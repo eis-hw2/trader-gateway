@@ -2,6 +2,7 @@ package com.example.trader.Service.Impl;
 
 import com.example.trader.Service.WebSocketService;
 import com.example.trader.Util.ResponseWrapperFactory;
+import com.example.trader.Util.Wrapper.ResponseWrapper;
 import com.example.trader.Util.Wrapper.SessionWrapper;
 import com.example.trader.Util.SessionWrapperFactory;
 import org.slf4j.Logger;
@@ -28,7 +29,7 @@ public class WebSocketServiceImpl implements WebSocketService {
         addOnlineCount();
         log.info("[WebSocket.onOpen] New Connection:" + sid + ", Number of Connection:" + getOnlineCount());
         try {
-            String s = ResponseWrapperFactory.createResponseString("success", "connection success");
+            String s = ResponseWrapperFactory.createResponseString(ResponseWrapper.SUCCESS, "connection success");
             sendMessageToSessionWrapper(sessionWrapper, s);
         } catch (IOException e) {
             log.error("[WebSocket.onOpen] IO Error");
