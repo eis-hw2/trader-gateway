@@ -3,6 +3,10 @@ package com.example.trader.Util.Wrapper;
 import com.alibaba.fastjson.JSON;
 
 public class ResponseWrapper {
+
+    public static String SUCCESS = "success";
+    public static String ERROR = "error";
+
     private String status;
     private Object detail;
 
