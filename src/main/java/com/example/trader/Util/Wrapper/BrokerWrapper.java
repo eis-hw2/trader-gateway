@@ -14,7 +14,11 @@ public class BrokerWrapper {
     }
 
     public BrokerWrapper(){}
-    
+
+    public BrokerWrapper(String url){
+        this.url = url;
+    }
+
     public int getId() {
         return id;
     }
