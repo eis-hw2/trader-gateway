@@ -1,27 +1,40 @@
 package com.example.trader.Entity;
 
 public class Order {
+
+    public Order(Order o){
+        type = o.getType();
+        status = o.getStatus();
+        id = o.getId();
+        futureId = o.getFutureId();
+        position = o.getPosition();
+        unitPrice = o.getUnitPrice();
+        count = o.getCount();
+        orderId = o.getOrderId();
+    }
+
     public static final int BUYER = 0;
     public static final int SELLER = 1;
-
     public static enum Type{
         LIMIT,
         MARKET,
         STOP,
         CANCEL
     }
-    Type type;
 
     public static enum Status{
         PENDING,
         DONE
     }
-    Status status;
 
+    Type type;
+    Status status;
     String id;
-    String itemId;
+    String futureId;
     int position;
     int unitPrice;
+    int count;
+    String orderId;
 
     public Status getStatus() {
         return status;
@@ -39,11 +52,6 @@ public class Order {
         this.unitPrice = unitPrice;
     }
 
-    int count;
-
-    String orderId;
-
-
     public Type getType() {
         return type;
     }
@@ -60,12 +68,12 @@ public class Order {
         this.id = id;
     }
 
-    public String getItemId() {
-        return itemId;
+    public String getFutureId() {
+        return futureId;
     }
 
-    public void setItemId(String itemId) {
-        this.itemId = itemId;
+    public void setFutureId(String futureId) {
+        this.futureId = futureId;
     }
 
     public int getPosition() {
