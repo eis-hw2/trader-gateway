@@ -1,6 +1,7 @@
 package com.example.trader.Entity;
 
 public class Future {
-    private long id;
-    private Product product;
+    private String id;
+    private Item item;
+    private String time;
 }

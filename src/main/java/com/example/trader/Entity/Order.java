@@ -1,68 +1,94 @@
 package com.example.trader.Entity;
 
 public class Order {
+    public static final int BUYER = 0;
+    public static final int SELLER = 1;
 
-    public static short MARTKET_ORDER = 0;
-    public static short LIMIT_ORDER = 1;
-    public static short STOP_ORDER = 2;
-    public static short CANCEL_ORDER = 3;
-
-    public static short PENDING = 0;
-    public static short DONE = 1;
-
-
-    private long id;
-    private short type;
-    private Future future;
-    private double unitPrice;
-    private int volume;
-    private short status;
-
-    public Future getFuture() {
-        return future;
+    public static enum Type{
+        LIMIT,
+        MARKET,
+        STOP,
+        CANCEL
     }
+    Type type;
 
-    public void setFuture(Future future) {
-        this.future = future;
+    public static enum Status{
+        PENDING,
+        DONE
     }
+    Status status;
 
-    public double getUnitPrice() {
-        return unitPrice;
-    }
+    String id;
+    String itemId;
+    int position;
+    int unitPrice;
 
-    public void setUnitPrice(double unitPrice) {
-        this.unitPrice = unitPrice;
-    }
-
-    public int getVolume() {
-        return volume;
-    }
-
-    public void setVolume(int volume) {
-        this.volume = volume;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public short getType() {
-        return type;
-    }
-
-    public void setType(short type) {
-        this.type = type;
-    }
-
-    public short getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(short status) {
+    public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public int getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(int unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    int count;
+
+    String orderId;
+
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 }

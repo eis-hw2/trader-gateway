@@ -1,7 +1,7 @@
 package com.example.trader.Entity;
 
-public class Product {
-    private long id;
+public class Item {
+    private String id;
     private String name;
     private String description;
 }
