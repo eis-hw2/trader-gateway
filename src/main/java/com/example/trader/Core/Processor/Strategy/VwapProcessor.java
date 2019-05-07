@@ -1,17 +1,17 @@
-package com.example.trader.Util.Iceberg;
+package com.example.trader.Core.Processor.Strategy;
 
 import com.example.trader.Dao.OrderBlotterDao;
-import com.example.trader.Entity.Order;
-import com.example.trader.Entity.OrderBlotter;
+import com.example.trader.Domain.Order;
+import com.example.trader.Domain.OrderBlotter;
+import com.example.trader.Core.Processor.Processor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Component
-public class VWAP extends IcebergProcessor{
+public class VwapProcessor extends Processor {
     @Autowired
     OrderBlotterDao orderBlotterDao;
 

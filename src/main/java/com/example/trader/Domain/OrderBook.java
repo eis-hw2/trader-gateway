@@ -1,4 +1,4 @@
-package com.example.trader.Entity;
+package com.example.trader.Domain;
 
 import java.util.ArrayList;
 import java.util.List;

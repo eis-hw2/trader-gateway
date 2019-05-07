@@ -1,4 +1,4 @@
-package com.example.trader.Entity;
+package com.example.trader.Domain;
 
 public class Item {
     private String id;

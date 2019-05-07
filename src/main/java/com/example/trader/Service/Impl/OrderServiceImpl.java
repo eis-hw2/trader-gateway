@@ -1,25 +1,37 @@
 package com.example.trader.Service.Impl;
 
-import com.example.trader.Dao.OrderBlotterDao;
-import com.example.trader.Entity.Order;
-import com.example.trader.Entity.OrderBlotter;
+import com.example.trader.Domain.Order;
+import com.example.trader.Service.OrderService;
+import com.example.trader.Core.Processor.Processor;
+import com.example.trader.Core.Processor.ProcessorFactory;
+import com.example.trader.Core.Sender.Sender;
+import com.example.trader.Core.Sender.SenderFactory;
+import com.example.trader.Domain.Wrapper.ResponseWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class OrderServiceImpl {
+public class OrderServiceImpl implements OrderService{
     @Autowired
-    private OrderBlotterDao orderBlotterDao;
+    private ProcessorFactory processorFactory;
+    @Autowired
+    private SenderFactory senderFactory;
 
-    private List<Order> VWAP(Order order){
-        List<OrderBlotter> history = orderBlotterDao.getByFutureIdYesterday(order.getFutureId());
+    @Override
+    public List<Order> create(Order order, String processStrategy, String sendStrategy) {
+        Processor processor = processorFactory.create(processStrategy);
+        List<Order> orders = processor.process(order);
 
-        return null;
+        Sender sender = senderFactory.create(sendStrategy);
+        ResponseWrapper responseWrapper = sender.send(orders);
+        List<Order> res = (List<Order>) responseWrapper.getBody();
+        return res;
     }
 
-    private List<Order> TWAP(Order order){
+    @Override
+    public Order getById(String id) {
         return null;
     }
 }
