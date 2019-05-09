@@ -1,7 +1,6 @@
-package com.example.trader.Util;
+package com.example.trader.Domain.Factory;
 
-import com.example.trader.Util.Wrapper.SessionWrapper;
-
+import com.example.trader.Domain.Wrapper.SessionWrapper;
 import javax.websocket.Session;
 
 public class SessionWrapperFactory {

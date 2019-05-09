@@ -1,4 +1,4 @@
-package com.example.trader.Util.Wrapper;
+package com.example.trader.Domain.Wrapper;
 
 import com.alibaba.fastjson.JSON;
 
@@ -8,21 +8,21 @@ public class ResponseWrapper {
     public static String ERROR = "error";
 
     private String status;
-    private Object detail;
+    private Object body;
 
     public ResponseWrapper(){}
 
-    public ResponseWrapper(String status, Object detail){
+    public ResponseWrapper(String status, Object body){
         this.status = status;
-        this.detail = detail;
+        this.body = body;
     }
 
-    public Object getDetail() {
-        return detail;
+    public Object getBody() {
+        return body;
     }
 
-    public void setDetail(Object detail) {
-        this.detail = detail;
+    public void setBody(Object body) {
+        this.body = body;
     }
 
     public String getStatus() {

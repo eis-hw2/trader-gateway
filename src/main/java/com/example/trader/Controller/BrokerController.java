@@ -1,9 +1,9 @@
 package com.example.trader.Controller;
 
-import com.example.trader.Service.BrokerConfigService;
-import com.example.trader.Util.ResponseWrapperFactory;
-import com.example.trader.Util.Wrapper.BrokerWrapper;
-import com.example.trader.Util.Wrapper.ResponseWrapper;
+import com.example.trader.Service.BrokerService;
+import com.example.trader.Domain.Factory.ResponseWrapperFactory;
+import com.example.trader.Domain.Broker;
+import com.example.trader.Domain.Wrapper.ResponseWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,22 +13,22 @@ import java.util.List;
 @RequestMapping("/api/v1/broker")
 public class BrokerController {
     @Autowired
-    BrokerConfigService brokerConfigService;
+    BrokerService brokerConfigService;
 
     @PostMapping("")
-    public ResponseWrapper addBroker(@RequestBody BrokerWrapper brokerWrapper){
-        BrokerWrapper res = brokerConfigService.addBroker(brokerWrapper);
+    public ResponseWrapper addBroker(@RequestBody Broker broker){
+        Broker res = brokerConfigService.addBroker(broker);
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, res);
     }
 
     @GetMapping("")
     public ResponseWrapper getBroker(){
-        List<BrokerWrapper> res = brokerConfigService.getBroker();
+        List<Broker> res = brokerConfigService.getBroker();
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, res);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseWrapper deleteById(@PathVariable Integer id){
+    public ResponseWrapper deleteById(@PathVariable String id){
         boolean delete = brokerConfigService.deleteBrokerById(id);
         String status = delete ? ResponseWrapper.SUCCESS : ResponseWrapper.ERROR;
         String detail = delete ? "Delete Success" : "Delete Error";
