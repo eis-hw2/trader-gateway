@@ -1,39 +1,43 @@
 package com.example.trader.Service.Impl;
 
+import com.example.trader.Core.BrokerSocket.BrokerSocketContainer;
 import com.example.trader.Domain.Broker;
-import com.example.trader.Service.BrokerConfigService;
+import com.example.trader.Service.BrokerService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Service
-public class BrokerConfigServiceImpl implements BrokerConfigService{
-    public static CopyOnWriteArrayList<Broker> brokers = new CopyOnWriteArrayList<>();
+public class BrokerServiceImpl implements BrokerService {
+    public static CopyOnWriteArrayList<BrokerSocketContainer> brokerSocketContainers = new CopyOnWriteArrayList<>();
 
     @Override
-    public Broker addBroker(Broker brokerWrapper){
-        brokers.add(brokerWrapper);
-        return brokerWrapper;
+    public Broker addBroker(Broker broker){
+        BrokerSocketContainer brokerSocket = new BrokerSocketContainer(broker);
+        brokerSocketContainers.add(brokerSocket);
+        return broker;
     }
 
     @Override
     public boolean deleteBrokerById(String id){
-        return brokers.removeIf(e->e.getId().equals(id));
+        for (BrokerSocketContainer broker: brokerSocketContainers){
+            if (broker.getBroker().getId().equals(id)){
+                broker.close();
+                brokerSocketContainers.remove(broker);
+                break;
+            }
+        }
+        return true;
     }
 
     @Override
     public List<Broker> getBroker(){
-        return brokers;
+        return null;
     }
 
     @Override
     public Broker getBrokerById(String id) {
-        for (Broker broker: brokers){
-            if (broker.getId().equals(id)){
-                return broker;
-            }
-        }
         return null;
     }
 }

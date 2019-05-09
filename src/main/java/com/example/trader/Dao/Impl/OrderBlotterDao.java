@@ -1,4 +1,4 @@
-package com.example.trader.Dao;
+package com.example.trader.Dao.Impl;
 
 
 import com.example.trader.Domain.OrderBlotter;

@@ -1,4 +1,4 @@
-package com.example.trader.Util.Wrapper;
+package com.example.trader.Domain.Wrapper;
 
 import javax.websocket.Session;
 

@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface OrderService {
 
-    Order getById(String id);
+    Order getById(String id, String brokerId);
 
-    List<Order> create(Order order, String processStrategy, String sendStrategy);
+    List<Order> create(Order order, String processStrategy, String sendStrategy, String brokerId);
 }

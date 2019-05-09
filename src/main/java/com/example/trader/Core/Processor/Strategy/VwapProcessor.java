@@ -1,6 +1,6 @@
 package com.example.trader.Core.Processor.Strategy;
 
-import com.example.trader.Dao.OrderBlotterDao;
+import com.example.trader.Dao.Impl.OrderBlotterDao;
 import com.example.trader.Domain.Order;
 import com.example.trader.Domain.OrderBlotter;
 import com.example.trader.Core.Processor.Processor;

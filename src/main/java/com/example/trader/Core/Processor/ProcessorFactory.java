@@ -12,9 +12,9 @@ public class ProcessorFactory {
     @Autowired
     ApplicationContext applicationContext;
 
-    private final static String VWAP = "VWAP";
-    private final static String TWAP = "TWAP";
-    private final static String NONE = "NONE";
+    public final static String VWAP = "VWAP";
+    public final static String TWAP = "TWAP";
+    public final static String NONE = "NONE";
 
     public Processor create(String name){
         switch (name){

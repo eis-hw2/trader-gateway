@@ -1,6 +1,6 @@
-package com.example.trader.Util;
+package com.example.trader.Domain.Factory;
 
-import com.example.trader.Util.Wrapper.ResponseWrapper;
+import com.example.trader.Domain.Wrapper.ResponseWrapper;
 
 public class ResponseWrapperFactory {
     public static ResponseWrapper create() {

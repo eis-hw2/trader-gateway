@@ -1,7 +1,7 @@
-package com.example.trader.Util.Wrapper;
+package com.example.trader.Domain;
 
-public class BrokerWrapper {
-    private int id;
+public class Broker {
+    private String id;
     private String url;
     private String description;
 
@@ -13,17 +13,17 @@ public class BrokerWrapper {
         this.url = url;
     }
 
-    public BrokerWrapper(){}
+    public Broker(){}
 
-    public BrokerWrapper(String url){
+    public Broker(String url){
         this.url = url;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
