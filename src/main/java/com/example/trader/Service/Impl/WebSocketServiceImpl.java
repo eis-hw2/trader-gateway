@@ -1,10 +1,10 @@
 package com.example.trader.Service.Impl;
 
 import com.example.trader.Service.WebSocketService;
-import com.example.trader.Util.ResponseWrapperFactory;
-import com.example.trader.Util.Wrapper.ResponseWrapper;
-import com.example.trader.Util.Wrapper.SessionWrapper;
-import com.example.trader.Util.SessionWrapperFactory;
+import com.example.trader.Domain.Factory.ResponseWrapperFactory;
+import com.example.trader.Domain.Wrapper.ResponseWrapper;
+import com.example.trader.Domain.Wrapper.SessionWrapper;
+import com.example.trader.Domain.Factory.SessionWrapperFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class WebSocketServiceImpl implements WebSocketService {
 
     static Logger log = LoggerFactory.getLogger(WebSocketServiceImpl.class);
 
-    private static CopyOnWriteArraySet<SessionWrapper> sessionWrappers;
+    private static CopyOnWriteArraySet<SessionWrapper> sessionWrappers = new CopyOnWriteArraySet<>();
     private static Integer onlineCount = 0;
 
     @Override
@@ -49,7 +49,13 @@ public class WebSocketServiceImpl implements WebSocketService {
 
     @Override
     public void onMessage(String message, Session session) {
-        //do nothing
+        try{
+            sendMessageToSession(session, message);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -87,7 +93,11 @@ public class WebSocketServiceImpl implements WebSocketService {
     }
 
     private void sendMessageToSessionWrapper(SessionWrapper sessionWrapper, String message) throws IOException {
-        sessionWrapper.getSession().getBasicRemote().sendText(message);
+        sendMessageToSession(sessionWrapper.getSession(), message);
+    }
+
+    private void sendMessageToSession(Session session, String message) throws IOException {
+        session.getBasicRemote().sendText(message);
     }
 
     private void addOnlineCount() {
