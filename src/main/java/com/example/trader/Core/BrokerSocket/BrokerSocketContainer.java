@@ -1,11 +1,8 @@
 package com.example.trader.Core.BrokerSocket;
 
-import com.example.trader.Domain.Broker;
-import org.java_websocket.WebSocket;
-import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.handshake.ServerHandshake;
+import com.example.trader.Domain.Entity.Broker;
+import com.example.trader.Domain.OrderBook;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -35,6 +32,10 @@ public class BrokerSocketContainer {
 
     public Broker getBroker() {
         return broker;
+    }
+
+    public OrderBook getOrderBook(){
+        return client.getOrderBook();
     }
 
     @Override

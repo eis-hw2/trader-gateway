@@ -1,63 +1,28 @@
 package com.example.trader.Domain;
 
+import com.example.trader.Domain.Entity.Side;
+import com.example.trader.Domain.Entity.Status;
+
 public class Order {
+    public static final String MARKET_ORDER = "MarketOrder";
+    public static final String LIMIT_ORDER = "LimitOrder";
+    public static final String STOP_ORDER = "StopOrder";
+    public static final String CANCEL_ORDER = "CancelOrder";
+
+    private String id;
+    private int unitPrice;
+    private Side side;
+    private String marketDepthId;
+    private Status status;
+    private int count;
 
     public Order(Order o){
-        type = o.getType();
-        status = o.getStatus();
         id = o.getId();
-        futureId = o.getFutureId();
-        position = o.getPosition();
         unitPrice = o.getUnitPrice();
+        side = o.getSide();
+        marketDepthId = o.getMarketDepthId();
+        status = o.getStatus();
         count = o.getCount();
-        orderId = o.getOrderId();
-    }
-
-    public static final int BUYER = 0;
-    public static final int SELLER = 1;
-    public static enum Type{
-        LIMIT,
-        MARKET,
-        STOP,
-        CANCEL
-    }
-
-    public static enum Status{
-        PENDING,
-        DONE
-    }
-
-    Type type;
-    Status status;
-    String id;
-    String futureId;
-    int position;
-    int unitPrice;
-    int count;
-    String orderId;
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public int getUnitPrice() {
-        return unitPrice;
-    }
-
-    public void setUnitPrice(int unitPrice) {
-        this.unitPrice = unitPrice;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
     }
 
     public String getId() {
@@ -68,20 +33,36 @@ public class Order {
         this.id = id;
     }
 
-    public String getFutureId() {
-        return futureId;
+    public int getUnitPrice() {
+        return unitPrice;
     }
 
-    public void setFutureId(String futureId) {
-        this.futureId = futureId;
+    public void setUnitPrice(int unitPrice) {
+        this.unitPrice = unitPrice;
     }
 
-    public int getPosition() {
-        return position;
+    public Side getSide() {
+        return side;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
+    public void setSide(Side side) {
+        this.side = side;
+    }
+
+    public String getMarketDepthId() {
+        return marketDepthId;
+    }
+
+    public void setMarketDepthId(String marketDepthId) {
+        this.marketDepthId = marketDepthId;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public int getCount() {
@@ -90,13 +71,5 @@ public class Order {
 
     public void setCount(int count) {
         this.count = count;
-    }
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
     }
 }

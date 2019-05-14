@@ -4,7 +4,6 @@ import com.example.trader.Core.Sender.Strategy.Instant.InstantSender;
 import com.example.trader.Core.Sender.Strategy.Split.DistributeSender;
 import com.example.trader.Core.Sender.Strategy.Split.OneSender;
 import com.example.trader.Service.BrokerService;
-import com.example.trader.Domain.Broker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -25,7 +24,7 @@ public class SenderFactory {
     // TODO LRU
     private static ConcurrentHashMap<String, Sender> senders = new ConcurrentHashMap<>();
 
-    public Sender create(String strategy, String brokerId) throws Exception{
+    public Sender create(String strategy, String brokerId, String type) throws Exception{
         String broker;
         if (brokerId.equals("NONE"))
             broker = brokerConfigService.getBroker().get(0).getUrl();
@@ -45,33 +44,33 @@ public class SenderFactory {
                 return distributeSender;
 
             case SPLIT_ONE:
-                String k1 = SPLIT_ONE + brokerId;
+                String k1 = SPLIT_ONE + brokerId + "/" + type;
                 if (senders.containsKey(k1))
                     return senders.get(k1);
 
                 OneSender oneSender = applicationContext.getBean(OneSender.class);
 
-                oneSender.setBroker(broker);
+                oneSender.setBroker(broker + "/" + type);
                 senders.put(k1, oneSender);
                 return oneSender;
 
             case INSTANT:
-                String k2 = INSTANT + brokerId;
+                String k2 = INSTANT + brokerId + "/" + type;
                 if (senders.containsKey(k2))
                     return senders.get(strategy);
                 InstantSender instantSender = applicationContext.getBean(InstantSender.class);
 
-                instantSender.setBroker(broker);
+                instantSender.setBroker(broker + "/" + type);
                 senders.put(k2, instantSender);
                 return instantSender;
 
             default:
-                String k3 = INSTANT + brokerId;
+                String k3 = INSTANT + brokerId + "/" + type;
                 if (senders.containsKey(k3))
                     return senders.get(strategy);
                 InstantSender sender = applicationContext.getBean(InstantSender.class);
 
-                sender.setBroker(broker);
+                sender.setBroker(broker + "/" + type);
                 senders.put(k3, sender);
                 return sender;
         }

@@ -1,4 +1,4 @@
-package com.example.trader.Domain;
+package com.example.trader.Domain.Entity;
 
 public class Broker {
     public static String NEW = "NEW";

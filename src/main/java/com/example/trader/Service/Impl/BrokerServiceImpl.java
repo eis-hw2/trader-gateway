@@ -1,7 +1,7 @@
 package com.example.trader.Service.Impl;
 
 import com.example.trader.Core.BrokerSocket.BrokerSocketContainer;
-import com.example.trader.Domain.Broker;
+import com.example.trader.Domain.Entity.Broker;
 import com.example.trader.Service.BrokerService;
 import org.springframework.stereotype.Service;
 

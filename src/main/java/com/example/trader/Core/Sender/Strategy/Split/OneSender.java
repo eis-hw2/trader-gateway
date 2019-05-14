@@ -1,5 +1,6 @@
 package com.example.trader.Core.Sender.Strategy.Split;
 
+import com.example.trader.Core.Scheduler.OrderScheduler;
 import com.example.trader.Core.Sender.Strategy.SplitSender;
 import com.example.trader.Dao.DaoFactory;
 import com.example.trader.Dao.Impl.OrderDao;
@@ -19,14 +20,15 @@ public class OneSender extends SplitSender {
 
     @Autowired
     private DaoFactory daoFactory;
+    @Autowired
+    private OrderScheduler orderScheduler;
 
     private OrderDao orderDao;
 
     @Override
     public ResponseWrapper send(List<Order> orders) {
-        assert(orders.size() == 1);
         orderDao = daoFactory.create(broker, OrderDao.class);
-        orderDao.create(orders.get(0));
+        orderScheduler.addSplitOrder(orders, orderDao);
         return null;
     }
 

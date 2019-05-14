@@ -1,5 +1,8 @@
 package com.example.trader.Core.BrokerSocket;
 
+import com.alibaba.fastjson.JSONObject;
+import com.example.trader.Domain.OrderBook;
+import com.example.trader.Util.Network.JsonHelper;
 import org.java_websocket.WebSocket;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -15,6 +18,8 @@ public class BrokerSocketClient extends WebSocketClient {
 
     private int status = INIT;
 
+    private OrderBook orderBook;
+
     public BrokerSocketClient(URI serverUri) {
         super(serverUri);
     }
@@ -26,6 +31,16 @@ public class BrokerSocketClient extends WebSocketClient {
 
     @Override
     public void onMessage(String msg) {
+        JSONObject jsonObject = JSONObject.parseObject(msg);
+        JSONObject type = jsonObject.getJSONObject("type");
+        String typeString = JsonHelper.jsonObjectToObject(type, String.class);
+        switch (typeString){
+            case "OrderBook":
+                JSONObject orderbook = jsonObject.getJSONObject("body");
+                OrderBook ob = JsonHelper.jsonObjectToObject(orderbook, OrderBook.class);
+                orderBook = ob;
+        }
+
         System.out.println("[BrokerSocket.onMessage] " + this.uri.toString() + msg);
     }
 
@@ -66,5 +81,13 @@ public class BrokerSocketClient extends WebSocketClient {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public OrderBook getOrderBook() {
+        return orderBook;
+    }
+
+    public void setOrderBook(OrderBook orderBook) {
+        this.orderBook = orderBook;
     }
 }

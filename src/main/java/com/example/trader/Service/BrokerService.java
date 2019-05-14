@@ -1,6 +1,6 @@
 package com.example.trader.Service;
 
-import com.example.trader.Domain.Broker;
+import com.example.trader.Domain.Entity.Broker;
 
 import java.util.List;
 

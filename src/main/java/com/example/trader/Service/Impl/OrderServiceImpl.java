@@ -35,16 +35,25 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public List<Order> create(Order order, String processStrategy, String sendStrategy, String brokerId) throws Exception{
+    public List<Order> createWithStrategy(Order order, String processStrategy, String sendStrategy, String brokerId, String type) throws Exception{
         Processor processor = processorFactory.create(processStrategy);
         List<Order> orders = processor.process(order);
 
-        Sender sender = senderFactory.create(sendStrategy, brokerId);
+        Sender sender = senderFactory.create(sendStrategy, brokerId, type);
         ResponseWrapper responseWrapper = sender.send(orders);
 
         if (responseWrapper.getStatus().equals(ResponseWrapper.ERROR))
             throw new Exception(JSON.toJSONString(responseWrapper.getBody()));
         return orders;
+    }
+
+    @Override
+    public Order create(Order order, String brokerId, String type) throws Exception{
+        Sender sender = senderFactory.create(SenderFactory.INSTANT, brokerId, type);
+        List<Order> orders = new ArrayList<>();
+        orders.add(order);
+        ResponseWrapper responseWrapper = sender.send(orders);
+        return order;
     }
 
     @Override
