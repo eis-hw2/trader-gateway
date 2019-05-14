@@ -18,13 +18,23 @@ public class SenderFactory {
     @Autowired
     private BrokerService brokerConfigService;
 
-    private final static String SPLIT_DISTRIBUTE = "SPLIT_DISTRIBUTE";
-    private final static String SPLIT_ONE = "SPLIT_ONE";
-    private final static String INSTANT = "INSTANT";
+    public final static String SPLIT_DISTRIBUTE = "SPLIT_DISTRIBUTE";
+    public final static String SPLIT_ONE = "SPLIT_ONE";
+    public final static String INSTANT = "INSTANT";
 
+    // TODO LRU
     private static ConcurrentHashMap<String, Sender> senders = new ConcurrentHashMap<>();
 
-    public Sender create(String strategy, String brokerId){
+    public Sender create(String strategy, String brokerId) throws Exception{
+        String broker;
+        if (brokerId.equals("NONE"))
+            broker = brokerConfigService.getBroker().get(0).getUrl();
+        else {
+            broker = brokerConfigService.getBrokerById(brokerId).getUrl();
+            if (broker == null)
+                throw new Exception("Broker Not Exist");
+        }
+
         switch (strategy){
             case SPLIT_DISTRIBUTE:
                 if (senders.containsKey(SPLIT_DISTRIBUTE))
@@ -40,7 +50,8 @@ public class SenderFactory {
                     return senders.get(k1);
 
                 OneSender oneSender = applicationContext.getBean(OneSender.class);
-                oneSender.setBroker(brokerId);
+
+                oneSender.setBroker(broker);
                 senders.put(k1, oneSender);
                 return oneSender;
 
@@ -49,8 +60,8 @@ public class SenderFactory {
                 if (senders.containsKey(k2))
                     return senders.get(strategy);
                 InstantSender instantSender = applicationContext.getBean(InstantSender.class);
-                Broker bro = brokerConfigService.getBrokerById(brokerId);
-                instantSender.setBroker(bro.getUrl());
+
+                instantSender.setBroker(broker);
                 senders.put(k2, instantSender);
                 return instantSender;
 
@@ -59,8 +70,8 @@ public class SenderFactory {
                 if (senders.containsKey(k3))
                     return senders.get(strategy);
                 InstantSender sender = applicationContext.getBean(InstantSender.class);
-                Broker b = brokerConfigService.getBrokerById(strategy);
-                sender.setBroker(b.getUrl());
+
+                sender.setBroker(broker);
                 senders.put(k3, sender);
                 return sender;
         }

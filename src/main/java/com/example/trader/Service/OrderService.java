@@ -8,5 +8,5 @@ public interface OrderService {
 
     Order getById(String id, String brokerId);
 
-    List<Order> create(Order order, String processStrategy, String sendStrategy, String brokerId);
+    List<Order> create(Order order, String processStrategy, String sendStrategy, String brokerId) throws Exception;
 }

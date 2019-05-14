@@ -1,5 +1,7 @@
 package com.example.trader.Controller;
 
+import com.example.trader.Core.Processor.ProcessorFactory;
+import com.example.trader.Core.Sender.SenderFactory;
 import com.example.trader.Domain.Factory.ResponseWrapperFactory;
 import com.example.trader.Domain.Order;
 import com.example.trader.Domain.Wrapper.ResponseWrapper;
@@ -18,9 +20,16 @@ public class OrderController {
     @PostMapping("")
     public ResponseWrapper create(
             @RequestBody Order order,
-            @RequestParam(defaultValue = "NONE") String processStrategy,
-            @RequestParam String sendStrategy) {
-        List<Order> orders  = orderService.create(order, processStrategy, sendStrategy);
-        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, orders);
+            @RequestParam(defaultValue = ProcessorFactory.NONE) String processStrategy,
+            @RequestParam(defaultValue = SenderFactory.INSTANT) String sendStrategy,
+            @RequestParam(defaultValue = "NONE") String brokerId) {
+        try{
+            List<Order> orders = orderService.create(order, processStrategy, sendStrategy, brokerId);
+            return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, orders);
+        }
+        catch(Exception e){
+            return ResponseWrapperFactory.create(ResponseWrapper.ERROR, e.getMessage());
+        }
+
     }
 }

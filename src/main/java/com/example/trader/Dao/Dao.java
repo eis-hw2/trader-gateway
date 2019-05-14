@@ -6,7 +6,7 @@ public abstract class Dao<K, V> {
 
     public abstract V create(V value);
 
-    public abstract V modify(V value);
+    public abstract V modify(K key, V value);
 
     public abstract V deleteById(K key);
 

@@ -24,6 +24,16 @@ public class WebSocketServiceImpl implements WebSocketService {
 
     @Override
     public void onOpen(Session session, @PathParam("sid") String sid) {
+        if (sessionWrappers.stream().anyMatch(e -> e.getSid().equals(sid))){
+            try {
+                session.close();
+            }
+            catch(IOException e){
+                e.printStackTrace();
+            }
+            return;
+        }
+
         SessionWrapper sessionWrapper = SessionWrapperFactory.create(session, sid);
         sessionWrappers.add(sessionWrapper);
         addOnlineCount();

@@ -1,9 +1,14 @@
 package com.example.trader.Domain;
 
 public class Broker {
+    public static String NEW = "NEW";
+    public static String DEAD = "DEAD";
+    public static String ALIVE = "ALIVE";
+
     private String id;
     private String url;
     private String description;
+    private String status;
 
     public String getUrl() {
         return url;
@@ -33,5 +38,13 @@ public class Broker {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
