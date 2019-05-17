@@ -1,8 +1,8 @@
 package com.example.trader.Core.Processor.Strategy;
 
-import com.example.trader.Dao.Impl.OrderBlotterDao;
-import com.example.trader.Domain.Order;
-import com.example.trader.Domain.OrderBlotter;
+import com.example.trader.Dao.OrderBlotterDao;
+import com.example.trader.Domain.Entity.Order;
+import com.example.trader.Domain.Entity.OrderBlotter;
 import com.example.trader.Core.Processor.Processor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ public class VwapProcessor extends Processor {
 
     @Override
     public List<Order> process(Order order){
-        List<OrderBlotter> orderBlotters = getYesterdayOrderBlotter(order.getFutureId());
+        List<OrderBlotter> orderBlotters = getYesterdayOrderBlotter(order.getMarketDepthId());
         double[] percents = preprocess(orderBlotters);
         List<Order> splitOrder = new ArrayList<>(); // 24 hour
 

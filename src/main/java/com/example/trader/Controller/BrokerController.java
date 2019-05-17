@@ -2,7 +2,7 @@ package com.example.trader.Controller;
 
 import com.example.trader.Service.BrokerService;
 import com.example.trader.Domain.Factory.ResponseWrapperFactory;
-import com.example.trader.Domain.Broker;
+import com.example.trader.Domain.Entity.Broker;
 import com.example.trader.Domain.Wrapper.ResponseWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/broker")
+@RequestMapping("/api/v1/Broker")
 public class BrokerController {
     @Autowired
     BrokerService brokerConfigService;
@@ -28,7 +28,7 @@ public class BrokerController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseWrapper deleteById(@PathVariable String id){
+    public ResponseWrapper deleteById(@PathVariable Integer id){
         boolean delete = brokerConfigService.deleteBrokerById(id);
         String status = delete ? ResponseWrapper.SUCCESS : ResponseWrapper.ERROR;
         String detail = delete ? "Delete Success" : "Delete Error";

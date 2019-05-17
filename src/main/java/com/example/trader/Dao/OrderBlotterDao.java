@@ -1,7 +1,7 @@
-package com.example.trader.Dao.Impl;
+package com.example.trader.Dao;
 
 
-import com.example.trader.Domain.OrderBlotter;
+import com.example.trader.Domain.Entity.OrderBlotter;
 import com.example.trader.Util.DateUtil;
 import org.springframework.stereotype.Repository;
 

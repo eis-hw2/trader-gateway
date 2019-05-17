@@ -1,17 +1,9 @@
 package com.example.trader.Dao;
 
+import com.example.trader.Domain.Entity.Order;
+
 public abstract class Dao<K, V> {
-
     private String source;
-
-    public abstract V create(V value);
-
-    public abstract V modify(V value);
-
-    public abstract V deleteById(K key);
-
-    public abstract V getById(K key);
-
     public String getSource() {
         return source;
     }
@@ -19,4 +11,9 @@ public abstract class Dao<K, V> {
     public void setSource(String source) {
         this.source = source;
     }
+
+    public abstract V create(V  order);
+    public abstract V modify(K id, V value);
+    public abstract void deleteById(K id);
+    public abstract V getById(K  id);
 }

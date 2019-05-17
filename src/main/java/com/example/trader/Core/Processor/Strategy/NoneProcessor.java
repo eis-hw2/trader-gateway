@@ -1,6 +1,6 @@
 package com.example.trader.Core.Processor.Strategy;
 
-import com.example.trader.Domain.Order;
+import com.example.trader.Domain.Entity.Order;
 import com.example.trader.Core.Processor.Processor;
 
 import java.util.List;

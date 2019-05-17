@@ -1,28 +1,35 @@
 package com.example.trader.Dao;
 
+import com.example.trader.Util.LRUCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class DaoFactory {
     @Autowired
     private ApplicationContext applicationContext;
 
-    private Map<String, Dao> daos = new ConcurrentHashMap<>();
+    @Autowired
+    private LRUCache<String, Dao> daoCache;
 
-    public <T> T create(String broker, Class<T> type){
+    @Bean
+    public LRUCache<String, Dao> daoCache(){
+        return new LRUCache<>(5);
+    }
 
-        String key = broker + type.getName();
-        if (daos.containsKey(key)){
-            return (T)daos.get(key);
+    public Dao create(String broker, String type){
+        Dao dao = daoCache.get(broker + type);
+        if (dao != null) {
+            return dao;
         }
-        Dao dao = (Dao)(applicationContext.getBean(type));
-        dao.setSource(broker);
-        daos.put(key, dao);
-        return (T)(dao);
+        else{
+            dao = (Dao)applicationContext.getBean(type + "Dao");
+            dao.setSource(broker);
+            daoCache.put(broker + type, dao);
+            return dao;
+        }
+
     }
 }
