@@ -1,7 +1,7 @@
 package com.example.trader.Core.BrokerSocket;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.trader.Domain.OrderBook;
+import com.example.trader.Domain.Entity.OrderBook;
 import com.example.trader.Util.Network.JsonHelper;
 import org.java_websocket.WebSocket;
 import org.java_websocket.client.WebSocketClient;

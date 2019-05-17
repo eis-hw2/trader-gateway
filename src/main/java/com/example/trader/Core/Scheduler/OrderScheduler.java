@@ -1,17 +1,18 @@
 package com.example.trader.Core.Scheduler;
 
-import com.example.trader.Dao.DaoFactory;
-import com.example.trader.Dao.Impl.OrderDao;
-import com.example.trader.Domain.Order;
+import com.example.trader.Dao.Dao;
+import com.example.trader.Domain.Entity.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.Trigger;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.FutureTask;
 import java.util.concurrent.ScheduledFuture;
 
 @Component
@@ -31,7 +32,7 @@ public class OrderScheduler {
     }
 
     // TODO
-    public int addSplitOrder(List<Order> orders, OrderDao orderDao){
+    public int addSplitOrder(List<Order> orders, Dao orderDao){
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_MONTH, 1);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -54,7 +55,7 @@ public class OrderScheduler {
         return id;
     }
 
-    public int addSplitOrder(Map<Order, OrderDao> orders){
+    public int addSplitOrder(Map<Order, Dao> orders){
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_MONTH, 1);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -72,7 +73,7 @@ public class OrderScheduler {
             calendar.add(Calendar.HOUR_OF_DAY, 1);
         });
 
-        int id = orders.hashCode();
+        int id = futureList.hashCode();
         futures.put(id, futureList);
         return id;
     }

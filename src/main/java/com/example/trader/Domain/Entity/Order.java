@@ -1,7 +1,4 @@
-package com.example.trader.Domain;
-
-import com.example.trader.Domain.Entity.Side;
-import com.example.trader.Domain.Entity.Status;
+package com.example.trader.Domain.Entity;
 
 public class Order {
     public static final String MARKET_ORDER = "MarketOrder";
@@ -15,6 +12,9 @@ public class Order {
     private String marketDepthId;
     private Status status;
     private int count;
+    private Type targetType;
+    private String targetId;
+    private String type;
 
     public Order(Order o){
         id = o.getId();
@@ -23,6 +23,27 @@ public class Order {
         marketDepthId = o.getMarketDepthId();
         status = o.getStatus();
         count = o.getCount();
+        targetType = o.getTargetType();
+        targetId = o.getTargetId();
+        type = o.getType();
+    }
+
+    public Order(){}
+
+    public Type getTargetType() {
+        return targetType;
+    }
+
+    public void setTargetType(Type targetType) {
+        this.targetType = targetType;
+    }
+
+    public String getTargetId() {
+        return targetId;
+    }
+
+    public void setTargetId(String targetId) {
+        this.targetId = targetId;
     }
 
     public String getId() {
@@ -71,5 +92,13 @@ public class Order {
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

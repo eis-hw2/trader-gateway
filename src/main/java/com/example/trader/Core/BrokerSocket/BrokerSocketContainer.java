@@ -1,7 +1,7 @@
 package com.example.trader.Core.BrokerSocket;
 
 import com.example.trader.Domain.Entity.Broker;
-import com.example.trader.Domain.OrderBook;
+import com.example.trader.Domain.Entity.OrderBook;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -12,6 +12,7 @@ public class BrokerSocketContainer {
 
     public BrokerSocketContainer(Broker broker){
         this.broker = broker;
+        /*
         try {
             client = new BrokerSocketClient(new URI("ws://" + broker.getUrl()));
         }
@@ -20,6 +21,7 @@ public class BrokerSocketContainer {
             e.printStackTrace();
         }
         client.init();
+        */
     }
 
     public void send(byte[] bytes){
@@ -40,6 +42,7 @@ public class BrokerSocketContainer {
 
     @Override
     protected void finalize() throws Throwable {
-        close();
+        if (client != null)
+            close();
     }
 }

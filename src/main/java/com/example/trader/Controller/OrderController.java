@@ -2,14 +2,11 @@ package com.example.trader.Controller;
 
 import com.example.trader.Core.Processor.ProcessorFactory;
 import com.example.trader.Core.Sender.SenderFactory;
-import com.example.trader.Domain.Entity.CancelOrder;
-import com.example.trader.Domain.Entity.LimitOrder;
-import com.example.trader.Domain.Entity.MarketOrder;
-import com.example.trader.Domain.Entity.StopOrder;
 import com.example.trader.Domain.Factory.ResponseWrapperFactory;
-import com.example.trader.Domain.Order;
+import com.example.trader.Domain.Entity.Order;
 import com.example.trader.Domain.Wrapper.ResponseWrapper;
 import com.example.trader.Service.OrderService;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +23,7 @@ public class OrderController {
             @RequestBody Order order,
             @RequestParam(defaultValue = ProcessorFactory.NONE) String processStrategy,
             @RequestParam(defaultValue = SenderFactory.INSTANT) String sendStrategy,
-            @RequestParam(defaultValue = "NONE") String brokerId,
+            @RequestParam Integer brokerId,
             @RequestParam String type) {
         try{
             List<Order> orders = orderService.createWithStrategy(order, processStrategy, sendStrategy, brokerId, type);
@@ -40,8 +37,8 @@ public class OrderController {
 
     @PostMapping("/MarketOrder")
     public ResponseWrapper createMarketOrder(
-            @RequestBody MarketOrder marketOrder,
-            @RequestParam(defaultValue = "NONE") String brokerId){
+            @RequestBody Order marketOrder,
+            @RequestParam Integer brokerId){
         try{
             Order order = orderService.create(marketOrder, brokerId, Order.MARKET_ORDER);
             return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
@@ -53,8 +50,8 @@ public class OrderController {
 
     @PostMapping("/LimitOrder")
     public ResponseWrapper createLimitOrder(
-            @RequestBody LimitOrder limitOrder,
-            @RequestParam(defaultValue = "NONE") String brokerId){
+            @RequestBody Order limitOrder,
+            @RequestParam Integer brokerId){
         try{
             Order order = orderService.create(limitOrder, brokerId, Order.LIMIT_ORDER);
             return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
@@ -66,8 +63,8 @@ public class OrderController {
 
     @PostMapping("/StopOrder")
     public ResponseWrapper createStopOrder(
-            @RequestBody StopOrder stopOrder,
-            @RequestParam(defaultValue = "NONE") String brokerId){
+            @RequestBody Order stopOrder,
+            @RequestParam Integer brokerId){
         try{
             Order order = orderService.create(stopOrder, brokerId, Order.STOP_ORDER);
             return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
@@ -79,8 +76,8 @@ public class OrderController {
 
     @PostMapping("/CancelOrder")
     public ResponseWrapper createCancelOrder(
-            @RequestBody CancelOrder cancelOrder,
-            @RequestParam(defaultValue = "NONE") String brokerId){
+            @RequestBody Order cancelOrder,
+            @RequestParam Integer brokerId){
         try{
             Order order = orderService.create(cancelOrder, brokerId, Order.CANCEL_ORDER);
             return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
