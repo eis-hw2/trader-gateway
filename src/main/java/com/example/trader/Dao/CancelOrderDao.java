@@ -16,7 +16,7 @@ public class CancelOrderDao extends DynamicDao<String ,Order> {
     private RestTemplate restTemplate = new RestTemplate();
 
     public Order create(Order  order) {
-        String url = getSource() + "/CancelOrder";
+        String url = getBroker().getWriteApi()+ "/CancelOrder";
         ResponseEntity<ResponseWrapper> responseEntity = restTemplate.postForEntity(url, order, ResponseWrapper.class);
 
         ResponseWrapper rw = responseEntity.getBody();  //响应体转换为Book类型
@@ -28,16 +28,16 @@ public class CancelOrderDao extends DynamicDao<String ,Order> {
     }
 
     public Order modify(String id, Order order) {
-        String url = getSource() + "/CancelOrder";
+        String url = getBroker().getWriteApi() + "/CancelOrder";
         return null;
     }
 
     public void deleteById(String id) {
-        String url = getSource() + "/CancelOrder/" + id;
+        String url = getBroker().getWriteApi() + "/CancelOrder/" + id;
     }
 
     public Order getById(String  id) {
-        String url = getSource() + "/CancelOrder/" + id;
+        String url = getBroker().getReadApi() + "/CancelOrder/" + id;
         return null;
     }
 }

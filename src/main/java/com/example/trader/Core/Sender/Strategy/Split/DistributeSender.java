@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 /*
-* Send the Order to Different Broker
+* Send the Order to Different Brokers
 * */
 @Component
 public class DistributeSender extends SplitSender {
@@ -33,7 +33,7 @@ public class DistributeSender extends SplitSender {
         int curIndex = 0;
         for (Order order: orders){
             Broker curBroker = brokers.get(curIndex % size);
-            DynamicDao orderDao = daoFactory.create(curBroker.getGateway(), orders.get(0).getType());
+            DynamicDao orderDao = daoFactory.create(curBroker, orders.get(0).getType());
             orderMap.put(order, orderDao);
             ++curIndex;
         }

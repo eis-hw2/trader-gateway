@@ -8,8 +8,9 @@ public class Broker {
     public static String DEAD = "DEAD";
     public static String ALIVE = "ALIVE";
 
-    private static String gatewayPort = "31000";
-    private static String webSocketPort = "whatever";
+    private static String writePort = "31000";
+    private static String readPort = "31001";
+    private static String webSocketPort = "31002";
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -26,8 +27,13 @@ public class Broker {
     }
 
     @Transient
-    public String getGateway(){
-        return url + ":" + gatewayPort;
+    public String getWriteApi(){
+        return url + ":" + writePort;
+    }
+
+    @Transient
+    public String getReadApi(){
+        return url + ":" + readPort;
     }
 
     @Transient

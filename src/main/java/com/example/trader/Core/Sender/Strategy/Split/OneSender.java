@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /*
-* Send the Order to one broker
+* Send the Order to One Broker
 * */
 @Component
 public class OneSender extends SplitSender {
@@ -25,7 +25,7 @@ public class OneSender extends SplitSender {
 
     @Override
     public ResponseWrapper send(List<Broker> brokers, List<Order> orders) {
-        DynamicDao orderDao = daoFactory.create(brokers.get(0).getGateway(), orders.get(0).getType());
+        DynamicDao orderDao = daoFactory.create(brokers.get(0), orders.get(0).getType());
         orderScheduler.addSplitOrder(orders, orderDao);
         return null;
     }

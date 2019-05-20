@@ -16,7 +16,7 @@ public class MarketOrderDao extends DynamicDao<String, Order> {
     private RestTemplate restTemplate = new RestTemplate();
 
     public Order create(Order  order) {
-        String url = getSource() + "/MarketOrder";
+        String url = getBroker().getWriteApi()+ "/MarketOrder";
         ResponseEntity<ResponseWrapper> responseEntity = restTemplate.postForEntity(url, order, ResponseWrapper.class);
 
         ResponseWrapper rw = responseEntity.getBody();  //响应体转换为Book类型
@@ -28,18 +28,18 @@ public class MarketOrderDao extends DynamicDao<String, Order> {
     }
 
     public Order modify(String id, Order order) {
-        String url = getSource() + "/MarketOrder";
+        String url = getBroker().getWriteApi() + "/MarketOrder";
         restTemplate.put(url, order);
         return null;
     }
 
     public void deleteById(String id) {
-        String url = getSource() + "/MarketOrder/" + id;
+        String url = getBroker().getWriteApi() + "/MarketOrder/" + id;
         restTemplate.delete(url);
     }
 
     public Order getById(String  id) {
-        String url = getSource() + "/MarketOrder/" + id;
+        String url = getBroker().getReadApi() + "/MarketOrder/" + id;
         ResponseEntity<ResponseWrapper> responseEntity = restTemplate.getForEntity(url, ResponseWrapper.class);
 
         return null;

@@ -16,7 +16,7 @@ public class LimitOrderDao extends DynamicDao<String, Order> {
     private RestTemplate restTemplate = new RestTemplate();
 
     public Order create(Order  order) {
-        String url = getSource() + "/LimitOrder";
+        String url = getBroker().getWriteApi() + "/LimitOrder";
         ResponseEntity<ResponseWrapper> responseEntity = restTemplate.postForEntity(url, order, ResponseWrapper.class);
 
         ResponseWrapper rw = responseEntity.getBody();  //响应体转换为Book类型
@@ -28,16 +28,16 @@ public class LimitOrderDao extends DynamicDao<String, Order> {
     }
 
     public Order modify(String id, Order order) {
-        String url = getSource() + "/LimitOrder";
+        String url = getBroker().getWriteApi() + "/LimitOrder";
         return null;
     }
 
     public void deleteById(String id) {
-        String url = getSource() + "/LimitOrder/" + id;
+        String url = getBroker().getWriteApi() + "/LimitOrder/" + id;
     }
 
     public Order getById(String  id) {
-        String url = getSource() + "/LimitOrder/" + id;
+        String url = getBroker().getReadApi() + "/LimitOrder/" + id;
         return null;
     }
 }
