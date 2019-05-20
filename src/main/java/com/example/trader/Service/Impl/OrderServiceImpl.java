@@ -60,6 +60,6 @@ public class OrderServiceImpl implements OrderService{
     public List<Order> getAll(String type, Integer brokerId) {
         Broker broker = brokerService.getBrokerById(brokerId);
         AbstractOrderDao dao = (AbstractOrderDao)daoFactory.create(broker, type);
-        return dao.getAll();
+        return dao.findAll();
     }
 }

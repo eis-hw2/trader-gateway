@@ -10,7 +10,6 @@ import org.springframework.web.client.RestTemplate;
 @Scope("prototype")
 public class StopOrderDao extends AbstractOrderDao {
 
-    private RestTemplate restTemplate;
 
     @Override
     public String getType() {

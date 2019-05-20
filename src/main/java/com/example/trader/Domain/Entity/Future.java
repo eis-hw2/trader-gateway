@@ -3,7 +3,7 @@ package com.example.trader.Domain.Entity;
 
 public class Future {
     String id;
-    String MarketDepthId;
+    String marketDepthId;
     String description;
 
     public String getId() {
@@ -15,11 +15,11 @@ public class Future {
     }
 
     public String getMarketDepthId() {
-        return MarketDepthId;
+        return marketDepthId;
     }
 
     public void setMarketDepthId(String marketDepthId) {
-        MarketDepthId = marketDepthId;
+        this.marketDepthId = marketDepthId;
     }
 
     public String getDescription() {
