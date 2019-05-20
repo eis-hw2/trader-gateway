@@ -1,10 +1,10 @@
-package com.example.trader.Dao;
+package com.example.trader.Dao.Repo;
 
 import com.example.trader.Domain.Entity.Future;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component("FutureDao")
 @Scope("prototype")
 public class FutureDao extends DynamicDao<String ,Future> {
     @Override
@@ -12,18 +12,4 @@ public class FutureDao extends DynamicDao<String ,Future> {
         return null;
     }
 
-    @Override
-    public Future getById(String id) {
-        return null;
-    }
-
-    @Override
-    public void deleteById(String id) {
-
-    }
-
-    @Override
-    public Future modify(String id, Future value) {
-        return null;
-    }
 }

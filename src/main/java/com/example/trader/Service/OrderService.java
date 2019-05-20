@@ -9,4 +9,6 @@ public interface OrderService {
     List<Order> createWithStrategy(Order order, String processStrategy, String sendStrategy, Integer brokerId);
 
     Order create(Order order, Integer brokerId);
+
+    List<Order> getAll(String type, Integer brokerId);
 }

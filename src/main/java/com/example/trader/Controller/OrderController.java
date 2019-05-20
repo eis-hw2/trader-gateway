@@ -52,6 +52,12 @@ public class OrderController {
         }
     }
 
+    @GetMapping("/MarketOrder")
+    public ResponseWrapper getMarketOrder(@RequestParam Integer brokerId){
+        List<Order> orders = orderService.getAll(Order.MARKET_ORDER, brokerId);
+        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, orders);
+    }
+
     @PostMapping("/LimitOrder")
     public ResponseWrapper createLimitOrder(
             @RequestBody Order limitOrder,
@@ -63,6 +69,12 @@ public class OrderController {
         catch(Exception e){
             return ResponseWrapperFactory.create(ResponseWrapper.ERROR, e.getMessage());
         }
+    }
+
+    @GetMapping("/LimitOrder")
+    public ResponseWrapper getLimitOrder(@RequestParam Integer brokerId){
+        List<Order> orders = orderService.getAll(Order.LIMIT_ORDER, brokerId);
+        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, orders);
     }
 
     @PostMapping("/StopOrder")
@@ -78,6 +90,12 @@ public class OrderController {
         }
     }
 
+    @GetMapping("/StopOrder")
+    public ResponseWrapper getStopOrder(@RequestParam Integer brokerId){
+        List<Order> orders = orderService.getAll(Order.STOP_ORDER, brokerId);
+        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, orders);
+    }
+
     @PostMapping("/CancelOrder")
     public ResponseWrapper createCancelOrder(
             @RequestBody Order cancelOrder,
@@ -89,5 +107,11 @@ public class OrderController {
         catch(Exception e){
             return ResponseWrapperFactory.create(ResponseWrapper.ERROR, e.getMessage());
         }
+    }
+
+    @GetMapping("/CancelOrder")
+    public ResponseWrapper getCancelOrder(@RequestParam Integer brokerId){
+        List<Order> orders = orderService.getAll(Order.MARKET_ORDER, brokerId);
+        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, orders);
     }
 }

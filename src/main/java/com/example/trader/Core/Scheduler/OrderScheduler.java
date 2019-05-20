@@ -1,6 +1,6 @@
 package com.example.trader.Core.Scheduler;
 
-import com.example.trader.Dao.DynamicDao;
+import com.example.trader.Dao.Repo.DynamicDao;
 import com.example.trader.Domain.Entity.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
