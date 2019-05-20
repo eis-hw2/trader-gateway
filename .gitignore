@@ -1,7 +1,9 @@
-.DS_Store
 HELP.md
 /target/
 !.mvn/wrapper/maven-wrapper.jar
+
+### MACOS ###
+.DS_Store
 
 ### STS ###
 .apt_generated
