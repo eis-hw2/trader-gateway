@@ -1,0 +1,34 @@
+pipeline:
+  build:
+    image: registry.cn-hangzhou.aliyuncs.com/acs/maven
+    commands:
+      - mvn clean package -DskipTests
+    volumes:
+      - /root/maven/repository:/root/.m2/repository
+      - /root/maven/settings.xml:/usr/share/maven/conf/settings.xml
+
+  publish:
+    image: docker
+    secrets: [docker_username,docker_password]
+    commands:
+        - docker login --username=$DOCKER_USERNAME --password=$DOCKER_PASSWORD registry-vpc.cn-shenzhen.aliyuncs.com/pipipan/broker-gateway
+        - docker build -t trader-gateway:latest -f Dockerfile .
+        - docker push trader-gateway:latest
+    volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+    when:
+        branch: master
+        status: success
+
+  deploy:
+    image: appleboy/drone-ssh
+    host: 47.106.8.44
+    secrets: [ssh_username, ssh_password]
+    port: 22
+    script:
+      script:
+        - echo "[0/2] Image Pulling..."
+        - docker pull trader-gateway:latest
+        - echo "[1/2] Image Running..."
+        - docker run -p 8080:8080 -d trader-gateway:latest
+        - echo "[2/2] Success."
