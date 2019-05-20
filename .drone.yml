@@ -23,9 +23,8 @@ pipeline:
     secrets: [ssh_username, ssh_password]
     port: 22
     script:
-      script:
-        - echo "[0/2] Image Pulling..."
-        - docker pull trader-gateway:latest
-        - echo "[1/2] Image Running..."
-        - docker run -p 8080:8080 -d zzbslayer/trader-gateway:latest
-        - echo "[2/2] Success."
+      - echo "[0/2] Image Pulling..."
+      - docker pull zzbslayer/trader-gateway:latest
+      - echo "[1/2] Image Running..."
+      - docker run -p 8080:8080 -d zzbslayer/trader-gateway:latest
+      - echo "[2/2] Success."
