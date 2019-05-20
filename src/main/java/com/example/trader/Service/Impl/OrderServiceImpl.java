@@ -23,30 +23,31 @@ public class OrderServiceImpl implements OrderService{
     private ProcessorFactory processorFactory;
     @Autowired
     private SenderFactory senderFactory;
-    @Autowired
-    private DaoFactory daoFactory;
-    @Autowired
-    private BrokerService brokerService;
 
     @Override
-    public List<Order> createWithStrategy(Order order, String processStrategy, String sendStrategy, Integer brokerId, String type) throws Exception{
+    public List<Order> createWithStrategy(Order order, String processStrategy, String sendStrategy, Integer brokerId){
         Processor processor = processorFactory.create(processStrategy);
         List<Order> orders = processor.process(order);
 
-        Sender sender = senderFactory.create(sendStrategy, brokerId, type);
-        ResponseWrapper responseWrapper = sender.send(orders);
+        List<Broker> brokers = senderFactory.getBroker(sendStrategy, brokerId);
+        Sender sender = senderFactory.create(sendStrategy);
+        ResponseWrapper responseWrapper = sender.send(brokers, orders);
 
+        /*
         if (responseWrapper.getStatus().equals(ResponseWrapper.ERROR))
             throw new Exception(JSON.toJSONString(responseWrapper.getBody()));
+            */
         return orders;
     }
 
     @Override
-    public Order create(Order order, Integer brokerId, String type) throws Exception{
-        Sender sender = senderFactory.create(SenderFactory.INSTANT, brokerId, type);
+    public Order create(Order order, Integer brokerId){
+        Sender sender = senderFactory.create(SenderFactory.INSTANT);
         List<Order> orders = new ArrayList<>();
         orders.add(order);
-        ResponseWrapper responseWrapper = sender.send(orders);
+
+        List<Broker> brokers = senderFactory.getBroker(SenderFactory.INSTANT, brokerId);
+        ResponseWrapper responseWrapper = sender.send(brokers, orders);
         return order;
     }
 }

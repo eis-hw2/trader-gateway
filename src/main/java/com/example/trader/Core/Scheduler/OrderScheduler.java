@@ -1,6 +1,6 @@
 package com.example.trader.Core.Scheduler;
 
-import com.example.trader.Dao.Dao;
+import com.example.trader.Dao.DynamicDao;
 import com.example.trader.Domain.Entity.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -32,7 +32,7 @@ public class OrderScheduler {
     }
 
     // TODO
-    public int addSplitOrder(List<Order> orders, Dao orderDao){
+    public int addSplitOrder(List<Order> orders, DynamicDao orderDao){
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_MONTH, 1);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -55,7 +55,7 @@ public class OrderScheduler {
         return id;
     }
 
-    public int addSplitOrder(Map<Order, Dao> orders){
+    public int addSplitOrder(Map<Order, DynamicDao> orders){
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_MONTH, 1);
         calendar.set(Calendar.HOUR_OF_DAY, 0);

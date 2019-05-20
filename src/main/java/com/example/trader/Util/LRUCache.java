@@ -42,24 +42,28 @@ public class LRUCache<K, V> {
         }
     }
 
-    public synchronized V get(K key){
+    public V get(K key){
+        //
         Node<K, V> node = this.map.get(key);
         if (node == null)
             return null;
         if (node == head.next)
             return node.value;
 
-        Node<K, V> next = node.next;
-        Node<K, V> previous = node.previous;
-        next.previous = previous;
-        previous.next = next;
+        synchronized(this){
+            Node<K, V> next = node.next;
+            Node<K, V> previous = node.previous;
+            next.previous = previous;
+            previous.next = next;
 
-        Node<K, V> originalMostRecent = head.next;
-        node.previous = head;
-        node.next = originalMostRecent;
-        head.next = node;
-        originalMostRecent.previous = node;
-        return node.value;
+            Node<K, V> originalMostRecent = head.next;
+            node.previous = head;
+            node.next = originalMostRecent;
+            head.next = node;
+            originalMostRecent.previous = node;
+            return node.value;
+        }
+
     }
 
     public synchronized void put(K key, V value){

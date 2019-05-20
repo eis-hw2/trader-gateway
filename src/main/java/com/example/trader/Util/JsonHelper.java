@@ -1,4 +1,4 @@
-package com.example.trader.Util.Network;
+package com.example.trader.Util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;

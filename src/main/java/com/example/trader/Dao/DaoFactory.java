@@ -12,20 +12,20 @@ public class DaoFactory {
     private ApplicationContext applicationContext;
 
     @Autowired
-    private LRUCache<String, Dao> daoCache;
+    private LRUCache<String, DynamicDao> daoCache;
 
     @Bean
-    public LRUCache<String, Dao> daoCache(){
+    public LRUCache<String, DynamicDao> daoCache(){
         return new LRUCache<>(5);
     }
 
-    public Dao create(String broker, String type){
-        Dao dao = daoCache.get(broker + type);
+    public DynamicDao create(String broker, String type){
+        DynamicDao dao = daoCache.get(broker + type);
         if (dao != null) {
             return dao;
         }
         else{
-            dao = (Dao)applicationContext.getBean(type + "Dao");
+            dao = (DynamicDao)applicationContext.getBean(type + "DynamicDao");
             dao.setSource(broker);
             daoCache.put(broker + type, dao);
             return dao;

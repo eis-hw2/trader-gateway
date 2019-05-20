@@ -8,6 +8,9 @@ public class Broker {
     public static String DEAD = "DEAD";
     public static String ALIVE = "ALIVE";
 
+    private static String gatewayPort = "31000";
+    private static String webSocketPort = "whatever";
+
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
@@ -20,6 +23,16 @@ public class Broker {
     public Broker(String url){
         this.url = url;
         this.status = NEW;
+    }
+
+    @Transient
+    public String getGateway(){
+        return url + ":" + gatewayPort;
+    }
+
+    @Transient
+    public String getWebSocket(){
+        return url + ":" + webSocketPort;
     }
 
     @Basic

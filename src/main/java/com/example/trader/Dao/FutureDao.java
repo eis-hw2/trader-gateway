@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Scope("prototype")
-public class FutureDao extends Dao<String ,Future>{
+public class FutureDao extends DynamicDao<String ,Future> {
     @Override
     public Future create(Future order) {
         return null;

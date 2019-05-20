@@ -1,5 +1,6 @@
 package com.example.trader.Controller;
 
+import com.alibaba.fastjson.JSON;
 import com.example.trader.Core.Processor.ProcessorFactory;
 import com.example.trader.Core.Sender.SenderFactory;
 import com.example.trader.Domain.Factory.ResponseWrapperFactory;
@@ -23,15 +24,18 @@ public class OrderController {
             @RequestBody Order order,
             @RequestParam(defaultValue = ProcessorFactory.NONE) String processStrategy,
             @RequestParam(defaultValue = SenderFactory.INSTANT) String sendStrategy,
-            @RequestParam Integer brokerId,
-            @RequestParam String type) {
+            @RequestParam Integer brokerId) {
+        System.out.println(JSON.toJSONString(order));
+        List<Order> orders = orderService.createWithStrategy(order, processStrategy, sendStrategy, brokerId);
+        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, orders);
+        /*
         try{
-            List<Order> orders = orderService.createWithStrategy(order, processStrategy, sendStrategy, brokerId, type);
+            List<Order> orders = orderService.createWithStrategy(order, processStrategy, sendStrategy, brokerId);
             return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, orders);
         }
         catch(Exception e){
             return ResponseWrapperFactory.create(ResponseWrapper.ERROR, e.getMessage());
-        }
+        }*/
 
     }
 
@@ -40,7 +44,7 @@ public class OrderController {
             @RequestBody Order marketOrder,
             @RequestParam Integer brokerId){
         try{
-            Order order = orderService.create(marketOrder, brokerId, Order.MARKET_ORDER);
+            Order order = orderService.create(marketOrder, brokerId);
             return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
         }
         catch(Exception e){
@@ -53,7 +57,7 @@ public class OrderController {
             @RequestBody Order limitOrder,
             @RequestParam Integer brokerId){
         try{
-            Order order = orderService.create(limitOrder, brokerId, Order.LIMIT_ORDER);
+            Order order = orderService.create(limitOrder, brokerId);
             return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
         }
         catch(Exception e){
@@ -66,7 +70,7 @@ public class OrderController {
             @RequestBody Order stopOrder,
             @RequestParam Integer brokerId){
         try{
-            Order order = orderService.create(stopOrder, brokerId, Order.STOP_ORDER);
+            Order order = orderService.create(stopOrder, brokerId);
             return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
         }
         catch(Exception e){
@@ -79,7 +83,7 @@ public class OrderController {
             @RequestBody Order cancelOrder,
             @RequestParam Integer brokerId){
         try{
-            Order order = orderService.create(cancelOrder, brokerId, Order.CANCEL_ORDER);
+            Order order = orderService.create(cancelOrder, brokerId);
             return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
         }
         catch(Exception e){

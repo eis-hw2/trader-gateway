@@ -43,8 +43,9 @@ public class BrokerServiceImpl implements BrokerService {
     @Override
     public Broker getBrokerById(Integer id) {
         BrokerSocketContainer bsc = brokerSocketContainers.get(id);
-        if (bsc == null)
+        if (bsc == null) {
             return brokerDao.findById(id).get();
+        }
         else
             return bsc.getBroker();
     }

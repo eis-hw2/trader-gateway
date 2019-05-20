@@ -2,7 +2,7 @@ package com.example.trader.Dao;
 
 import com.example.trader.Domain.Entity.Order;
 
-public abstract class Dao<K, V> {
+public abstract class DynamicDao<K, V> {
     private String source;
     public String getSource() {
         return source;
