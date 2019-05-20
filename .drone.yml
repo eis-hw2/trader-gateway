@@ -3,9 +3,6 @@ pipeline:
     image: registry.cn-hangzhou.aliyuncs.com/acs/maven
     commands:
       - mvn clean package -DskipTests
-    volumes:
-      - /root/maven/repository:/root/.m2/repository
-      - /root/maven/settings.xml:/usr/share/maven/conf/settings.xml
 
   publish:
     image: docker
