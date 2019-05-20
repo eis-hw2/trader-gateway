@@ -1,7 +1,6 @@
-package com.example.trader.Dao;
+package com.example.trader.Dao.Repo;
 
 import com.example.trader.Domain.Entity.Broker;
-import com.example.trader.Domain.Entity.Order;
 
 public abstract class DynamicDao<K, V> {
     private Broker broker;
@@ -14,5 +13,4 @@ public abstract class DynamicDao<K, V> {
     }
 
     public abstract V create(V  order);
-    public abstract V getById(K  id);
 }

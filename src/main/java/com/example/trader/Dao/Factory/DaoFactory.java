@@ -1,5 +1,6 @@
-package com.example.trader.Dao;
+package com.example.trader.Dao.Factory;
 
+import com.example.trader.Dao.Repo.DynamicDao;
 import com.example.trader.Domain.Entity.Broker;
 import com.example.trader.Util.LRUCache;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class DaoFactory {
             return dao;
         }
         else{
-            dao = (DynamicDao)applicationContext.getBean(type + "DynamicDao");
+            dao = (DynamicDao)applicationContext.getBean(type + "Dao");
             dao.setBroker(broker);
             daoCache.put(key, dao);
             return dao;

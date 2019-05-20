@@ -1,13 +1,16 @@
-package com.example.trader.Dao;
+package com.example.trader.Dao.Repo;
 
 
 import com.example.trader.Domain.Entity.OrderBlotter;
 import com.example.trader.Util.DateUtil;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
-@Repository
+@Component("OrderBlotterDao")
+@Scope("prototype")
 public class OrderBlotterDao {
 
     public List<OrderBlotter> getByFutureIdAndByDate(String futureId, String date){

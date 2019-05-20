@@ -2,8 +2,8 @@ package com.example.trader.Core.Sender.Strategy.Split;
 
 import com.example.trader.Core.Scheduler.OrderScheduler;
 import com.example.trader.Core.Sender.Strategy.SplitSender;
-import com.example.trader.Dao.DynamicDao;
-import com.example.trader.Dao.DaoFactory;
+import com.example.trader.Dao.Repo.DynamicDao;
+import com.example.trader.Dao.Factory.DaoFactory;
 import com.example.trader.Domain.Entity.Broker;
 import com.example.trader.Domain.Entity.Order;
 import com.example.trader.Domain.Wrapper.ResponseWrapper;

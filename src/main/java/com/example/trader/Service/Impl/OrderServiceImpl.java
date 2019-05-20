@@ -1,7 +1,8 @@
 package com.example.trader.Service.Impl;
 
-import com.alibaba.fastjson.JSON;
-import com.example.trader.Dao.*;
+
+import com.example.trader.Dao.Factory.DaoFactory;
+import com.example.trader.Dao.Repo.AbstractOrderDao;
 import com.example.trader.Domain.Entity.Broker;
 import com.example.trader.Domain.Entity.Order;
 import com.example.trader.Service.BrokerService;
@@ -23,6 +24,10 @@ public class OrderServiceImpl implements OrderService{
     private ProcessorFactory processorFactory;
     @Autowired
     private SenderFactory senderFactory;
+    @Autowired
+    private DaoFactory daoFactory;
+    @Autowired
+    private BrokerService brokerService;
 
     @Override
     public List<Order> createWithStrategy(Order order, String processStrategy, String sendStrategy, Integer brokerId){
@@ -49,5 +54,12 @@ public class OrderServiceImpl implements OrderService{
         List<Broker> brokers = senderFactory.getBroker(SenderFactory.INSTANT, brokerId);
         ResponseWrapper responseWrapper = sender.send(brokers, orders);
         return order;
+    }
+
+    @Override
+    public List<Order> getAll(String type, Integer brokerId) {
+        Broker broker = brokerService.getBrokerById(brokerId);
+        AbstractOrderDao dao = (AbstractOrderDao)daoFactory.create(broker, type);
+        return dao.getAll();
     }
 }
