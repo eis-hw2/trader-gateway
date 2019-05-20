@@ -9,8 +9,8 @@ pipeline:
     secrets: [docker_username,docker_password]
     commands:
         - docker login --username=$DOCKER_USERNAME --password=$DOCKER_PASSWORD
-        - docker build -t trader-gateway:latest -f Dockerfile .
-        - docker push trader-gateway:latest
+        - docker build -t zzbslayer/trader-gateway:latest -f Dockerfile .
+        - docker push zzbslayer/trader-gateway:latest
     volumes:
         - /var/run/docker.sock:/var/run/docker.sock
     when:
@@ -27,5 +27,5 @@ pipeline:
         - echo "[0/2] Image Pulling..."
         - docker pull trader-gateway:latest
         - echo "[1/2] Image Running..."
-        - docker run -p 8080:8080 -d trader-gateway:latest
+        - docker run -p 8080:8080 -d zzbslayer/trader-gateway:latest
         - echo "[2/2] Success."
