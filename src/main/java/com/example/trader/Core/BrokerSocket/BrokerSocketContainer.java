@@ -12,17 +12,20 @@ public class BrokerSocketContainer {
 
     // TODO
     public BrokerSocketContainer(Broker broker){
+        System.out.println("[BrokerSocketContainer.Constructor] " + broker.getWebSocket());
         this.broker = broker;
-        /*
+
         try {
-            client = new BrokerSocketClient(new URI("ws://" + broker.getWebSocket()));
+            client = new BrokerSocketClient(new URI(broker.getWebSocket() + "/websocket/1"));
         }
         catch(URISyntaxException e){
             System.out.println("[BrokerSocketContainer] " + " error");
             e.printStackTrace();
         }
+    }
+
+    public void init(){
         client.init();
-        */
     }
 
     public void send(byte[] bytes){

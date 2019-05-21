@@ -20,9 +20,11 @@ public class BrokerServiceImpl implements BrokerService {
 
     @PostConstruct
     public void init(){
+        System.out.println("[BrokerService.init] init");
         List<Broker> brokers = brokerDao.findAll();
         brokers.stream().forEach( e -> {
             BrokerSocketContainer brokerSocket = new BrokerSocketContainer(e);
+            brokerSocket.init();
             brokerSocketContainers.put(e.getId(), brokerSocket);
         });
     }
@@ -31,6 +33,7 @@ public class BrokerServiceImpl implements BrokerService {
     public Broker addBroker(Broker broker){
         Broker b = brokerDao.saveAndFlush(broker);
         BrokerSocketContainer brokerSocket = new BrokerSocketContainer(b);
+        //brokerSocket.init();
         brokerSocketContainers.put(b.getId(), brokerSocket);
         return b;
     }

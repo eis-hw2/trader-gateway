@@ -8,9 +8,12 @@ public class Broker {
     public static String DEAD = "DEAD";
     public static String ALIVE = "ALIVE";
 
-    private static String writePort = "31000";
-    private static String readPort = "31001";
-    private static String webSocketPort = "31002";
+    private static final String writePort = "31000";
+    private static final String readPort = "31001";
+    private static final String webSocketPort = "31002";
+
+    private static final String HTTP_PROTOCOL = "http://";
+    private static final String WS_PROTOCOL = "ws://";
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -28,17 +31,17 @@ public class Broker {
 
     @Transient
     public String getWriteApi(){
-        return url + ":" + writePort;
+        return HTTP_PROTOCOL + url + ":" + writePort;
     }
 
     @Transient
     public String getReadApi(){
-        return url + ":" + readPort;
+        return HTTP_PROTOCOL + url + ":" + readPort;
     }
 
     @Transient
     public String getWebSocket(){
-        return url + ":" + webSocketPort;
+        return WS_PROTOCOL + url + ":" + webSocketPort;
     }
 
     @Basic

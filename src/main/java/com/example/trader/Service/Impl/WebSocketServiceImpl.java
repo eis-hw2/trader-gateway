@@ -22,6 +22,10 @@ public class WebSocketServiceImpl implements WebSocketService {
     private static CopyOnWriteArraySet<SessionWrapper> sessionWrappers = new CopyOnWriteArraySet<>();
     private static Integer onlineCount = 0;
 
+    public static CopyOnWriteArraySet<SessionWrapper> getSessionWrappers(){
+        return sessionWrappers;
+    }
+
     @Override
     public void onOpen(Session session, @PathParam("sid") String sid) {
         if (sessionWrappers.stream().anyMatch(e -> e.getSid().equals(sid))){
@@ -87,7 +91,12 @@ public class WebSocketServiceImpl implements WebSocketService {
 
     @Override
     public void broadcast(String message) {
+        staticBroadcast(message);
+    }
+
+    public static void staticBroadcast(String message){
         log.info("[WebSocket] Send Message to All");
+        log.info(message);
         for (SessionWrapper sessionWrapper : sessionWrappers) {
             try {
                 sendMessageToSessionWrapper(sessionWrapper, message);
@@ -102,11 +111,11 @@ public class WebSocketServiceImpl implements WebSocketService {
         return onlineCount;
     }
 
-    private void sendMessageToSessionWrapper(SessionWrapper sessionWrapper, String message) throws IOException {
+    private static void sendMessageToSessionWrapper(SessionWrapper sessionWrapper, String message) throws IOException {
         sendMessageToSession(sessionWrapper.getSession(), message);
     }
 
-    private void sendMessageToSession(Session session, String message) throws IOException {
+    private static void sendMessageToSession(Session session, String message) throws IOException {
         session.getBasicRemote().sendText(message);
     }
 
