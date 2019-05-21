@@ -7,6 +7,7 @@ import com.example.trader.Service.BrokerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -16,6 +17,16 @@ public class BrokerServiceImpl implements BrokerService {
 
     @Autowired
     private BrokerDao brokerDao;
+
+    @PostConstruct
+    public void init(){
+        List<Broker> brokers = brokerDao.findAll();
+        brokers.stream().forEach( e -> {
+            BrokerSocketContainer brokerSocket = new BrokerSocketContainer(e);
+            brokerSocketContainers.put(e.getId(), brokerSocket);
+        });
+    }
+
     @Override
     public Broker addBroker(Broker broker){
         Broker b = brokerDao.saveAndFlush(broker);

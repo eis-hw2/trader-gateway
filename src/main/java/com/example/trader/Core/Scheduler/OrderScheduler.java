@@ -1,7 +1,9 @@
 package com.example.trader.Core.Scheduler;
 
+import com.alibaba.fastjson.JSON;
 import com.example.trader.Dao.Repo.DynamicDao;
 import com.example.trader.Domain.Entity.Order;
+import com.example.trader.Util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.Trigger;
@@ -43,6 +45,7 @@ public class OrderScheduler {
         List<ScheduledFuture> futureList = new ArrayList<>();
 
         orders.stream().forEach( order -> {
+            System.out.println("[Future]: " + calendar.getTime() + " " + JSON.toJSONString(order));
             ScheduledFuture future = threadPoolTaskScheduler.schedule(() -> {
                 orderDao.create(order);
             }, calendar.getTime());
