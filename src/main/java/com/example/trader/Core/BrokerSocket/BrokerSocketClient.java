@@ -1,13 +1,16 @@
 package com.example.trader.Core.BrokerSocket;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.example.trader.Domain.Entity.OrderBook;
-import com.example.trader.Util.JsonHelper;
+import com.example.trader.Domain.Wrapper.SessionWrapper;
+import com.example.trader.Service.Impl.WebSocketServiceImpl;
 import org.java_websocket.WebSocket;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 public class BrokerSocketClient extends WebSocketClient {
 
@@ -31,6 +34,7 @@ public class BrokerSocketClient extends WebSocketClient {
 
     @Override
     public void onMessage(String msg) {
+        /*
         JSONObject jsonObject = JSONObject.parseObject(msg);
         JSONObject type = jsonObject.getJSONObject("type");
         String typeString = JsonHelper.jsonObjectToObject(type, String.class);
@@ -40,8 +44,12 @@ public class BrokerSocketClient extends WebSocketClient {
                 OrderBook ob = JsonHelper.jsonObjectToObject(orderbook, OrderBook.class);
                 orderBook = ob;
         }
+        */
+        System.out.println("[BrokerSocket.onMessage] " + this.uri.toString());
+        OrderBook orderBook = JSON.parseObject(msg, OrderBook.class);
+        System.out.println(JSON.toJSONString(orderBook));
 
-        System.out.println("[BrokerSocket.onMessage] " + this.uri.toString() + msg);
+        WebSocketServiceImpl.staticBroadcast(msg);
     }
 
     @Override
