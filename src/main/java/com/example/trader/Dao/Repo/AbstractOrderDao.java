@@ -10,27 +10,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class AbstractOrderDao extends DynamicDao<String, Order>{
-    public abstract String getType();
-    private RestTemplate restTemplate = new RestTemplate();
 
-    public RestTemplate getRestTemplate() {
-        return restTemplate;
-    }
-
-    @Override
-    public Order create(Order  order) {
-        String url = getBroker().getWriteApi() + getType();
-        ResponseEntity<ResponseWrapper> responseEntity = getRestTemplate().postForEntity(url, order, ResponseWrapper.class);
-
-        ResponseWrapper rw = responseEntity.getBody();
-
-        System.out.println(JSON.toJSONString(rw));
-        return null;
-    }
-
-    public List<Order> getAll(){
+    public List<Order> findAll(){
         String url = getBroker().getReadApi() + getType();
-        ResponseEntity<Order[]> responseEntity = restTemplate.getForEntity(url, Order[].class);
+        ResponseEntity<Order[]> responseEntity = getRestTemplate().getForEntity(url, Order[].class);
         List<Order> res = Arrays.asList(responseEntity.getBody());
         System.out.println(JSON.toJSONString(res));
         return res;

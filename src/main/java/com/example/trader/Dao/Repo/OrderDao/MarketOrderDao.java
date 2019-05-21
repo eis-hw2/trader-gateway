@@ -12,8 +12,6 @@ import org.springframework.web.client.RestTemplate;
 @Scope("prototype")
 public class MarketOrderDao extends AbstractOrderDao {
 
-    private RestTemplate restTemplate = new RestTemplate();
-
     @Override
     public String getType() {
         return "/" + Order.MARKET_ORDER;

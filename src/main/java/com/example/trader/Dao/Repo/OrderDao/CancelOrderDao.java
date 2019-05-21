@@ -9,9 +9,6 @@ import org.springframework.web.client.RestTemplate;
 @Component("CancelOrderDao")
 @Scope("prototype")
 public class CancelOrderDao extends AbstractOrderDao {
-
-    private RestTemplate restTemplate = new RestTemplate();
-
     @Override
     public String getType() {
         return "/" + Order.CANCEL_ORDER;

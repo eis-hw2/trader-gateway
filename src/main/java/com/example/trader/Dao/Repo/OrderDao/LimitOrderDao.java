@@ -10,9 +10,6 @@ import org.springframework.web.client.RestTemplate;
 @Scope("prototype")
 public class LimitOrderDao extends AbstractOrderDao {
 
-    private RestTemplate restTemplate = new RestTemplate();
-
-
     @Override
     public String getType() {
         return "/" + Order.LIMIT_ORDER;
