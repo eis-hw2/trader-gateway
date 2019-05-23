@@ -1,5 +1,8 @@
 package com.example.trader.Service.Impl;
 
+import com.alibaba.fastjson.JSON;
+import com.example.trader.Domain.Entity.Broker;
+import com.example.trader.Service.BrokerService;
 import com.example.trader.Service.WebSocketService;
 import com.example.trader.Domain.Factory.ResponseWrapperFactory;
 import com.example.trader.Domain.Wrapper.ResponseWrapper;
@@ -7,6 +10,7 @@ import com.example.trader.Domain.Wrapper.SessionWrapper;
 import com.example.trader.Domain.Factory.SessionWrapperFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.websocket.*;
@@ -22,14 +26,25 @@ public class WebSocketServiceImpl implements WebSocketService {
     private static CopyOnWriteArraySet<SessionWrapper> sessionWrappers = new CopyOnWriteArraySet<>();
     private static Integer onlineCount = 0;
 
+    @Autowired
+    BrokerService brokerService;
+
     public static CopyOnWriteArraySet<SessionWrapper> getSessionWrappers(){
         return sessionWrappers;
     }
 
     @Override
-    public void onOpen(Session session, @PathParam("sid") String sid) {
-        if (sessionWrappers.stream().anyMatch(e -> e.getSid().equals(sid))){
+    public void onOpen(Session session, @PathParam("sid") String sid, @PathParam("bid") Integer bid) {
+        Broker broker = brokerService.getBrokerById(bid);
+        String errMessage = null;
+        if (sessionWrappers.stream().anyMatch(e -> e.getSid().equals(sid)))
+            errMessage = "sid duplicated";
+        else if (broker == null)
+            errMessage = "broker not found";
+
+        if (errMessage!= null){
             try {
+                sendMessageToSession(session, errMessage);
                 session.close();
             }
             catch(IOException e){
@@ -37,21 +52,20 @@ public class WebSocketServiceImpl implements WebSocketService {
             }
             return;
         }
-
-        SessionWrapper sessionWrapper = SessionWrapperFactory.create(session, sid);
+        SessionWrapper sessionWrapper = SessionWrapperFactory.create(session, sid, broker);
         sessionWrappers.add(sessionWrapper);
         addOnlineCount();
         log.info("[WebSocket.onOpen] New Connection:" + sid + ", Number of Connection:" + getOnlineCount());
+
         try {
-            String s = ResponseWrapperFactory.createResponseString(ResponseWrapper.SUCCESS, "connection success");
-            sendMessageToSessionWrapper(sessionWrapper, s);
+            sendMessageToSession(session, JSON.toJSONString(brokerService.getOrderBookByBrokerId(bid)));
         } catch (IOException e) {
             log.error("[WebSocket.onOpen] IO Error");
         }
     }
 
     @Override
-    public void onClose(Session session, String sid) {
+    public void onClose(Session session, String sid, @PathParam("bid") Integer bid) {
         boolean isRemoved = sessionWrappers.removeIf(e -> e.getSid().equals(sid));
         if (isRemoved) {
             subOnlineCount();
@@ -97,13 +111,24 @@ public class WebSocketServiceImpl implements WebSocketService {
     public static void staticBroadcast(String message){
         log.info("[WebSocket] Send Message to All");
         log.info(message);
-        for (SessionWrapper sessionWrapper : sessionWrappers) {
-            try {
-                sendMessageToSessionWrapper(sessionWrapper, message);
-            } catch (IOException e) {
-                continue;
-            }
-        }
+        sessionWrappers.stream()
+                .forEach(sessionWrapper -> {
+                    try {
+                        sendMessageToSessionWrapper(sessionWrapper, message);
+                    } catch (IOException e) { }
+                });
+    }
+
+    public static void staticBroadcastByBrokerId(String message, Integer bid){
+        log.info("[WebSocket] Send Message By BrokerId:" + bid);
+        log.info(message);
+        sessionWrappers.stream()
+                .filter(e -> e.getBroker().getId().equals(bid))
+                .forEach(sessionWrapper -> {
+                    try {
+                        sendMessageToSessionWrapper(sessionWrapper, message);
+                    } catch (IOException e) { }
+                });
     }
 
     @Override

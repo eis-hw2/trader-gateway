@@ -15,6 +15,15 @@ public class Order {
     private Type targetType;
     private String targetId;
     private String type;
+    String traderName;
+
+    public String getTraderName() {
+        return traderName;
+    }
+
+    public void setTraderName(String traderName) {
+        this.traderName = traderName;
+    }
 
     public Order(Order o){
         id = o.getId();

@@ -2,6 +2,7 @@ package com.example.trader.Core.BrokerSocket;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.example.trader.Domain.Entity.Broker;
 import com.example.trader.Domain.Entity.OrderBook;
 import com.example.trader.Domain.Wrapper.SessionWrapper;
 import com.example.trader.Service.Impl.WebSocketServiceImpl;
@@ -10,6 +11,7 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 public class BrokerSocketClient extends WebSocketClient {
@@ -22,9 +24,12 @@ public class BrokerSocketClient extends WebSocketClient {
     private int status = INIT;
 
     private OrderBook orderBook;
+    private Integer brokerId;
 
-    public BrokerSocketClient(URI serverUri) {
-        super(serverUri);
+    public BrokerSocketClient(Broker broker) throws URISyntaxException{
+
+        super(new URI(broker.getWebSocket() + "/websocket/1"));
+        brokerId = broker.getId();
     }
 
     @Override
@@ -46,10 +51,12 @@ public class BrokerSocketClient extends WebSocketClient {
         }
         */
         System.out.println("[BrokerSocket.onMessage] " + this.uri.toString());
-        OrderBook orderBook = JSON.parseObject(msg, OrderBook.class);
+
+        orderBook = JSON.parseObject(msg, OrderBook.class);
+
         System.out.println(JSON.toJSONString(orderBook));
 
-        WebSocketServiceImpl.staticBroadcast(msg);
+        WebSocketServiceImpl.staticBroadcastByBrokerId(msg, brokerId);
     }
 
     @Override
