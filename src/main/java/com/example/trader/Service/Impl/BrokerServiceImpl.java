@@ -3,6 +3,7 @@ package com.example.trader.Service.Impl;
 import com.example.trader.Core.BrokerSocket.BrokerSocketContainer;
 import com.example.trader.Dao.Repo.BrokerDao;
 import com.example.trader.Domain.Entity.Broker;
+import com.example.trader.Domain.Entity.OrderBook;
 import com.example.trader.Service.BrokerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,14 @@ public class BrokerServiceImpl implements BrokerService {
             brokerSocket.init();
             brokerSocketContainers.put(e.getId(), brokerSocket);
         });
+    }
+
+    @Override
+    public OrderBook getOrderBookByBrokerId(Integer bid){
+        BrokerSocketContainer bsc = brokerSocketContainers.get(bid);
+        if (bsc == null)
+            return null;
+        return bsc.getOrderBook();
     }
 
     @Override
