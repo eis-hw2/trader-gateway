@@ -1,15 +1,18 @@
 package com.example.trader.Service;
 
 import com.example.trader.Domain.Entity.Broker;
+import com.example.trader.Domain.Entity.OrderBook;
 
 import java.util.List;
 
 public interface BrokerService {
-    public Broker addBroker(Broker broker);
+    Broker addBroker(Broker broker);
 
-    public boolean deleteBrokerById(Integer id);
+    boolean deleteBrokerById(Integer id);
 
-    public List<Broker> getBroker();
+    List<Broker> getBroker();
 
-    public Broker getBrokerById(Integer id);
+    Broker getBrokerById(Integer id);
+
+    OrderBook getOrderBookByBrokerId(Integer bid);
 }

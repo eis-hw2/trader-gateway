@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.socket.server.standard.SpringConfigurator;
 
 import javax.websocket.*;
@@ -14,7 +15,7 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
 
-@ServerEndpoint(value = "/websocket/{sid}")
+@ServerEndpoint(value = "/websocket/{sid}/{bid}")
 @Component
 public class WebSocketEndpoint{
 
@@ -27,13 +28,13 @@ public class WebSocketEndpoint{
 
 
     @OnOpen
-    public void onOpen(Session session, @PathParam("sid") String sid) {
-        webSocketService.onOpen(session, sid);
+    public void onOpen(Session session, @PathParam("sid") String sid, @PathParam("bid") Integer bid) {
+        webSocketService.onOpen(session, sid, bid);
     }
 
     @OnClose
-    public void onClose(Session session, @PathParam("sid") String sid) {
-        webSocketService.onClose(session, sid);
+    public void onClose(Session session, @PathParam("sid") String sid, @PathParam("bid") Integer bid) {
+        webSocketService.onClose(session, sid, bid);
     }
 
     @OnMessage

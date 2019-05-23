@@ -10,13 +10,12 @@ public class BrokerSocketContainer {
     private  BrokerSocketClient client;
     private Broker broker;
 
-    // TODO
     public BrokerSocketContainer(Broker broker){
         System.out.println("[BrokerSocketContainer.Constructor] " + broker.getWebSocket());
         this.broker = broker;
 
         try {
-            client = new BrokerSocketClient(new URI(broker.getWebSocket() + "/websocket/1"));
+            client = new BrokerSocketClient(broker);
         }
         catch(URISyntaxException e){
             System.out.println("[BrokerSocketContainer] " + " error");
@@ -47,6 +46,6 @@ public class BrokerSocketContainer {
     @Override
     protected void finalize() throws Throwable {
         if (client != null)
-            close();
+            client.close();
     }
 }

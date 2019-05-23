@@ -36,17 +36,24 @@ public class OrderScheduler {
     // TODO
     public int addSplitOrder(List<Order> orders, DynamicDao orderDao){
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        // after 5 min
+        //calendar.add(Calendar.MINUTE, 5);
+
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+
 
         List<ScheduledFuture> futureList = new ArrayList<>();
 
         orders.stream().forEach( order -> {
-            System.out.println("[Future]: " + calendar.getTime() + " " + JSON.toJSONString(order));
+            if (order.getCount() == 0)
+                return;
+            System.out.println("[Future.create]: " + calendar.getTime() + " " + JSON.toJSONString(order));
             ScheduledFuture future = threadPoolTaskScheduler.schedule(() -> {
+                System.out.println("[Future.execute]: " + calendar.getTime() + " " + JSON.toJSONString(order));
                 orderDao.create(order);
             }, calendar.getTime());
             futureList.add(future);
