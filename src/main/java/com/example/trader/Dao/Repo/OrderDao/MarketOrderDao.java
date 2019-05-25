@@ -14,7 +14,7 @@ public class MarketOrderDao extends AbstractOrderDao {
 
     @Override
     public String getType() {
-        return "/" + Order.MARKET_ORDER;
+        return "marketOrders";
     }
 
 }

@@ -17,7 +17,7 @@ public class VwapProcessor extends Processor {
 
     @Override
     public List<Order> process(Order order){
-        List<OrderBlotter> orderBlotters = getYesterdayOrderBlotter(order.getMarketDepthId());
+        List<OrderBlotter> orderBlotters = findYesterdayOrderBlotter(order.getMarketDepthId());
         double[] percents = preprocess(orderBlotters);
         List<Order> splitOrder = new ArrayList<>(); // 24 hour
 
@@ -37,8 +37,8 @@ public class VwapProcessor extends Processor {
         return splitOrder;
     }
 
-    private List<OrderBlotter> getYesterdayOrderBlotter(String futureId){
-        return orderBlotterDao.getByFutureIdYesterday(futureId);
+    private List<OrderBlotter> findYesterdayOrderBlotter(String futureId){
+        return orderBlotterDao.findByFutureIdYesterday(futureId);
     }
 
     private Order makeSplitOrder(Order origin, int count){

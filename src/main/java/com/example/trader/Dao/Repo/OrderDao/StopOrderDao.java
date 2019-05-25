@@ -13,7 +13,7 @@ public class StopOrderDao extends AbstractOrderDao {
 
     @Override
     public String getType() {
-        return "/" + Order.STOP_ORDER;
+        return "stopOrders";
     }
 
 }

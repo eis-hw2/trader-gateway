@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 public class CancelOrderDao extends AbstractOrderDao {
     @Override
     public String getType() {
-        return "/" + Order.CANCEL_ORDER;
+        return "cancelOrders";
     }
 
     public Order modify(String id, Order order) {

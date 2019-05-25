@@ -7,7 +7,6 @@ import com.example.trader.Domain.Factory.ResponseWrapperFactory;
 import com.example.trader.Domain.Entity.Order;
 import com.example.trader.Domain.Wrapper.ResponseWrapper;
 import com.example.trader.Service.OrderService;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,7 +53,7 @@ public class OrderController {
 
     @GetMapping("/MarketOrder")
     public ResponseWrapper getMarketOrder(@RequestParam Integer brokerId){
-        List<Order> orders = orderService.getAll(Order.MARKET_ORDER, brokerId);
+        List<Order> orders = orderService.findAll(Order.MARKET_ORDER, brokerId);
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, orders);
     }
 
@@ -73,7 +72,7 @@ public class OrderController {
 
     @GetMapping("/LimitOrder")
     public ResponseWrapper getLimitOrder(@RequestParam Integer brokerId){
-        List<Order> orders = orderService.getAll(Order.LIMIT_ORDER, brokerId);
+        List<Order> orders = orderService.findAll(Order.LIMIT_ORDER, brokerId);
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, orders);
     }
 
@@ -92,7 +91,7 @@ public class OrderController {
 
     @GetMapping("/StopOrder")
     public ResponseWrapper getStopOrder(@RequestParam Integer brokerId){
-        List<Order> orders = orderService.getAll(Order.STOP_ORDER, brokerId);
+        List<Order> orders = orderService.findAll(Order.STOP_ORDER, brokerId);
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, orders);
     }
 
@@ -111,7 +110,7 @@ public class OrderController {
 
     @GetMapping("/CancelOrder")
     public ResponseWrapper getCancelOrder(@RequestParam Integer brokerId){
-        List<Order> orders = orderService.getAll(Order.MARKET_ORDER, brokerId);
+        List<Order> orders = orderService.findAll(Order.CANCEL_ORDER, brokerId);
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, orders);
     }
 }
