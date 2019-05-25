@@ -1,5 +1,10 @@
 package com.example.trader.Domain.Entity;
 
+import com.example.trader.Domain.Entity.Util.Links;
+import com.example.trader.Domain.Entity.Util.Side;
+import com.example.trader.Domain.Entity.Util.Status;
+import com.example.trader.Domain.Entity.Util.Type;
+
 public class Order {
     public static final String MARKET_ORDER = "MarketOrder";
     public static final String LIMIT_ORDER = "LimitOrder";
@@ -15,7 +20,16 @@ public class Order {
     private Type targetType;
     private String targetId;
     private String type;
-    String traderName;
+    private String traderName;
+    private Links _links;
+
+    public Links get__links() {
+        return _links;
+    }
+
+    public void set__links(Links _links) {
+        this._links = _links;
+    }
 
     public String getTraderName() {
         return traderName;

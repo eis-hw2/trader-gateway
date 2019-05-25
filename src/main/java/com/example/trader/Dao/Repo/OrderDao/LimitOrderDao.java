@@ -12,7 +12,7 @@ public class LimitOrderDao extends AbstractOrderDao {
 
     @Override
     public String getType() {
-        return "/" + Order.LIMIT_ORDER;
+        return "limitOrders";
     }
 
 

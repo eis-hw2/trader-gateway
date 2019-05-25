@@ -31,7 +31,7 @@ public class BrokerServiceImpl implements BrokerService {
     }
 
     @Override
-    public OrderBook getOrderBookByBrokerId(Integer bid){
+    public OrderBook findOrderBookByBrokerId(Integer bid){
         BrokerSocketContainer bsc = brokerSocketContainers.get(bid);
         if (bsc == null)
             return null;
@@ -39,7 +39,7 @@ public class BrokerServiceImpl implements BrokerService {
     }
 
     @Override
-    public Broker addBroker(Broker broker){
+    public Broker create(Broker broker){
         Broker b = brokerDao.saveAndFlush(broker);
         BrokerSocketContainer brokerSocket = new BrokerSocketContainer(b);
         //brokerSocket.init();
@@ -48,7 +48,7 @@ public class BrokerServiceImpl implements BrokerService {
     }
 
     @Override
-    public boolean deleteBrokerById(Integer id){
+    public boolean deleteById(Integer id){
         brokerSocketContainers.get(id).close();
         brokerSocketContainers.remove(id);
         brokerDao.deleteById(id);
@@ -56,12 +56,12 @@ public class BrokerServiceImpl implements BrokerService {
     }
 
     @Override
-    public List<Broker> getBroker(){
+    public List<Broker> findAll(){
         return brokerDao.findAll();
     }
 
     @Override
-    public Broker getBrokerById(Integer id) {
+    public Broker findById(Integer id) {
         BrokerSocketContainer bsc = brokerSocketContainers.get(id);
         if (bsc == null) {
             return brokerDao.findById(id).get();

@@ -29,10 +29,10 @@ public class SenderFactory {
         switch (strategy){
             case SPLIT_ONE:
             case INSTANT:
-                brokers.add(brokerService.getBrokerById(brokerId));
+                brokers.add(brokerService.findById(brokerId));
                 return brokers;
             case SPLIT_DISTRIBUTE:
-                return brokerService.getBroker();
+                return brokerService.findAll();
             default:
                 return null;
         }

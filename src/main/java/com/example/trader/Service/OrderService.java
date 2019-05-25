@@ -10,5 +10,7 @@ public interface OrderService {
 
     Order create(Order order, Integer brokerId);
 
-    List<Order> getAll(String type, Integer brokerId);
+    List<Order> findAll(String type, Integer brokerId);
+
+    Order findById(String type, Integer brokerId, String id);
 }

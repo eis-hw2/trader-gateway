@@ -6,13 +6,13 @@ import com.example.trader.Domain.Entity.OrderBook;
 import java.util.List;
 
 public interface BrokerService {
-    Broker addBroker(Broker broker);
+    Broker create(Broker broker);
 
-    boolean deleteBrokerById(Integer id);
+    boolean deleteById(Integer id);
 
-    List<Broker> getBroker();
+    List<Broker> findAll();
 
-    Broker getBrokerById(Integer id);
+    Broker findById(Integer id);
 
-    OrderBook getOrderBookByBrokerId(Integer bid);
+    OrderBook findOrderBookByBrokerId(Integer bid);
 }
