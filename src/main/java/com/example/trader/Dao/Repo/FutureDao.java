@@ -1,6 +1,7 @@
 package com.example.trader.Dao.Repo;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.example.trader.Domain.Entity.Future;
 import com.example.trader.Domain.Wrapper.ResponseWrapper;
 import org.springframework.context.annotation.Scope;
@@ -16,15 +17,17 @@ public class FutureDao extends DynamicDao<String ,Future> {
 
     @Override
     public String getType() {
-        return "/Future";
+        return "futures";
     }
 
-    public List<Future> findAll(){
-        String url = getBroker().getReadApi() + getType();
-        ResponseEntity<Future[]> responseEntity = getRestTemplate().getForEntity(url, Future[].class);
-        List<Future> res = Arrays.asList(responseEntity.getBody());
-        System.out.println(JSON.toJSONString(res));
-        return res;
+    @Override
+    public Class<Future> getValueClass() {
+        return Future.class;
+    }
+
+    @Override
+    public Class<Future[]> getValueArrayClass() {
+        return Future[].class;
     }
 
 }

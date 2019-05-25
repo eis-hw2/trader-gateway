@@ -57,9 +57,16 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public List<Order> getAll(String type, Integer brokerId) {
-        Broker broker = brokerService.getBrokerById(brokerId);
+    public List<Order> findAll(String type, Integer brokerId) {
+        Broker broker = brokerService.findById(brokerId);
         AbstractOrderDao dao = (AbstractOrderDao)daoFactory.create(broker, type);
         return dao.findAll();
+    }
+
+    @Override
+    public Order findById(String type, Integer brokerId, String id) {
+        Broker broker = brokerService.findById(brokerId);
+        AbstractOrderDao dao = (AbstractOrderDao)daoFactory.create(broker, type);
+        return dao.findById(id);
     }
 }

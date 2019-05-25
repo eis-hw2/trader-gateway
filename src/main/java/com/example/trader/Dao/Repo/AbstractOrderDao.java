@@ -1,6 +1,7 @@
 package com.example.trader.Dao.Repo;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.example.trader.Domain.Entity.Order;
 import com.example.trader.Domain.Wrapper.ResponseWrapper;
 import org.springframework.http.ResponseEntity;
@@ -11,25 +12,24 @@ import java.util.List;
 
 public abstract class AbstractOrderDao extends DynamicDao<String, Order>{
 
-    public List<Order> findAll(){
-        String url = getBroker().getReadApi() + getType();
-        ResponseEntity<Order[]> responseEntity = getRestTemplate().getForEntity(url, Order[].class);
-        List<Order> res = Arrays.asList(responseEntity.getBody());
+    @Override
+    public Class<Order> getValueClass() {
+        return Order.class;
+    }
+
+    @Override
+    public Class<Order[]> getValueArrayClass() {
+        return Order[].class;
+    }
+
+    public List<Order> findByTraderName(String traderName){
+        String url = getBroker().getReadApi() + "/" + getType() + "/search/traderName?traderName=" + traderName;
+        ResponseEntity<JSONObject> responseEntity = getRestTemplate().getForEntity(url, JSONObject.class);
+        Order[] res = responseEntity.getBody()
+                .getJSONObject("_embedded")
+                .getJSONArray(getType())
+                .toJavaObject(getValueArrayClass());
         System.out.println(JSON.toJSONString(res));
-        return res;
-    }
-
-    public Order modify(String id, Order order) {
-        String url = getBroker().getWriteApi() + getType();
-        return null;
-    }
-
-    public void deleteById(String id) {
-        String url = getBroker().getWriteApi() + getType() + "/" + id;
-    }
-
-    public Order getById(String  id) {
-        String url = getBroker().getReadApi() + getType() + "/" + id;
-        return null;
+        return Arrays.asList(res);
     }
 }

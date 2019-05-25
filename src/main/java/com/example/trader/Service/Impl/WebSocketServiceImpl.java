@@ -35,7 +35,7 @@ public class WebSocketServiceImpl implements WebSocketService {
 
     @Override
     public void onOpen(Session session, @PathParam("sid") String sid, @PathParam("bid") Integer bid) {
-        Broker broker = brokerService.getBrokerById(bid);
+        Broker broker = brokerService.findById(bid);
         String errMessage = null;
         if (sessionWrappers.stream().anyMatch(e -> e.getSid().equals(sid)))
             errMessage = "sid duplicated";
@@ -58,7 +58,7 @@ public class WebSocketServiceImpl implements WebSocketService {
         log.info("[WebSocket.onOpen] New Connection:" + sid + ", Number of Connection:" + getOnlineCount());
 
         try {
-            sendMessageToSession(session, JSON.toJSONString(brokerService.getOrderBookByBrokerId(bid)));
+            sendMessageToSession(session, JSON.toJSONString(brokerService.findOrderBookByBrokerId(bid)));
         } catch (IOException e) {
             log.error("[WebSocket.onOpen] IO Error");
         }

@@ -9,6 +9,8 @@ import com.example.trader.Service.Impl.WebSocketServiceImpl;
 import org.java_websocket.WebSocket;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -21,6 +23,7 @@ public class BrokerSocketClient extends WebSocketClient {
     public final static short CONNECTED = 2;
     public final static short ERROR = 3;
 
+    private Logger logger = LoggerFactory.getLogger("BrokerSocketClient");
     private int status = INIT;
 
     private OrderBook orderBook;
@@ -34,7 +37,7 @@ public class BrokerSocketClient extends WebSocketClient {
 
     @Override
     public void onOpen(ServerHandshake serverHandshake) {
-        System.out.println("[BrokerSocket.onOpen] "+ this.uri.toString() + " Connection Success");
+        logger.info("[BrokerSocket.onOpen] "+ this.uri.toString() + " Connection Success");
     }
 
     @Override
@@ -50,11 +53,11 @@ public class BrokerSocketClient extends WebSocketClient {
                 orderBook = ob;
         }
         */
-        System.out.println("[BrokerSocket.onMessage] " + this.uri.toString());
+        logger.info("[BrokerSocket.onMessage] " + this.uri.toString());
 
         orderBook = JSON.parseObject(msg, OrderBook.class);
 
-        System.out.println(JSON.toJSONString(orderBook));
+        logger.info(JSON.toJSONString(orderBook));
 
         WebSocketServiceImpl.staticBroadcastByBrokerId(msg, brokerId);
     }
@@ -62,7 +65,7 @@ public class BrokerSocketClient extends WebSocketClient {
     @Override
     public void onClose(int i, String s, boolean b) {
         this.setStatus(ERROR);
-        System.out.println("[BrokerSocket.onMessage]" + this.uri.toString() + " Connection Closed");
+        logger.info("[BrokerSocket.onMessage]" + this.uri.toString() + " Connection Closed");
         while(!this.getReadyState().equals(WebSocket.READYSTATE.OPEN)){
             this.reconnect();
         }
@@ -70,7 +73,7 @@ public class BrokerSocketClient extends WebSocketClient {
 
     @Override
     public void onError(Exception e) {
-        System.out.println("[BrokerSocket.onError]" + this.uri.toString());
+        logger.info("[BrokerSocket.onError]" + this.uri.toString());
         e.printStackTrace();
     }
 
@@ -80,13 +83,13 @@ public class BrokerSocketClient extends WebSocketClient {
 
     public void init(){
         this.setStatus(CONNECTING);
-        System.out.println("[BrokerSocketContainer.init] " + this.uri + " Connecting");
+        logger.info("[BrokerSocketContainer.init] " + this.uri + " Connecting");
 
         this.connect();
         while(!this.getReadyState().equals(WebSocket.READYSTATE.OPEN)){}
 
         this.setStatus(CONNECTED);
-        System.out.println("[BrokerSocketContainer.init] " + this.uri + " Connected");
+        logger.info("[BrokerSocketContainer.init] " + this.uri + " Connected");
 
     }
 

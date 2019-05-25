@@ -13,23 +13,23 @@ import java.util.List;
 @RequestMapping("/api/v1/Broker")
 public class BrokerController {
     @Autowired
-    BrokerService brokerConfigService;
+    BrokerService brokerService;
 
     @PostMapping("")
-    public ResponseWrapper addBroker(@RequestBody Broker broker){
-        Broker res = brokerConfigService.addBroker(broker);
+    public ResponseWrapper create(@RequestBody Broker broker){
+        Broker res = brokerService.create(broker);
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, res);
     }
 
     @GetMapping("")
-    public ResponseWrapper getBroker(){
-        List<Broker> res = brokerConfigService.getBroker();
+    public ResponseWrapper findAll(){
+        List<Broker> res = brokerService.findAll();
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, res);
     }
 
     @DeleteMapping("/{id}")
     public ResponseWrapper deleteById(@PathVariable Integer id){
-        boolean delete = brokerConfigService.deleteBrokerById(id);
+        boolean delete = brokerService.deleteById(id);
         String status = delete ? ResponseWrapper.SUCCESS : ResponseWrapper.ERROR;
         String detail = delete ? "Delete Success" : "Delete Error";
 

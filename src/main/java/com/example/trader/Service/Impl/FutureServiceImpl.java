@@ -20,9 +20,16 @@ public class FutureServiceImpl implements FutureService {
     private DaoFactory daoFactory;
 
     @Override
-    public List<Future> getAll(Integer brokerId) {
-        Broker broker = brokerService.getBrokerById(brokerId);
+    public List<Future> findAll(Integer brokerId) {
+        Broker broker = brokerService.findById(brokerId);
         FutureDao dao = (FutureDao)daoFactory.create(broker, "Future");
         return dao.findAll();
+    }
+
+    @Override
+    public Future findById(Integer brokerId, String id) {
+        Broker broker = brokerService.findById(brokerId);
+        FutureDao dao = (FutureDao)daoFactory.create(broker, "Future");
+        return dao.findById(id);
     }
 }

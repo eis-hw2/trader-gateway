@@ -1,4 +1,4 @@
-package com.example.trader.Domain.Entity;
+package com.example.trader.Domain.Entity.Util;
 
 public enum Type {
     LimitOrder,
