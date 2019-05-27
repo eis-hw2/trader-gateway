@@ -1,0 +1,26 @@
+pipeline:
+  build:
+    image: registry.cn-hangzhou.aliyuncs.com/acs/maven
+    commands:
+      - mvn clean package -DskipTests
+
+  publish:
+    image: docker
+    secrets: [docker_username,docker_password]
+    commands:
+        - docker login --username=$DOCKER_USERNAME --password=$DOCKER_PASSWORD
+        - docker build -t zzbslayer/trader-gateway:latest -f Dockerfile .
+        - docker push zzbslayer/trader-gateway:latest
+    volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+    when:
+        branch: master
+        status: success
+
+  deploy:
+    image: appleboy/drone-ssh
+    host: 47.106.8.44
+    secrets: [ssh_username, ssh_password]
+    port: 22
+    script:
+      - /shell/deploy.sh trader-gateway 8080 8080

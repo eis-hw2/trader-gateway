@@ -2,7 +2,7 @@ package com.example.trader.Controller;
 
 import com.example.trader.Service.BrokerService;
 import com.example.trader.Domain.Factory.ResponseWrapperFactory;
-import com.example.trader.Domain.Broker;
+import com.example.trader.Domain.Entity.Broker;
 import com.example.trader.Domain.Wrapper.ResponseWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -10,26 +10,26 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/broker")
+@RequestMapping("/api/v1/Broker")
 public class BrokerController {
     @Autowired
-    BrokerService brokerConfigService;
+    BrokerService brokerService;
 
     @PostMapping("")
-    public ResponseWrapper addBroker(@RequestBody Broker broker){
-        Broker res = brokerConfigService.addBroker(broker);
+    public ResponseWrapper create(@RequestBody Broker broker){
+        Broker res = brokerService.create(broker);
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, res);
     }
 
     @GetMapping("")
-    public ResponseWrapper getBroker(){
-        List<Broker> res = brokerConfigService.getBroker();
+    public ResponseWrapper findAll(){
+        List<Broker> res = brokerService.findAll();
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, res);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseWrapper deleteById(@PathVariable String id){
-        boolean delete = brokerConfigService.deleteBrokerById(id);
+    public ResponseWrapper deleteById(@PathVariable Integer id){
+        boolean delete = brokerService.deleteById(id);
         String status = delete ? ResponseWrapper.SUCCESS : ResponseWrapper.ERROR;
         String detail = delete ? "Delete Success" : "Delete Error";
 

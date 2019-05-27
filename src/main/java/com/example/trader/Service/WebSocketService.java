@@ -4,9 +4,9 @@ import javax.websocket.Session;
 import java.io.IOException;
 
 public interface WebSocketService {
-    public void onOpen(Session session, String sid);
+    public void onOpen(Session session, String sid, Integer bid);
 
-    public void onClose(Session session, String sid);
+    public void onClose(Session session, String sid, Integer bid);
 
     public void onMessage(String message, Session session);
 

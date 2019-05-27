@@ -1,40 +1,32 @@
 package com.example.trader.Core.Sender.Strategy.Instant;
 
 import com.example.trader.Core.Sender.Sender;
-import com.example.trader.Dao.DaoFactory;
-import com.example.trader.Dao.Impl.OrderDao;
-import com.example.trader.Domain.Order;
+import com.example.trader.Dao.Repo.DynamicDao;
+import com.example.trader.Dao.Factory.DaoFactory;
+import com.example.trader.Domain.Entity.Broker;
+import com.example.trader.Domain.Entity.Order;
 import com.example.trader.Domain.Wrapper.ResponseWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 
+/*
+* Send the Order to One Broker
+* */
 @Component
 public class InstantSender extends Sender {
-    private String broker;
 
     @Autowired
     private DaoFactory daoFactory;
 
-    private OrderDao orderDao;
-
     @Override
-    public ResponseWrapper send(List<Order> orders) {
-        orderDao = daoFactory.create(broker, OrderDao.class);
+    public ResponseWrapper send(List<Broker> brokers, List<Order> orders) {
+        DynamicDao orderDao = daoFactory.create(brokers.get(0), orders.get(0).getType());
         for(Order order: orders){
-            orderDao.create(orders.get(0));
+            orderDao.create(order);
         }
 
         return null;
-    }
-
-    public String getBroker() {
-        return broker;
-    }
-
-    public void setBroker(String broker) {
-        this.broker = broker;
     }
 }
