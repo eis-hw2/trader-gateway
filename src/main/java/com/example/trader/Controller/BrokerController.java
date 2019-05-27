@@ -27,9 +27,9 @@ public class BrokerController {
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, res);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseWrapper deleteById(@PathVariable Integer id){
-        boolean delete = brokerService.deleteById(id);
+    @DeleteMapping("/{brokerId}")
+    public ResponseWrapper deleteById(@PathVariable Integer brokerId){
+        boolean delete = brokerService.deleteById(brokerId);
         String status = delete ? ResponseWrapper.SUCCESS : ResponseWrapper.ERROR;
         String detail = delete ? "Delete Success" : "Delete Error";
 

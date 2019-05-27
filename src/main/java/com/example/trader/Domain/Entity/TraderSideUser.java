@@ -10,10 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Document
 public class TraderSideUser implements UserDetails{
@@ -23,8 +20,8 @@ public class TraderSideUser implements UserDetails{
     @Indexed(unique = true)
     private String username;
     private String password;
-    private List<String> roles;
-    private Map<Integer, BrokerSideUser> brokerSideUsers;
+    private List<String> roles = new ArrayList<>();
+    private Map<Integer, BrokerSideUser> brokerSideUsers = new HashMap<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -96,5 +93,19 @@ public class TraderSideUser implements UserDetails{
 
     public void setBrokerSideUsers(Map<Integer, BrokerSideUser> brokerSideUsers) {
         this.brokerSideUsers = brokerSideUsers;
+    }
+
+    public BrokerSideUser addBrokerSideUser(BrokerSideUser brokerSideUser){
+        return brokerSideUsers.put(brokerSideUser.getBrokerId(), brokerSideUser);
+    }
+
+    public BrokerSideUser removeBrokerSideUser(Integer bid){
+        return brokerSideUsers.remove(bid);
+    }
+
+    public BrokerSideUser modifyBrokerSideUser(BrokerSideUser brokerSideUser){
+        if (brokerSideUsers.get(brokerSideUser.getBrokerId()) == null)
+            return null;
+        return brokerSideUsers.put(brokerSideUser.getBrokerId(), brokerSideUser);
     }
 }
