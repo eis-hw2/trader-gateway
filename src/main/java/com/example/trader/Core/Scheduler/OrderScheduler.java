@@ -1,9 +1,14 @@
 package com.example.trader.Core.Scheduler;
 
 import com.alibaba.fastjson.JSON;
+import com.example.trader.Dao.Repo.AbstractOrderDao;
 import com.example.trader.Dao.Repo.DynamicDao;
 import com.example.trader.Domain.Entity.Order;
+import com.example.trader.Service.BrokerSideUserService;
 import com.example.trader.Util.DateUtil;
+import net.bytebuddy.asm.Advice;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.Trigger;
@@ -23,6 +28,10 @@ public class OrderScheduler {
     private ThreadPoolTaskScheduler threadPoolTaskScheduler;
     @Autowired
     private ConcurrentHashMap<Integer, List<ScheduledFuture>> futures;
+    @Autowired
+    private BrokerSideUserService brokerSideUserService;
+
+    private static Logger logger  = LoggerFactory.getLogger("OrderScheduler");
 
     @Bean
     public ThreadPoolTaskScheduler threadPoolTaskScheduler() {
@@ -34,7 +43,7 @@ public class OrderScheduler {
     }
 
     // TODO
-    public int addSplitOrder(List<Order> orders, DynamicDao orderDao){
+    public int addSplitOrder(String username, List<Order> orders, AbstractOrderDao orderDao){
         Calendar calendar = Calendar.getInstance();
         // after 5 min
         //calendar.add(Calendar.MINUTE, 5);
@@ -51,9 +60,14 @@ public class OrderScheduler {
         orders.stream().forEach( order -> {
             if (order.getCount() == 0)
                 return;
-            System.out.println("[Future.create]: " + calendar.getTime() + " " + JSON.toJSONString(order));
+            logger.info("[Future.create]: " + calendar.getTime() + " " + JSON.toJSONString(order));
             ScheduledFuture future = threadPoolTaskScheduler.schedule(() -> {
-                System.out.println("[Future.execute]: " + calendar.getTime() + " " + JSON.toJSONString(order));
+                int hashCode = order.hashCode();
+                String token = brokerSideUserService.login(username, orderDao.getBroker().getId());
+                logger.info("[Future.execute."+hashCode+"]: User: " + username);
+                logger.info("[Future.execute."+hashCode+"]: Token: " + token);
+                logger.info("[Future.execute."+hashCode+"]: " + calendar.getTime() + " " + JSON.toJSONString(order));
+                orderDao.setToken(token);
                 orderDao.create(order);
             }, calendar.getTime());
             futureList.add(future);
@@ -65,7 +79,7 @@ public class OrderScheduler {
         return id;
     }
 
-    public int addSplitOrder(Map<Order, DynamicDao> orders){
+    public int addSplitOrder(String username, Map<Order, AbstractOrderDao> orders){
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_MONTH, 1);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -77,7 +91,18 @@ public class OrderScheduler {
 
         orders.entrySet().stream().forEach( entry -> {
             ScheduledFuture future = threadPoolTaskScheduler.schedule(() -> {
-                entry.getValue().create(entry.getKey());
+                Order o = entry.getKey();
+                AbstractOrderDao dao = entry.getValue();
+
+                int hashCode = o.hashCode();
+                String token = brokerSideUserService.login(username, dao.getBroker().getId());
+
+                logger.info("[Future.execute."+hashCode+"]: User: " + username);
+                logger.info("[Future.execute."+hashCode+"]: Token: " + token);
+                logger.info("[Future.execute."+hashCode+"]: " + calendar.getTime() + " " + JSON.toJSONString(o));
+
+                dao.setToken(token);
+                dao.create(o);
             }, calendar.getTime());
             futureList.add(future);
             calendar.add(Calendar.HOUR_OF_DAY, 1);

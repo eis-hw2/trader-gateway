@@ -53,7 +53,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return authProvider;
     }
 
-
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(authProvider());
@@ -69,7 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v1/Order").permitAll()
                 .antMatchers("/api/v1/User/BrokerSideUser").hasRole(Role.TRADER)
                 .and()
-                .formLogin().loginPage("/page/login")
+                .formLogin().loginPage("/page/v1/login")
                 .successHandler((HttpServletRequest httpServletRequest,
                                  HttpServletResponse httpServletResponse,
                                  Authentication authentication ) -> {
@@ -94,10 +93,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         out.flush();
                         out.close();
                 })
-                .loginProcessingUrl("/api/login")
+                .loginProcessingUrl("/api/v1/login")
                 .usernameParameter("username").passwordParameter("password").permitAll()
                 .and()
-                .logout().logoutUrl("/api/logout")
+                .logout().logoutUrl("/api/v1/logout")
                 .logoutSuccessHandler((HttpServletRequest httpServletRequest,
                                        HttpServletResponse httpServletResponse,
                                        Authentication authentication) ->{

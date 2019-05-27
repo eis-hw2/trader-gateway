@@ -8,6 +8,9 @@ import com.example.trader.Domain.Entity.Future;
 import com.example.trader.Domain.Wrapper.ResponseWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -16,10 +19,9 @@ import java.util.List;
 
 public abstract class DynamicDao<K, V> {
     private Logger logger = LoggerFactory.getLogger("Dao");
-    private RestTemplate restTemplate = new RestTemplate();
 
     public RestTemplate getRestTemplate() {
-        return restTemplate;
+        return new RestTemplate();
     }
 
     private Broker broker;
@@ -27,6 +29,18 @@ public abstract class DynamicDao<K, V> {
     public Broker getBroker() {
         return broker;
     }
+
+    public HttpHeaders getHttpHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return headers;
+    }
+
+    public HttpEntity<Object> getHttpEntity(Object requestBody) {
+        HttpEntity<Object> httpEntity = new HttpEntity<>(requestBody, getHttpHeaders());
+        return httpEntity;
+    }
+
     public void setBroker(Broker broker) {
         this.broker = broker;
     }
@@ -38,7 +52,7 @@ public abstract class DynamicDao<K, V> {
     public V create(V  value){
         String url = getBroker().getWriteApi() + "/" + getType();
         logger.info("[Dao.create] " + url);
-        ResponseEntity<JSONObject> responseEntity = getRestTemplate().postForEntity(url, value, JSONObject.class);
+        ResponseEntity<JSONObject> responseEntity = getRestTemplate().postForEntity(url, getHttpEntity(value), JSONObject.class);
         JSONObject rw = responseEntity.getBody();
         return null;
     }

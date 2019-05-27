@@ -8,6 +8,7 @@ import com.example.trader.Domain.Entity.Order;
 import com.example.trader.Domain.Wrapper.ResponseWrapper;
 import com.example.trader.Service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,11 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
+    private String getUsername(){
+        return  SecurityContextHolder.getContext().getAuthentication().getName();
+
+    }
+
     @PostMapping("")
     public ResponseWrapper createWithStrategy(
             @RequestBody Order order,
@@ -25,7 +31,7 @@ public class OrderController {
             @RequestParam(defaultValue = SenderFactory.INSTANT) String sendStrategy,
             @RequestParam Integer brokerId) {
         System.out.println(JSON.toJSONString(order));
-        List<Order> orders = orderService.createWithStrategy(order, processStrategy, sendStrategy, brokerId);
+        List<Order> orders = orderService.createWithStrategy(getUsername(), order, processStrategy, sendStrategy, brokerId);
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, orders);
         /*
         try{
@@ -43,7 +49,7 @@ public class OrderController {
             @RequestBody Order marketOrder,
             @RequestParam Integer brokerId){
         try{
-            Order order = orderService.create(marketOrder, brokerId);
+            Order order = orderService.create(getUsername(), marketOrder, brokerId);
             return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
         }
         catch(Exception e){
@@ -62,7 +68,7 @@ public class OrderController {
             @RequestBody Order limitOrder,
             @RequestParam Integer brokerId){
         try{
-            Order order = orderService.create(limitOrder, brokerId);
+            Order order = orderService.create(getUsername(), limitOrder, brokerId);
             return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
         }
         catch(Exception e){
@@ -81,7 +87,7 @@ public class OrderController {
             @RequestBody Order stopOrder,
             @RequestParam Integer brokerId){
         try{
-            Order order = orderService.create(stopOrder, brokerId);
+            Order order = orderService.create(getUsername(), stopOrder, brokerId);
             return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
         }
         catch(Exception e){
@@ -100,7 +106,7 @@ public class OrderController {
             @RequestBody Order cancelOrder,
             @RequestParam Integer brokerId){
         try{
-            Order order = orderService.create(cancelOrder, brokerId);
+            Order order = orderService.create(getUsername(), cancelOrder, brokerId);
             return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
         }
         catch(Exception e){

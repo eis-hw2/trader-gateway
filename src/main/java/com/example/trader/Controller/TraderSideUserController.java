@@ -17,7 +17,6 @@ public class TraderSideUserController {
     @Autowired
     private TraderSideUserService traderSideUserService;
 
-
     @PostMapping("")
     public ResponseWrapper register(@RequestBody TraderSideUser traderSideUser){
         try {
