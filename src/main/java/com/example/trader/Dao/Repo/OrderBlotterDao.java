@@ -26,12 +26,17 @@ public class OrderBlotterDao extends DynamicDao<String ,OrderBlotter>{
         return OrderBlotter[].class;
     }
 
+    // todo
+    public List<OrderBlotter> findByFutureId(String mkid){
+        return null;
+    }
+
     public List<OrderBlotter> findByFutureIdAndDate(String futureId, String date){
         // todo
         return null;
     }
 
-    public List<OrderBlotter> findByFutureIdAndTime(String futureId, Calendar startTime, Calendar endTime){
+    public List<OrderBlotter> findByFutureIdAndTimeInterval(String futureId, Calendar startTime, Calendar endTime){
         // todo
         return null;
     }

@@ -46,8 +46,14 @@ public abstract class DynamicDao<K, V> {
     public V findById(String id) {
         String url = getBroker().getReadApi() + "/" + getType() + "/" + id;
         logger.info("[Dao.findById] " + url);
-        ResponseEntity<JSONObject> responseEntity = getRestTemplate().getForEntity(url, JSONObject.class);
-        V res = responseEntity.getBody().toJavaObject(getValueClass());
+        V res = null;
+        try {
+            ResponseEntity<JSONObject> responseEntity = getRestTemplate().getForEntity(url, JSONObject.class);
+            res = responseEntity.getBody().toJavaObject(getValueClass());
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
         logger.info("[Dao.findById] " + JSON.toJSONString(res));
         return res;
     }
