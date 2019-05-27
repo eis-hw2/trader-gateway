@@ -11,25 +11,26 @@ import java.net.URISyntaxException;
 public class BrokerSocketContainer {
     private Logger logger = LoggerFactory.getLogger("BrokerSocketContainer");
 
-    private  BrokerSocketClient client;
+    private BrokerSocketClient client;
     private Broker broker;
 
     public BrokerSocketContainer(Broker broker){
 
         logger.info("[BrokerSocketContainer.Constructor] " + broker.getWebSocket());
         this.broker = broker;
-
-        try {
-            client = new BrokerSocketClient(broker);
-        }
-        catch(URISyntaxException e){
-            logger.info("[BrokerSocketContainer] " + " error");
-            e.printStackTrace();
-        }
+        init();
     }
 
     public void init(){
-        client.init();
+        try {
+            client = new BrokerSocketClient(broker, this);
+        }
+        catch(URISyntaxException e){
+            e.printStackTrace();
+            logger.info("[BrokerSocketContainer] Error");
+            logger.info("[BrokerSocketContainer] Reconnecting... ");
+            init();
+        }
     }
 
     public void send(byte[] bytes){

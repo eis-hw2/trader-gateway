@@ -28,10 +28,11 @@ public class BrokerSocketClient extends WebSocketClient {
 
     private OrderBook orderBook;
     private Integer brokerId;
+    private BrokerSocketContainer brokerSocketContainer;
 
-    public BrokerSocketClient(Broker broker) throws URISyntaxException{
-
+    public BrokerSocketClient(Broker broker, BrokerSocketContainer brokerSocketContainer) throws URISyntaxException{
         super(new URI(broker.getWebSocket() + "/websocket/1"));
+        this.brokerSocketContainer = brokerSocketContainer;
         brokerId = broker.getId();
     }
 
@@ -64,11 +65,8 @@ public class BrokerSocketClient extends WebSocketClient {
 
     @Override
     public void onClose(int i, String s, boolean b) {
-        this.setStatus(ERROR);
-        logger.info("[BrokerSocket.onMessage]" + this.uri.toString() + " Connection Closed");
-        while(!this.getReadyState().equals(WebSocket.READYSTATE.OPEN)){
-            this.reconnect();
-        }
+        logger.info("[BrokerSocket.onClose]" + this.uri.toString() + " Connection Closed");
+        brokerSocketContainer.init();
     }
 
     @Override
@@ -107,5 +105,13 @@ public class BrokerSocketClient extends WebSocketClient {
 
     public void setOrderBook(OrderBook orderBook) {
         this.orderBook = orderBook;
+    }
+
+    public BrokerSocketContainer getBrokerSocketContainer() {
+        return brokerSocketContainer;
+    }
+
+    public void setBrokerSocketContainer(BrokerSocketContainer brokerSocketContainer) {
+        this.brokerSocketContainer = brokerSocketContainer;
     }
 }
