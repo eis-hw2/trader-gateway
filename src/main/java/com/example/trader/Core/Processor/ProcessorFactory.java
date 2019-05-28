@@ -1,8 +1,7 @@
 package com.example.trader.Core.Processor;
 
-import com.example.trader.Core.Processor.Strategy.MeanProcessor;
-import com.example.trader.Core.Processor.Strategy.NoneProcessor;
 import com.example.trader.Core.Processor.Strategy.TwapProcessor;
+import com.example.trader.Core.Processor.Strategy.NoneProcessor;
 import com.example.trader.Core.Processor.Strategy.VwapProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -16,7 +15,6 @@ public class ProcessorFactory {
     public final static String VWAP = "VWAP";
     public final static String TWAP = "TWAP";
     public final static String NONE = "NONE";
-    public final static String MEAN = "MEAN";
 
     public Processor create(String name){
         switch (name){
@@ -24,8 +22,6 @@ public class ProcessorFactory {
                 return applicationContext.getBean(VwapProcessor.class);
             case TWAP:
                 return applicationContext.getBean(TwapProcessor.class);
-            case MEAN:
-                return applicationContext.getBean(MeanProcessor.class);
             default:
                 return applicationContext.getBean(NoneProcessor.class);
         }
