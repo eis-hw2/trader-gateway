@@ -27,7 +27,7 @@ public class InstantSender extends Sender {
     @Override
     public int send(String traderSideUsername, List<Broker> brokers, List<Order> orders) {
         Broker broker = brokers.get(0);
-        String token = brokerSideUserService.login(traderSideUsername, broker.getId());
+        String token = brokerSideUserService.getToken(traderSideUsername, broker.getId());
         AbstractOrderDao orderDao = daoFactory.create(broker, orders.get(0).getType(), token);
         for(Order order: orders){
             orderDao.create(order);

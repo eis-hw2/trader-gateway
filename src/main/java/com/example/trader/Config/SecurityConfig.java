@@ -66,7 +66,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v1/Future/**").permitAll()
                 .antMatchers("/api/v1/OrderBlotter/**").permitAll()
                 .antMatchers("/api/v1/Order/**").hasRole(Role.TRADER)
-                .antMatchers("/api/v1/User/BrokerSideUser/**").hasRole(Role.TRADER)
+                .antMatchers("/api/v1/TraderSideUser/BrokerSideUser/**").hasRole(Role.TRADER)
+                .antMatchers("/api/v1/BrokerSideUser/**").hasRole(Role.TRADER)
                 .and()
                 .formLogin().loginPage("/page/v1/login")
                 .successHandler((HttpServletRequest httpServletRequest,

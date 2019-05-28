@@ -1,8 +1,5 @@
 package com.example.trader.Domain.Entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.alibaba.fastjson.annotation.JSONType;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -21,7 +18,7 @@ public class TraderSideUser implements UserDetails{
     private String username;
     private String password;
     private List<String> roles = new ArrayList<>();
-    private Map<Integer, BrokerSideUser> brokerSideUsers = new HashMap<>();
+    private Map<String, BrokerSideUser> brokerSideUsers = new HashMap<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -87,25 +84,25 @@ public class TraderSideUser implements UserDetails{
         this.roles = roles;
     }
 
-    public Map<Integer, BrokerSideUser> getBrokerSideUsers() {
+    public Map<String, BrokerSideUser> getBrokerSideUsers() {
         return brokerSideUsers;
     }
 
-    public void setBrokerSideUsers(Map<Integer, BrokerSideUser> brokerSideUsers) {
+    public void setBrokerSideUsers(Map<String, BrokerSideUser> brokerSideUsers) {
         this.brokerSideUsers = brokerSideUsers;
     }
 
     public BrokerSideUser addBrokerSideUser(BrokerSideUser brokerSideUser){
-        return brokerSideUsers.put(brokerSideUser.getBrokerId(), brokerSideUser);
+        return brokerSideUsers.put(brokerSideUser.getBrokerId().toString(), brokerSideUser);
     }
 
     public BrokerSideUser removeBrokerSideUser(Integer bid){
-        return brokerSideUsers.remove(bid);
+        return brokerSideUsers.remove(bid.toString());
     }
 
     public BrokerSideUser modifyBrokerSideUser(BrokerSideUser brokerSideUser){
         if (brokerSideUsers.get(brokerSideUser.getBrokerId()) == null)
             return null;
-        return brokerSideUsers.put(brokerSideUser.getBrokerId(), brokerSideUser);
+        return brokerSideUsers.put(brokerSideUser.getBrokerId().toString(), brokerSideUser);
     }
 }

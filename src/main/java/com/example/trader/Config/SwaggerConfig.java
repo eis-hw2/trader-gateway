@@ -26,7 +26,7 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("BrokerSideUser Gateway")
+                .title("Trader Gateway")
                 .description("EIS Homework")
                 .version("1.0")
                 .build();

@@ -52,6 +52,7 @@ public abstract class DynamicDao<K, V> {
     public V create(V  value){
         String url = getBroker().getWriteApi() + "/" + getType();
         logger.info("[Dao.create] " + url);
+        logger.info("[Dao.create] " + JSON.toJSONString(value));
         ResponseEntity<JSONObject> responseEntity = getRestTemplate().postForEntity(url, getHttpEntity(value), JSONObject.class);
         JSONObject rw = responseEntity.getBody();
         logger.info("[Dao.create] " + rw.toJSONString());
