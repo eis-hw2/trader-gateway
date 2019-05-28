@@ -2,7 +2,6 @@ package com.example.trader.Controller;
 
 import com.example.trader.Domain.Entity.OrderBlotter;
 import com.example.trader.Service.OrderBlotterService;
-import com.example.trader.Service.WebSocketService;
 import com.example.trader.Domain.Factory.ResponseWrapperFactory;
 import com.example.trader.Domain.Wrapper.ResponseWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
