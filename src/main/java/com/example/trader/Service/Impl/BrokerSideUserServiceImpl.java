@@ -3,6 +3,7 @@ package com.example.trader.Service.Impl;
 import com.example.trader.Domain.Entity.Broker;
 import com.example.trader.Domain.Entity.BrokerSideUser;
 import com.example.trader.Domain.Entity.TraderSideUser;
+import com.example.trader.Domain.Entity.Util.Role;
 import com.example.trader.Service.BrokerService;
 import com.example.trader.Service.BrokerSideUserService;
 import com.example.trader.Service.TraderSideUserService;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.support.BasicAuthorizationInterceptor;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -39,6 +41,7 @@ public class BrokerSideUserServiceImpl implements BrokerSideUserService {
         return new RestTemplate();
     }
 
+    @Secured(Role.TRADER)
     @Override
     public String login(String traderSideUsername, Integer brokerId) {
         TraderSideUser traderSideUser = traderSideUserService.findByUsername(traderSideUsername);

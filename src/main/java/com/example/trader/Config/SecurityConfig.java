@@ -62,11 +62,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/api/v1/Broker").permitAll()
-                .antMatchers("/api/v1/Future").permitAll()
-                .antMatchers("/api/v1/OrderBlotter").permitAll()
-                .antMatchers("/api/v1/Order").permitAll()
-                .antMatchers("/api/v1/User/BrokerSideUser").hasRole(Role.TRADER)
+                .antMatchers("/api/v1/Broker/**").permitAll()
+                .antMatchers("/api/v1/Future/**").permitAll()
+                .antMatchers("/api/v1/OrderBlotter/**").permitAll()
+                .antMatchers("/api/v1/Order/**").hasRole(Role.TRADER)
+                .antMatchers("/api/v1/User/BrokerSideUser/**").hasRole(Role.TRADER)
                 .and()
                 .formLogin().loginPage("/page/v1/login")
                 .successHandler((HttpServletRequest httpServletRequest,
@@ -75,6 +75,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         httpServletResponse.setContentType("application/json;charset=utf-8");
                         String username = authentication.getName();
                         logger.info("[SpringSecurity.login.success] " + username);
+                        authentication.getAuthorities()
+                            .stream()
+                            .forEach(e ->
+                                    logger.info("[SpringSecurity.login.success] " + e.toString())
+                            );
                         PrintWriter out = httpServletResponse.getWriter();
                         out.write(ResponseWrapperFactory.createResponseString(ResponseWrapper.SUCCESS, traderSideUserService.findByUsername(username)));
                         out.flush();

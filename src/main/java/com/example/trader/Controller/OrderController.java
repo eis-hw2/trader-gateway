@@ -48,13 +48,8 @@ public class OrderController {
     public ResponseWrapper createMarketOrder(
             @RequestBody Order marketOrder,
             @RequestParam Integer brokerId){
-        try{
-            Order order = orderService.create(getUsername(), marketOrder, brokerId);
-            return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
-        }
-        catch(Exception e){
-            return ResponseWrapperFactory.create(ResponseWrapper.ERROR, e.getMessage());
-        }
+        Order order = orderService.create(getUsername(), marketOrder, brokerId);
+        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
     }
 
     @GetMapping("/MarketOrder")
@@ -67,13 +62,8 @@ public class OrderController {
     public ResponseWrapper createLimitOrder(
             @RequestBody Order limitOrder,
             @RequestParam Integer brokerId){
-        try{
-            Order order = orderService.create(getUsername(), limitOrder, brokerId);
-            return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
-        }
-        catch(Exception e){
-            return ResponseWrapperFactory.create(ResponseWrapper.ERROR, e.getMessage());
-        }
+        Order order = orderService.create(getUsername(), limitOrder, brokerId);
+        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
     }
 
     @GetMapping("/LimitOrder")
@@ -86,13 +76,8 @@ public class OrderController {
     public ResponseWrapper createStopOrder(
             @RequestBody Order stopOrder,
             @RequestParam Integer brokerId){
-        try{
-            Order order = orderService.create(getUsername(), stopOrder, brokerId);
-            return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
-        }
-        catch(Exception e){
-            return ResponseWrapperFactory.create(ResponseWrapper.ERROR, e.getMessage());
-        }
+        Order order = orderService.create(getUsername(), stopOrder, brokerId);
+        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
     }
 
     @GetMapping("/StopOrder")
@@ -105,13 +90,9 @@ public class OrderController {
     public ResponseWrapper createCancelOrder(
             @RequestBody Order cancelOrder,
             @RequestParam Integer brokerId){
-        try{
-            Order order = orderService.create(getUsername(), cancelOrder, brokerId);
-            return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
-        }
-        catch(Exception e){
-            return ResponseWrapperFactory.create(ResponseWrapper.ERROR, e.getMessage());
-        }
+        Order order = orderService.create(getUsername(), cancelOrder, brokerId);
+        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
+
     }
 
     @GetMapping("/CancelOrder")
