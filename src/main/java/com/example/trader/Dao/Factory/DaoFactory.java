@@ -1,5 +1,6 @@
 package com.example.trader.Dao.Factory;
 
+import com.example.trader.Dao.Repo.AbstractOrderDao;
 import com.example.trader.Dao.Repo.DynamicDao;
 import com.example.trader.Domain.Entity.Broker;
 import com.example.trader.Util.LRUCache;
@@ -27,12 +28,18 @@ public class DaoFactory {
         if (dao != null) {
             return dao;
         }
-        else{
+        else {
             dao = (DynamicDao)applicationContext.getBean(type + "Dao");
             dao.setBroker(broker);
             daoCache.put(key, dao);
             return dao;
         }
+    }
 
+    public AbstractOrderDao create(Broker broker, String type, String token){
+        AbstractOrderDao dao = (AbstractOrderDao)applicationContext.getBean(type + "Dao");
+        dao.setBroker(broker);
+        dao.setToken(token);
+        return dao;
     }
 }

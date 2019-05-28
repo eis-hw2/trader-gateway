@@ -11,6 +11,7 @@ public class Broker {
     private static final String writePort = "31000";
     private static final String readPort = "31001";
     private static final String webSocketPort = "31002";
+    private static final String loginPort = "31003";
 
     private static final String HTTP_PROTOCOL = "http://";
     private static final String WS_PROTOCOL = "ws://";
@@ -30,19 +31,22 @@ public class Broker {
     }
 
     @Transient
-    public String getWriteApi(){
+    public final String getWriteApi(){
         return HTTP_PROTOCOL + url + ":" + writePort;
     }
 
     @Transient
-    public String getReadApi(){
+    public final String getReadApi(){
         return HTTP_PROTOCOL + url + ":" + readPort;
     }
 
     @Transient
-    public String getWebSocket(){
+    public final String getWebSocket(){
         return WS_PROTOCOL + url + ":" + webSocketPort;
     }
+
+    @Transient
+    public final String getLoginApi() { return HTTP_PROTOCOL + url + ":" + loginPort; }
 
     @Basic
     @Column(name = "url", nullable = false, length = 100)

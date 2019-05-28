@@ -22,9 +22,9 @@ public class FutureController {
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, futures);
     }
 
-    @GetMapping("/{fid}")
-    public ResponseWrapper findById(@RequestParam Integer brokerId, @PathVariable String fid){
-        Future future = futureService.findById(brokerId, fid);
+    @GetMapping("/{futureId}")
+    public ResponseWrapper findById(@RequestParam Integer brokerId, @PathVariable String futureId){
+        Future future = futureService.findById(brokerId, futureId);
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, future);
     }
 }
