@@ -1,8 +1,11 @@
 package com.example.trader.Config;
 
+import com.example.trader.Domain.Entity.TraderSideUser;
 import com.example.trader.Domain.Entity.Util.Role;
+import com.example.trader.Domain.Entity.Util.TraderSideUserLoginReturned;
 import com.example.trader.Domain.Factory.ResponseWrapperFactory;
 import com.example.trader.Domain.Wrapper.ResponseWrapper;
+import com.example.trader.Service.BrokerService;
 import com.example.trader.Service.TraderSideUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +34,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private TraderSideUserService traderSideUserService;
+    @Autowired
+    private BrokerService brokerService;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -73,18 +79,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .successHandler((HttpServletRequest httpServletRequest,
                                  HttpServletResponse httpServletResponse,
                                  Authentication authentication ) -> {
-                        httpServletResponse.setContentType("application/json;charset=utf-8");
-                        String username = authentication.getName();
-                        logger.info("[SpringSecurity.login.success] " + username);
-                        authentication.getAuthorities()
+                    httpServletResponse.setContentType("application/json;charset=utf-8");
+                    String username = authentication.getName();
+                    logger.info("[SpringSecurity.login.success] " + username);
+                    authentication.getAuthorities()
                             .stream()
                             .forEach(e ->
                                     logger.info("[SpringSecurity.login.success] " + e.toString())
                             );
-                        PrintWriter out = httpServletResponse.getWriter();
-                        out.write(ResponseWrapperFactory.createResponseString(ResponseWrapper.SUCCESS, traderSideUserService.findByUsername(username)));
-                        out.flush();
-                        out.close();
+                    PrintWriter out = httpServletResponse.getWriter();
+
+                    TraderSideUser user = traderSideUserService.findByUsername(username);
+                    TraderSideUserLoginReturned res = new TraderSideUserLoginReturned(user, brokerService);
+
+                    out.write(ResponseWrapperFactory.createResponseString(ResponseWrapper.SUCCESS, res));
+                    out.flush();
+                    out.close();
                 })
                 .failureHandler((HttpServletRequest httpServletRequest,
                                 HttpServletResponse httpServletResponse,
