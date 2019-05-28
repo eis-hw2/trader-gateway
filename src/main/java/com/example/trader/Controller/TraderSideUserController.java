@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/User")
+@RequestMapping("/api/v1/TraderSideUser")
 public class TraderSideUserController {
     @Autowired
     private TraderSideUserService traderSideUserService;

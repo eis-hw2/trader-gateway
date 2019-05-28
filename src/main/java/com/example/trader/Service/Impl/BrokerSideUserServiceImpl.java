@@ -43,6 +43,13 @@ public class BrokerSideUserServiceImpl implements BrokerSideUserService {
 
     @Secured(Role.TRADER)
     @Override
+    public String getToken(String traderSideUsername, Integer brokerId){
+        // todo get from redis
+        return login(traderSideUsername, brokerId);
+    }
+
+    @Secured(Role.TRADER)
+    @Override
     public String login(String traderSideUsername, Integer brokerId) {
         TraderSideUser traderSideUser = traderSideUserService.findByUsername(traderSideUsername);
         BrokerSideUser brokerSideUser = traderSideUser.getBrokerSideUsers().get(brokerId);
@@ -60,6 +67,7 @@ public class BrokerSideUserServiceImpl implements BrokerSideUserService {
 
         String url = broker.getLoginApi() + "/login";
         logger.info("[BrokerSideUserSerivce.login] url: " + url);
+
         ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
 
         HttpHeaders responseHeaders = response.getHeaders();
