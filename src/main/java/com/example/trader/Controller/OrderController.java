@@ -8,6 +8,7 @@ import com.example.trader.Domain.Entity.Order;
 import com.example.trader.Domain.Wrapper.ResponseWrapper;
 import com.example.trader.Service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,11 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
+    private String getUsername(){
+        return  SecurityContextHolder.getContext().getAuthentication().getName();
+
+    }
+
     @PostMapping("")
     public ResponseWrapper createWithStrategy(
             @RequestBody Order order,
@@ -25,7 +31,7 @@ public class OrderController {
             @RequestParam(defaultValue = SenderFactory.INSTANT) String sendStrategy,
             @RequestParam Integer brokerId) {
         System.out.println(JSON.toJSONString(order));
-        List<Order> orders = orderService.createWithStrategy(order, processStrategy, sendStrategy, brokerId);
+        List<Order> orders = orderService.createWithStrategy(getUsername(), order, processStrategy, sendStrategy, brokerId);
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, orders);
         /*
         try{
@@ -42,13 +48,8 @@ public class OrderController {
     public ResponseWrapper createMarketOrder(
             @RequestBody Order marketOrder,
             @RequestParam Integer brokerId){
-        try{
-            Order order = orderService.create(marketOrder, brokerId);
-            return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
-        }
-        catch(Exception e){
-            return ResponseWrapperFactory.create(ResponseWrapper.ERROR, e.getMessage());
-        }
+        Order order = orderService.create(getUsername(), marketOrder, brokerId);
+        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
     }
 
     @GetMapping("/MarketOrder")
@@ -61,13 +62,8 @@ public class OrderController {
     public ResponseWrapper createLimitOrder(
             @RequestBody Order limitOrder,
             @RequestParam Integer brokerId){
-        try{
-            Order order = orderService.create(limitOrder, brokerId);
-            return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
-        }
-        catch(Exception e){
-            return ResponseWrapperFactory.create(ResponseWrapper.ERROR, e.getMessage());
-        }
+        Order order = orderService.create(getUsername(), limitOrder, brokerId);
+        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
     }
 
     @GetMapping("/LimitOrder")
@@ -80,13 +76,8 @@ public class OrderController {
     public ResponseWrapper createStopOrder(
             @RequestBody Order stopOrder,
             @RequestParam Integer brokerId){
-        try{
-            Order order = orderService.create(stopOrder, brokerId);
-            return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
-        }
-        catch(Exception e){
-            return ResponseWrapperFactory.create(ResponseWrapper.ERROR, e.getMessage());
-        }
+        Order order = orderService.create(getUsername(), stopOrder, brokerId);
+        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
     }
 
     @GetMapping("/StopOrder")
@@ -99,13 +90,9 @@ public class OrderController {
     public ResponseWrapper createCancelOrder(
             @RequestBody Order cancelOrder,
             @RequestParam Integer brokerId){
-        try{
-            Order order = orderService.create(cancelOrder, brokerId);
-            return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
-        }
-        catch(Exception e){
-            return ResponseWrapperFactory.create(ResponseWrapper.ERROR, e.getMessage());
-        }
+        Order order = orderService.create(getUsername(), cancelOrder, brokerId);
+        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
+
     }
 
     @GetMapping("/CancelOrder")

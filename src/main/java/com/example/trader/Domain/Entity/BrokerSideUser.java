@@ -5,6 +5,7 @@ import io.swagger.models.auth.In;
 public class BrokerSideUser {
     private Integer brokerId;
     private String traderName;
+    private String username;
     private String password;
 
     public String getTraderName() {
@@ -29,5 +30,13 @@ public class BrokerSideUser {
 
     public void setBrokerId(Integer brokerId) {
         this.brokerId = brokerId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

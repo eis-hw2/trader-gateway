@@ -30,13 +30,13 @@ public class OrderServiceImpl implements OrderService{
     private BrokerService brokerService;
 
     @Override
-    public List<Order> createWithStrategy(Order order, String processStrategy, String sendStrategy, Integer brokerId){
+    public List<Order> createWithStrategy(String username, Order order, String processStrategy, String sendStrategy, Integer brokerId){
         Processor processor = processorFactory.create(processStrategy);
         List<Order> orders = processor.process(order);
 
         List<Broker> brokers = senderFactory.getBroker(sendStrategy, brokerId);
         Sender sender = senderFactory.create(sendStrategy);
-        ResponseWrapper responseWrapper = sender.send(brokers, orders);
+        int res  = sender.send(username, brokers, orders);
 
         /*
         if (responseWrapper.getStatus().equals(ResponseWrapper.ERROR))
@@ -46,13 +46,13 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public Order create(Order order, Integer brokerId){
+    public Order create(String username, Order order, Integer brokerId){
         Sender sender = senderFactory.create(SenderFactory.INSTANT);
         List<Order> orders = new ArrayList<>();
         orders.add(order);
 
         List<Broker> brokers = senderFactory.getBroker(SenderFactory.INSTANT, brokerId);
-        ResponseWrapper responseWrapper = sender.send(brokers, orders);
+        int res = sender.send(username, brokers, orders);
         return order;
     }
 

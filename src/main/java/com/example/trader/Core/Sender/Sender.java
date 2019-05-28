@@ -7,5 +7,5 @@ import com.example.trader.Domain.Wrapper.ResponseWrapper;
 import java.util.List;
 
 public abstract class Sender {
-    public abstract ResponseWrapper send(List<Broker> brokers, List<Order> orders);
+    public abstract int send(String traderSideUsername, List<Broker> brokers, List<Order> orders);
 }

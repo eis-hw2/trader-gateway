@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface OrderService {
 
-    List<Order> createWithStrategy(Order order, String processStrategy, String sendStrategy, Integer brokerId);
+    List<Order> createWithStrategy(String username, Order order, String processStrategy, String sendStrategy, Integer brokerId);
 
-    Order create(Order order, Integer brokerId);
+    Order create(String username, Order order, Integer brokerId);
 
     List<Order> findAll(String type, Integer brokerId);
 
