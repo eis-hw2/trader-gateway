@@ -63,7 +63,7 @@ public class OrderScheduler {
             logger.info("[Future.create]: " + calendar.getTime() + " " + JSON.toJSONString(order));
             ScheduledFuture future = threadPoolTaskScheduler.schedule(() -> {
                 int hashCode = order.hashCode();
-                String token = brokerSideUserService.login(username, orderDao.getBroker().getId());
+                String token = brokerSideUserService.getToken(username, orderDao.getBroker().getId());
                 logger.info("[Future.execute."+hashCode+"]: User: " + username);
                 logger.info("[Future.execute."+hashCode+"]: Token: " + token);
                 logger.info("[Future.execute."+hashCode+"]: " + calendar.getTime() + " " + JSON.toJSONString(order));
@@ -95,7 +95,7 @@ public class OrderScheduler {
                 AbstractOrderDao dao = entry.getValue();
 
                 int hashCode = o.hashCode();
-                String token = brokerSideUserService.login(username, dao.getBroker().getId());
+                String token = brokerSideUserService.getToken(username, dao.getBroker().getId());
 
                 logger.info("[Future.execute."+hashCode+"]: User: " + username);
                 logger.info("[Future.execute."+hashCode+"]: Token: " + token);
