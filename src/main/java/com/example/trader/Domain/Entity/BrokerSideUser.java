@@ -1,8 +1,8 @@
 package com.example.trader.Domain.Entity;
 
-import io.swagger.models.auth.In;
+import java.io.Serializable;
 
-public class BrokerSideUser {
+public class BrokerSideUser implements Serializable{
     private Integer brokerId;
     private String traderName;
     private String username;
