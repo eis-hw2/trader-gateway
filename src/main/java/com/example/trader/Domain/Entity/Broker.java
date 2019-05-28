@@ -1,5 +1,7 @@
 package com.example.trader.Domain.Entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import javax.persistence.*;
 
 @Entity
@@ -30,21 +32,25 @@ public class Broker {
         this.status = NEW;
     }
 
+    @JSONField(serialize = false)
     @Transient
     public final String getWriteApi(){
         return HTTP_PROTOCOL + url + ":" + writePort;
     }
 
+    @JSONField(serialize = false)
     @Transient
     public final String getReadApi(){
         return HTTP_PROTOCOL + url + ":" + readPort;
     }
 
+    @JSONField(serialize = false)
     @Transient
     public final String getWebSocket(){
         return WS_PROTOCOL + url + ":" + webSocketPort;
     }
 
+    @JSONField(serialize = false)
     @Transient
     public final String getLoginApi() { return HTTP_PROTOCOL + url + ":" + loginPort; }
 

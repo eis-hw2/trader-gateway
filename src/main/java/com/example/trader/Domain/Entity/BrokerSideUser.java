@@ -1,11 +1,15 @@
 package com.example.trader.Domain.Entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.io.Serializable;
 
 public class BrokerSideUser implements Serializable{
     private Integer brokerId;
     private String traderName;
     private String username;
+
+    @JSONField(serialize = false)
     private String password;
 
     public String getTraderName() {
