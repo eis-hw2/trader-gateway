@@ -105,4 +105,8 @@ public class TraderSideUser implements UserDetails{
             return null;
         return brokerSideUsers.put(brokerSideUser.getBrokerId().toString(), brokerSideUser);
     }
+
+    public BrokerSideUser getBrokerSideUser(Integer bid){
+        return brokerSideUsers.get(bid.toString());
+    }
 }
