@@ -10,10 +10,10 @@ public class Broker {
     public static String DEAD = "DEAD";
     public static String ALIVE = "ALIVE";
 
-    private static final String writePort = "31000";
-    private static final String readPort = "31001";
-    private static final String webSocketPort = "31002";
-    private static final String loginPort = "31003";
+    private static final String writePort = "30251";
+    private static final String readPort = "30252";
+    private static final String loginPort = "30253";
+    private static final String webSocketPort = "30254";
 
     private static final String HTTP_PROTOCOL = "http://";
     private static final String WS_PROTOCOL = "ws://";
