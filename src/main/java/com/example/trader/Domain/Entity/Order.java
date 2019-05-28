@@ -21,14 +21,15 @@ public class Order {
     private String targetId;
     private String type;
     private String traderName;
-    private Links _links;
+    private String creationTime;
+    private Links __links;
 
     public Links get__links() {
-        return _links;
+        return __links;
     }
 
-    public void set__links(Links _links) {
-        this._links = _links;
+    public void set__links(Links __links) {
+        this.__links = __links;
     }
 
     public String getTraderName() {
@@ -123,5 +124,13 @@ public class Order {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime(String creationTime) {
+        this.creationTime = creationTime;
     }
 }

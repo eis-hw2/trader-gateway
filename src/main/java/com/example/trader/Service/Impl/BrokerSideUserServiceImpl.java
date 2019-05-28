@@ -6,6 +6,7 @@ import com.example.trader.Domain.Entity.TraderSideUser;
 import com.example.trader.Domain.Entity.Util.Role;
 import com.example.trader.Service.BrokerService;
 import com.example.trader.Service.BrokerSideUserService;
+import com.example.trader.Service.RedisService;
 import com.example.trader.Service.TraderSideUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,23 +16,27 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.support.BasicAuthorizationInterceptor;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Collections;
+import java.time.Duration;
 
 @Service
 public class BrokerSideUserServiceImpl implements BrokerSideUserService {
+    private static final Long DEFAULT_EXPIRATION = Duration.ofDays(365).getSeconds();
+
     @Autowired
     private BrokerService brokerService;
     @Autowired
     private TraderSideUserService traderSideUserService;
 
     private static Logger logger = LoggerFactory.getLogger("BrokerSideUserService");
+
+    @Autowired
+    private RedisService redisService;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -44,15 +49,20 @@ public class BrokerSideUserServiceImpl implements BrokerSideUserService {
     @Secured(Role.TRADER)
     @Override
     public String getToken(String traderSideUsername, Integer brokerId){
-        // todo get from redis
+        String key = getKey(traderSideUsername, brokerId);
+        if (redisService.exists(key))
+            return redisService.get(key, String.class);
         return login(traderSideUsername, brokerId);
     }
 
     @Secured(Role.TRADER)
     @Override
     public String login(String traderSideUsername, Integer brokerId) {
+        logger.info("[BrokerSideUserService.login] TraderSideUsername: " + traderSideUsername);
+        logger.info("[BrokerSideUserService.login] BrokerId: " + brokerId);
         TraderSideUser traderSideUser = traderSideUserService.findByUsername(traderSideUsername);
-        BrokerSideUser brokerSideUser = traderSideUser.getBrokerSideUsers().get(brokerId);
+        BrokerSideUser brokerSideUser = traderSideUser.getBrokerSideUser(brokerId);
+        //logger.info("[BrokerSideUserService.login] BrokerSideUser: " + JSON.toJSONString(brokerSideUser));
         Broker broker = brokerService.findById(brokerId);
 
 
@@ -60,7 +70,7 @@ public class BrokerSideUserServiceImpl implements BrokerSideUserService {
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
         MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
-        map.add("username", brokerSideUser.getTraderName());
+        map.add("username", brokerSideUser.getUsername());
         map.add("password", brokerSideUser.getPassword());
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
@@ -73,6 +83,13 @@ public class BrokerSideUserServiceImpl implements BrokerSideUserService {
         HttpHeaders responseHeaders = response.getHeaders();
         String token = responseHeaders.get("token").get(0);
         logger.info("[BrokerSideUserSerivce.login] token: " + token);
+
+        String key = getKey(traderSideUsername, brokerId);
+        redisService.set(key, token, DEFAULT_EXPIRATION);
         return token;
+    }
+
+    private String getKey(String username, Integer brokerId){
+        return username + "&" + brokerId;
     }
 }
