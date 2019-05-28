@@ -1,5 +1,6 @@
 package com.example.trader.Domain.Entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -16,10 +17,12 @@ public class TraderSideUser implements UserDetails{
 
     @Indexed(unique = true)
     private String username;
+
     private String password;
     private List<String> roles = new ArrayList<>();
     private Map<String, BrokerSideUser> brokerSideUsers = new HashMap<>();
 
+    @JSONField(serialize = false)
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> grantedAuthority = new ArrayList<>();
@@ -48,21 +51,25 @@ public class TraderSideUser implements UserDetails{
         this.password = password;
     }
 
+    @JSONField(serialize = false)
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    @JSONField(serialize = false)
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    @JSONField(serialize = false)
     @Override
     public boolean isEnabled() {
         return true;
     }
 
+    @JSONField(serialize = false)
     @Override
     public boolean isAccountNonLocked() {
         return true;
