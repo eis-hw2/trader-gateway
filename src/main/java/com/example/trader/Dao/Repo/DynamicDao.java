@@ -49,14 +49,22 @@ public abstract class DynamicDao<K, V> {
     public abstract Class<V> getValueClass();
     public abstract Class<V[]> getValueArrayClass();
 
-    public V create(V  value){
+    /**
+     * upstream return value :
+     * {
+     *     "body": $ID,
+     *     "description": "OK",
+     *     "status": "200"
+     * }
+     */
+    public String create(V  value){
         String url = getBroker().getWriteApi() + "/" + getType();
         logger.info("[Dao.create] " + url);
         logger.info("[Dao.create] " + JSON.toJSONString(value));
         ResponseEntity<JSONObject> responseEntity = getRestTemplate().postForEntity(url, getHttpEntity(value), JSONObject.class);
         JSONObject rw = responseEntity.getBody();
         logger.info("[Dao.create] " + rw.toJSONString());
-        return null;
+        return rw.getString("body");
     }
 
     public V findById(String id) {

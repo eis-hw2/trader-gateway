@@ -28,7 +28,7 @@ public class DistributeSender extends SplitSender {
     private OrderScheduler orderScheduler;
 
     @Override
-    public int send(String traderSideUsername, List<Broker> brokers, List<Order> orders) {
+    public Object send(String traderSideUsername, List<Broker> brokers, List<Order> orders) {
 
         Map<Order, AbstractOrderDao> orderMap = new HashMap<>();
 

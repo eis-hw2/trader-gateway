@@ -26,7 +26,7 @@ public class OneSender extends SplitSender {
     private OrderScheduler orderScheduler;
 
     @Override
-    public int send(String traderSideUsername, List<Broker> brokers, List<Order> orders) {
+    public Object send(String traderSideUsername, List<Broker> brokers, List<Order> orders) {
         AbstractOrderDao orderDao = (AbstractOrderDao)daoFactory.create(brokers.get(0), orders.get(0).getType());
         return orderScheduler.addSplitOrder(traderSideUsername, orders, orderDao);
     }
