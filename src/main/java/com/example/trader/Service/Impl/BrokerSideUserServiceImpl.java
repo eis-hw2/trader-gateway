@@ -34,6 +34,7 @@ public class BrokerSideUserServiceImpl implements BrokerSideUserService {
     private TraderSideUserService traderSideUserService;
 
     private static Logger logger = LoggerFactory.getLogger("BrokerSideUserService");
+    private static final String REDIS_KEY_PREFIX = "trader-gateway:BrokerSideUserService:login:";
 
     @Autowired
     private RedisService redisService;
@@ -84,12 +85,12 @@ public class BrokerSideUserServiceImpl implements BrokerSideUserService {
         String token = responseHeaders.get("token").get(0);
         logger.info("[BrokerSideUserSerivce.login] token: " + token);
 
-        String key = getKey(traderSideUsername, brokerId);
+        String key =  getKey(traderSideUsername, brokerId);
         redisService.set(key, token, DEFAULT_EXPIRATION);
         return token;
     }
 
     private String getKey(String username, Integer brokerId){
-        return username + "&" + brokerId;
+        return REDIS_KEY_PREFIX + username + ":" + brokerId;
     }
 }
