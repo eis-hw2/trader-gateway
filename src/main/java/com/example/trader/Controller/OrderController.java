@@ -31,6 +31,8 @@ public class OrderController {
             @RequestParam(defaultValue = SenderFactory.INSTANT) String sendStrategy,
             @RequestParam Integer brokerId) {
         System.out.println(JSON.toJSONString(order));
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        order.setTraderName(username);
         List<Order> orders = orderService.createWithStrategy(getUsername(), order, processStrategy, sendStrategy, brokerId);
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, orders);
         /*
@@ -44,26 +46,10 @@ public class OrderController {
 
     }
 
-    @PostMapping("/MarketOrder")
-    public ResponseWrapper createMarketOrder(
-            @RequestBody Order marketOrder,
-            @RequestParam Integer brokerId){
-        Order order = orderService.create(getUsername(), marketOrder, brokerId);
-        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
-    }
-
     @GetMapping("/MarketOrder")
     public ResponseWrapper getMarketOrder(@RequestParam Integer brokerId){
         List<Order> orders = orderService.findAll(Order.MARKET_ORDER, brokerId);
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, orders);
-    }
-
-    @PostMapping("/LimitOrder")
-    public ResponseWrapper createLimitOrder(
-            @RequestBody Order limitOrder,
-            @RequestParam Integer brokerId){
-        Order order = orderService.create(getUsername(), limitOrder, brokerId);
-        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
     }
 
     @GetMapping("/LimitOrder")
@@ -72,27 +58,10 @@ public class OrderController {
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, orders);
     }
 
-    @PostMapping("/StopOrder")
-    public ResponseWrapper createStopOrder(
-            @RequestBody Order stopOrder,
-            @RequestParam Integer brokerId){
-        Order order = orderService.create(getUsername(), stopOrder, brokerId);
-        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
-    }
-
     @GetMapping("/StopOrder")
     public ResponseWrapper getStopOrder(@RequestParam Integer brokerId){
         List<Order> orders = orderService.findAll(Order.STOP_ORDER, brokerId);
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, orders);
-    }
-
-    @PostMapping("/CancelOrder")
-    public ResponseWrapper createCancelOrder(
-            @RequestBody Order cancelOrder,
-            @RequestParam Integer brokerId){
-        Order order = orderService.create(getUsername(), cancelOrder, brokerId);
-        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
-
     }
 
     @GetMapping("/CancelOrder")
