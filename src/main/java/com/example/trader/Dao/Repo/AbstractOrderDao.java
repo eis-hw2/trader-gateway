@@ -12,9 +12,15 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractOrderDao extends DynamicDao<String, Order>{
+public abstract class AbstractOrderDao extends SecuredDao<String, Order>{
 
-    private String token;
+    @Override
+    public HttpHeaders getHttpHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("token", getToken());
+        return headers;
+    }
 
     @Override
     public Class<Order> getValueClass() {
@@ -26,14 +32,6 @@ public abstract class AbstractOrderDao extends DynamicDao<String, Order>{
         return Order[].class;
     }
 
-    @Override
-    public HttpHeaders getHttpHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("token", getToken());
-        return headers;
-    }
-
     public List<Order> findByTraderName(String traderName){
         String url = getBroker().getReadApi() + "/" + getType() + "/search/traderName?traderName=" + traderName;
         ResponseEntity<JSONObject> responseEntity = getRestTemplate().getForEntity(url, JSONObject.class);
@@ -43,13 +41,5 @@ public abstract class AbstractOrderDao extends DynamicDao<String, Order>{
                 .toJavaObject(getValueArrayClass());
         System.out.println(JSON.toJSONString(res));
         return Arrays.asList(res);
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 }

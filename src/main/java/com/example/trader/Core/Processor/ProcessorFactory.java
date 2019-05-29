@@ -3,27 +3,36 @@ package com.example.trader.Core.Processor;
 import com.example.trader.Core.Processor.Strategy.TwapProcessor;
 import com.example.trader.Core.Processor.Strategy.NoneProcessor;
 import com.example.trader.Core.Processor.Strategy.VwapProcessor;
+import com.example.trader.Dao.Repo.OrderBlotterDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import java.util.Calendar;
+
 @Component
 public class ProcessorFactory {
     @Autowired
-    ApplicationContext applicationContext;
+    OrderBlotterDao orderBlotterDao;
 
     public final static String VWAP = "VWAP";
     public final static String TWAP = "TWAP";
     public final static String NONE = "NONE";
 
-    public Processor create(String name){
+    public Processor create(String name, Calendar startTime, Calendar endTime){
+        Processor p;
         switch (name){
             case VWAP:
-                return applicationContext.getBean(VwapProcessor.class);
+                p = new VwapProcessor(startTime, endTime, orderBlotterDao);
+                break;
             case TWAP:
-                return applicationContext.getBean(TwapProcessor.class);
+                p = new TwapProcessor(startTime, endTime);
+                break;
             default:
-                return applicationContext.getBean(NoneProcessor.class);
+                p = new NoneProcessor();
+                break;
         }
+        return p;
+
     }
 }
