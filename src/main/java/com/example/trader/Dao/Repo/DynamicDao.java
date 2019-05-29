@@ -41,6 +41,10 @@ public abstract class DynamicDao<K, V> {
         return httpEntity;
     }
 
+    public String getBaseUrl(){
+        return getBroker().getWriteApi() + "/" + getType();
+    }
+
     public void setBroker(Broker broker) {
         this.broker = broker;
     }
@@ -50,17 +54,17 @@ public abstract class DynamicDao<K, V> {
     public abstract Class<V[]> getValueArrayClass();
 
     public V create(V  value){
-        String url = getBroker().getWriteApi() + "/" + getType();
-        logger.info("[Dao.create] " + url);
-        logger.info("[Dao.create] " + JSON.toJSONString(value));
+        String url = getBaseUrl();
+        logger.info("[Dao.createWithToken] " + url);
+        logger.info("[Dao.createWithToken] " + JSON.toJSONString(value));
         ResponseEntity<JSONObject> responseEntity = getRestTemplate().postForEntity(url, getHttpEntity(value), JSONObject.class);
         JSONObject rw = responseEntity.getBody();
-        logger.info("[Dao.create] " + rw.toJSONString());
+        logger.info("[Dao.createWithToken] " + rw.toJSONString());
         return null;
     }
 
     public V findById(String id) {
-        String url = getBroker().getReadApi() + "/" + getType() + "/" + id;
+        String url = getBaseUrl() + "/" + id;
         logger.info("[Dao.findById] " + url);
         V res = null;
         try {
@@ -75,7 +79,7 @@ public abstract class DynamicDao<K, V> {
     }
 
     public List<V> findAll(){
-        String url = getBroker().getReadApi() + "/" + getType();
+        String url = getBaseUrl();
         logger.info("[Dao.findAll] " + url);
         ResponseEntity<JSONObject> responseEntity = getRestTemplate().getForEntity(url, JSONObject.class);
         V[] res = responseEntity.getBody()
@@ -84,13 +88,5 @@ public abstract class DynamicDao<K, V> {
                 .toJavaObject(getValueArrayClass());
         logger.info("[Dao.findAll] " + JSON.toJSONString(res));
         return Arrays.asList(res);
-    }
-
-    public static void main(String[] args){
-        Broker broker= new Broker();
-        broker.setUrl("pipipan.cn");
-        FutureDao dao = new FutureDao();
-        dao.setBroker(broker);
-        System.out.println(JSON.toJSONString(dao.findAll().get(0).get__links()));
     }
 }

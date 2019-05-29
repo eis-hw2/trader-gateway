@@ -2,11 +2,8 @@ package com.example.trader.Core.Scheduler;
 
 import com.alibaba.fastjson.JSON;
 import com.example.trader.Dao.Repo.AbstractOrderDao;
-import com.example.trader.Dao.Repo.DynamicDao;
 import com.example.trader.Domain.Entity.Order;
 import com.example.trader.Service.BrokerSideUserService;
-import com.example.trader.Util.DateUtil;
-import net.bytebuddy.asm.Advice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +28,11 @@ public class OrderScheduler {
     @Autowired
     private BrokerSideUserService brokerSideUserService;
 
+    /**
+     * Minute
+     */
+    private final int DEFAULT_INTERVAL = 5;
+
     private static Logger logger  = LoggerFactory.getLogger("OrderScheduler");
 
     @Bean
@@ -43,35 +45,27 @@ public class OrderScheduler {
     }
 
     // TODO
-    public int addSplitOrder(String username, List<Order> orders, AbstractOrderDao orderDao){
-        Calendar calendar = Calendar.getInstance();
-        // after 5 min
-        //calendar.add(Calendar.MINUTE, 5);
+    public int addSplitOrder(String username, List<Order> orders, AbstractOrderDao orderDao, Calendar startTime, Calendar endTime){
 
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        calendar.add(Calendar.DAY_OF_MONTH, 1);
-
+        Calendar cur = startTime;
 
         List<ScheduledFuture> futureList = new ArrayList<>();
 
         orders.stream().forEach( order -> {
             if (order.getCount() == 0)
                 return;
-            logger.info("[Future.create]: " + calendar.getTime() + " " + JSON.toJSONString(order));
+            logger.info("[Future.createWithToken]: " + cur.getTime() + " " + JSON.toJSONString(order));
             ScheduledFuture future = threadPoolTaskScheduler.schedule(() -> {
                 int hashCode = order.hashCode();
                 String token = brokerSideUserService.getToken(username, orderDao.getBroker().getId());
                 logger.info("[Future.execute."+hashCode+"]: User: " + username);
                 logger.info("[Future.execute."+hashCode+"]: Token: " + token);
-                logger.info("[Future.execute."+hashCode+"]: " + calendar.getTime() + " " + JSON.toJSONString(order));
+                logger.info("[Future.execute."+hashCode+"]: " + cur.getTime() + " " + JSON.toJSONString(order));
                 orderDao.setToken(token);
                 orderDao.create(order);
-            }, calendar.getTime());
+            }, cur.getTime());
             futureList.add(future);
-            calendar.add(Calendar.HOUR_OF_DAY, 1);
+            cur.add(Calendar.MINUTE, DEFAULT_INTERVAL);
         });
 
         int id = orders.hashCode();
@@ -79,13 +73,8 @@ public class OrderScheduler {
         return id;
     }
 
-    public int addSplitOrder(String username, Map<Order, AbstractOrderDao> orders){
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_MONTH, 1);
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
+    public int addSplitOrder(String username, Map<Order, AbstractOrderDao> orders, Calendar startTime, Calendar endTime){
+        Calendar cur = startTime;
 
         List<ScheduledFuture> futureList = new ArrayList<>();
 
@@ -99,13 +88,13 @@ public class OrderScheduler {
 
                 logger.info("[Future.execute."+hashCode+"]: User: " + username);
                 logger.info("[Future.execute."+hashCode+"]: Token: " + token);
-                logger.info("[Future.execute."+hashCode+"]: " + calendar.getTime() + " " + JSON.toJSONString(o));
+                logger.info("[Future.execute."+hashCode+"]: " + cur.getTime() + " " + JSON.toJSONString(o));
 
                 dao.setToken(token);
                 dao.create(o);
-            }, calendar.getTime());
+            }, cur.getTime());
             futureList.add(future);
-            calendar.add(Calendar.HOUR_OF_DAY, 1);
+            cur.add(Calendar.MINUTE, DEFAULT_INTERVAL);
         });
 
         int id = futureList.hashCode();
