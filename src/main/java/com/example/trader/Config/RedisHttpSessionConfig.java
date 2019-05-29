@@ -10,8 +10,10 @@ import org.springframework.session.data.redis.config.ConfigureRedisAction;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 @Configuration
-@EnableRedisHttpSession
+@EnableRedisHttpSession(maxInactiveIntervalInSeconds = RedisHttpSessionConfig.defaultExpiration)
 public class RedisHttpSessionConfig {
+
+    public final static int defaultExpiration = 60 * 60 * 24;
 
     @Bean
     public LettuceConnectionFactory connectionFactory() {
