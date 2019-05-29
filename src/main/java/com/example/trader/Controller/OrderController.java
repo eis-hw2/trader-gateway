@@ -1,17 +1,17 @@
 package com.example.trader.Controller;
 
-import com.alibaba.fastjson.JSON;
 import com.example.trader.Core.Processor.ProcessorFactory;
 import com.example.trader.Core.Sender.SenderFactory;
 import com.example.trader.Domain.Factory.ResponseWrapperFactory;
 import com.example.trader.Domain.Entity.Order;
 import com.example.trader.Domain.Wrapper.ResponseWrapper;
 import com.example.trader.Service.OrderService;
+import com.example.trader.Util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.text.ParseException;
 
 @RestController
 @RequestMapping("/api/v1/Order")
@@ -24,25 +24,37 @@ public class OrderController {
 
     }
 
+
+
     @PostMapping("")
     public ResponseWrapper createWithStrategy(
             @RequestBody Order order,
             @RequestParam(defaultValue = ProcessorFactory.NONE) String processStrategy,
-            @RequestParam(defaultValue = SenderFactory.INSTANT) String sendStrategy,
+            @RequestParam(defaultValue = SenderFactory.INSTANT_ONE) String sendStrategy,
+            @RequestParam(defaultValue = DateUtil.TOMMOROW_OPEN) String startTime,
+            @RequestParam(defaultValue = DateUtil.TOMMOROW_CLOSE) String endTime,
             @RequestParam Integer brokerId) {
-        System.out.println(JSON.toJSONString(order));
+
+
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         order.setTraderName(username);
-        Object res = orderService.createWithStrategy(getUsername(), order, processStrategy, sendStrategy, brokerId);
-        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, res);
-        /*
-        try{
-            List<Order> orders = orderService.createWithStrategy(order, processStrategy, sendStrategy, brokerId);
-            return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, orders);
+
+        Object res;
+        if (processStrategy.equals(ProcessorFactory.NONE)) {
+            res = orderService.create(username, order, brokerId);
         }
-        catch(Exception e){
-            return ResponseWrapperFactory.create(ResponseWrapper.ERROR, e.getMessage());
-        }*/
+        else{
+            try {
+                res = orderService.createWithStrategy(getUsername(),
+                        order, processStrategy, sendStrategy, brokerId,
+                        startTime, endTime);
+            }
+            catch(ParseException e){
+                return ResponseWrapperFactory.create(ResponseWrapper.ERROR,
+                        "Time format should be yyyy-mm-dd HH:mm:ss");
+            }
+        }
+        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, res);
     }
 
     @GetMapping("")

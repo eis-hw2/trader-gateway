@@ -36,7 +36,7 @@ public class DaoFactory {
         }
     }
 
-    public AbstractOrderDao create(Broker broker, String type, String token){
+    public AbstractOrderDao createWithToken(Broker broker, String type, String token){
         AbstractOrderDao dao = (AbstractOrderDao)applicationContext.getBean(type + "Dao");
         dao.setBroker(broker);
         dao.setToken(token);

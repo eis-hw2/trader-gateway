@@ -1,24 +1,47 @@
 package com.example.trader.Core.Processor.Strategy;
 
+import com.alibaba.fastjson.JSON;
 import com.example.trader.Core.Processor.Processor;
 import com.example.trader.Domain.Entity.Order;
+import com.example.trader.Util.DateUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
-@Component
 public class TwapProcessor extends Processor{
 
-    private final int DEFAULT_NUMBER = 10;
-    private int slice = DEFAULT_NUMBER;
+    private final static Logger logger = LoggerFactory.getLogger("TwapProcessor");
+
+    /**
+     * Minute
+     */
+    private final int DEFAULT_INTERVAL = 5;
+
+    private Calendar startTime;
+    private Calendar endTime;
+
+    public TwapProcessor(Calendar startTime, Calendar endTime){
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
 
     @Override
     public List<Order> process(Order order) {
+        logger.info("[TwapProcessor] startTime: " + DateUtil.datetimeFormat.format(startTime.getTime()));
+        logger.info("[TwapProcessor] endTime: " + DateUtil.datetimeFormat.format(endTime.getTime()));
+        logger.info("[TwapProcessor.process] " + JSON.toJSONString(order));
+
         int total = order.getCount();
-        int mean = total / getSlice();
+        int slice = DateUtil.getMinuteInterval(startTime, endTime) / DEFAULT_INTERVAL;
+        int mean = total / slice;
+        logger.info("[TwapProcessor.process] Slice: " + slice + " Mean: " + mean);
+
         List<Order> orders = new ArrayList<>();
-        for (int i = 0; i < getSlice(); i++){
+        for (int i = 0; i < slice; i++){
             Order o = new Order(order);
             o.setCount(mean);
             orders.add(o);
@@ -26,11 +49,20 @@ public class TwapProcessor extends Processor{
         return orders;
     }
 
-    public int getSlice() {
-        return slice;
+
+    public Calendar getStartTime() {
+        return startTime;
     }
 
-    public void setSlice(int slice) {
-        this.slice = slice;
+    public void setStartTime(Calendar startTime) {
+        this.startTime = startTime;
+    }
+
+    public Calendar getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Calendar endTime) {
+        this.endTime = endTime;
     }
 }
