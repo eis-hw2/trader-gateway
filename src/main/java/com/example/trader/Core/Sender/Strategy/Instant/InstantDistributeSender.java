@@ -22,17 +22,17 @@ public class InstantDistributeSender extends InstantSender {
     }
 
     @Override
-    public Map<String, String> send(String traderSideUsername, List<Broker> brokers, List<Order> orders) {
-        Broker broker = brokers.get(0);
-        String token = brokerSideUserService.getToken(traderSideUsername, broker.getId());
+    public Map<String, String> send(String traderSideUsername, List<Order> orders) {
+
 
         // BrokerId, OrderId
         Map<String, String> res = new HashMap<>();
 
-        int size = brokers.size();
+        int size = getBrokers().size();
         int curIndex = 0;
         for (Order order: orders){
-            Broker curBroker = brokers.get(curIndex % size);
+            Broker curBroker = getBrokers().get(curIndex % size);
+            String token = brokerSideUserService.getToken(traderSideUsername, curBroker.getId());
             // set the token when the scheduler is about to send the request
             AbstractOrderDao orderDao = (AbstractOrderDao)daoFactory.createWithToken(curBroker, orders.get(0).getType(), token);
             String orderId = orderDao.create(order);

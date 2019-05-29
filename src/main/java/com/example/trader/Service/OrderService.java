@@ -1,5 +1,7 @@
 package com.example.trader.Service;
 
+import com.example.trader.Core.Processor.ProcessorFactory;
+import com.example.trader.Core.Sender.SenderFactory;
 import com.example.trader.Domain.Entity.Order;
 
 import java.text.ParseException;
@@ -8,11 +10,8 @@ import java.util.List;
 public interface OrderService {
 
     Object createWithStrategy(String username, Order order,
-                                   String processStrategy,
-                                   String sendStrategy,
-                                   Integer brokerId,
-                                   String startTime,
-                                   String endTime) throws ParseException;
+                              ProcessorFactory.Parameter pp,
+                              SenderFactory.Parameter sp);
 
     Order create(String username, Order order, Integer brokerId);
 

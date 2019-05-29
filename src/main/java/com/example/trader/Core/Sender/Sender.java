@@ -7,5 +7,15 @@ import com.example.trader.Domain.Wrapper.ResponseWrapper;
 import java.util.List;
 
 public abstract class Sender {
-    public abstract Object send(String traderSideUsername, List<Broker> brokers, List<Order> orders);
+    private List<Broker> brokers;
+
+    public abstract Object send(String traderSideUsername, List<Order> orders);
+
+    public List<Broker> getBrokers() {
+        return brokers;
+    }
+
+    public void setBrokers(List<Broker> brokers) {
+        this.brokers = brokers;
+    }
 }

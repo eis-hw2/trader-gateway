@@ -6,14 +6,12 @@ import com.example.trader.Dao.Factory.DaoFactory;
 import com.example.trader.Dao.Repo.AbstractOrderDao;
 import com.example.trader.Domain.Entity.Broker;
 import com.example.trader.Domain.Entity.Order;
-import com.example.trader.Domain.Factory.ResponseWrapperFactory;
 import com.example.trader.Service.BrokerService;
 import com.example.trader.Service.OrderService;
 import com.example.trader.Core.Processor.Processor;
 import com.example.trader.Core.Processor.ProcessorFactory;
 import com.example.trader.Core.Sender.Sender;
 import com.example.trader.Core.Sender.SenderFactory;
-import com.example.trader.Domain.Wrapper.ResponseWrapper;
 import com.example.trader.Util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,31 +35,14 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public Object createWithStrategy(String username, Order order,
-                                          String processStrategy,
-                                          String sendStrategy,
-                                          Integer brokerId,
-                                          String startTime,
-                                          String endTime) throws ParseException{
-        Calendar start, end;
-        if (startTime.equals(DateUtil.TOMMOROW_OPEN))
-            start = DateUtil.getTomorrowOpenTime();
-        else {
-            start = DateUtil.stringToCalendar(startTime, DateUtil.datetimeFormat);
-        }
+                                     ProcessorFactory.Parameter pp,
+                                     SenderFactory.Parameter sp){
 
-        if (endTime.equals(DateUtil.TOMMOROW_CLOSE))
-            end = DateUtil.getTomorrowCloseTime();
-        else {
-            end = DateUtil.stringToCalendar(endTime, DateUtil.datetimeFormat);
-        }
-
-        Processor processor = processorFactory.create(processStrategy, start, end);
-
+        Processor processor = processorFactory.create(pp);
         List<Order> orders = processor.process(order);
 
-        List<Broker> brokers = senderFactory.getBroker(sendStrategy, brokerId);
-        Sender sender = senderFactory.create(sendStrategy, start, end);
-        Object res  = sender.send(username, brokers, orders);
+        Sender sender = senderFactory.create(sp);
+        Object res  = sender.send(username, orders);
 
         /*
         if (responseWrapper.getStatus().equals(ResponseWrapper.ERROR))
@@ -72,12 +53,14 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public Order create(String username, Order order, Integer brokerId){
-        InstantSender sender = senderFactory.create(SenderFactory.INSTANT_ONE);
+        SenderFactory.Parameter sp = new SenderFactory.Parameter(SenderFactory.INSTANT_ONE, brokerId);
+
+        Sender sender = senderFactory.create(sp);
+
         List<Order> orders = new ArrayList<>();
         orders.add(order);
 
-        List<Broker> brokers = senderFactory.getBroker(SenderFactory.INSTANT_ONE, brokerId);
-        Map<String, String> res = sender.send(username, brokers, orders);
+        Map<String, String> res = (Map<String, String>)sender.send(username, orders);
         order.setId(res.get(brokerId));
         return order;
     }

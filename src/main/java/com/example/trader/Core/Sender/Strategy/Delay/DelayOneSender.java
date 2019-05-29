@@ -24,8 +24,8 @@ public class DelayOneSender extends DelaySender {
     }
 
     @Override
-    public Integer send(String traderSideUsername, List<Broker> brokers, List<Order> orders) {
-        AbstractOrderDao orderDao = (AbstractOrderDao)daoFactory.create(brokers.get(0), orders.get(0).getType());
+    public Integer send(String traderSideUsername, List<Order> orders) {
+        AbstractOrderDao orderDao = (AbstractOrderDao)daoFactory.create(getBrokers().get(0), orders.get(0).getType());
         return orderScheduler.addSplitOrder(traderSideUsername, orders, orderDao, getStartTime(), getEndTime());
     }
 

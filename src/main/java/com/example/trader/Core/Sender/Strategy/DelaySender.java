@@ -30,11 +30,10 @@ public abstract class DelaySender extends Sender {
     /**
      *
      * @param traderSideUsername
-     * @param brokers
      * @param orders
      * @return FutureTask ID
      */
     @Override
-    public abstract Integer send(String traderSideUsername, List<Broker> brokers, List<Order> orders);
+    public abstract Integer send(String traderSideUsername, List<Order> orders);
 
 }

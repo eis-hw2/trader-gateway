@@ -41,11 +41,16 @@ public class TwapProcessor extends Processor{
         logger.info("[TwapProcessor.process] Slice: " + slice + " Mean: " + mean);
 
         List<Order> orders = new ArrayList<>();
+
+        int gap = total - mean * slice;
+
         for (int i = 0; i < slice; i++){
             Order o = new Order(order);
             o.setCount(mean);
             orders.add(o);
         }
+        Order temp = orders.get(0);
+        temp.setCount(temp.getCount() + gap);
         return orders;
     }
 

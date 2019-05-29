@@ -21,6 +21,11 @@ public class DateUtil {
     }
 
     public static Calendar stringToCalendar(String str, SimpleDateFormat format) throws ParseException{
+        if (str.equals(TOMMOROW_OPEN))
+            return getTomorrowOpenTime();
+        if (str.equals(TOMMOROW_CLOSE))
+            return getTomorrowCloseTime();
+
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(format.parse(str));
         return calendar;
