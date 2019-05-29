@@ -14,18 +14,18 @@ import java.util.Map;
 /**
 * Send the Order to Different Brokers
 */
-public class DistributeSender extends DelaySender {
+public class DelayDistributeSender extends DelaySender {
 
     private DaoFactory daoFactory;
     private OrderScheduler orderScheduler;
 
-    public DistributeSender(DaoFactory daoFactory, OrderScheduler orderScheduler){
+    public DelayDistributeSender(DaoFactory daoFactory, OrderScheduler orderScheduler){
         this.daoFactory = daoFactory;
         this.orderScheduler = orderScheduler;
     }
 
     @Override
-    public int send(String traderSideUsername, List<Broker> brokers, List<Order> orders) {
+    public Integer send(String traderSideUsername, List<Broker> brokers, List<Order> orders) {
 
         Map<Order, AbstractOrderDao> orderMap = new HashMap<>();
 

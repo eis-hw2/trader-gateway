@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface OrderService {
 
-    List<Order> createWithStrategy(String username, Order order,
+    Object createWithStrategy(String username, Order order,
                                    String processStrategy,
                                    String sendStrategy,
                                    Integer brokerId,
@@ -18,5 +18,5 @@ public interface OrderService {
 
     List<Order> findAll(String type, Integer brokerId);
 
-    Order findById(String type, Integer brokerId, String id);
+    Order findById(String type,  String orderId, Integer brokerId);
 }

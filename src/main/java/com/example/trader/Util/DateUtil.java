@@ -10,7 +10,7 @@ public class DateUtil {
     public final static String TOMMOROW_CLOSE = "TM_CLOSE";
 
     public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    public static SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
+    public static SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public static long getMillisInterval(Calendar startTime, Calendar endTime){
         return endTime.getTimeInMillis() - startTime.getTimeInMillis();
@@ -49,5 +49,17 @@ public class DateUtil {
         Calendar tm = getTomorrow();
         tm.set(Calendar.HOUR_OF_DAY, 3);
         return tm;
+    }
+
+    public static void main(String[] args){
+        try {
+
+            Calendar c = stringToCalendar("2019-05-29 20:00:00", datetimeFormat);
+            System.out.println(datetimeFormat.format(c.getTime()));
+
+        }
+        catch (Exception e){
+            System.out.println("error");
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.example.trader.Service.Impl;
 
 
+import com.example.trader.Core.Sender.Strategy.InstantSender;
 import com.example.trader.Dao.Factory.DaoFactory;
 import com.example.trader.Dao.Repo.AbstractOrderDao;
 import com.example.trader.Domain.Entity.Broker;
@@ -21,6 +22,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class OrderServiceImpl implements OrderService{
@@ -34,7 +36,7 @@ public class OrderServiceImpl implements OrderService{
     private BrokerService brokerService;
 
     @Override
-    public List<Order> createWithStrategy(String username, Order order,
+    public Object createWithStrategy(String username, Order order,
                                           String processStrategy,
                                           String sendStrategy,
                                           Integer brokerId,
@@ -54,27 +56,29 @@ public class OrderServiceImpl implements OrderService{
         }
 
         Processor processor = processorFactory.create(processStrategy, start, end);
+
         List<Order> orders = processor.process(order);
 
         List<Broker> brokers = senderFactory.getBroker(sendStrategy, brokerId);
-        Sender sender = senderFactory.create(sendStrategy);
-        int res  = sender.send(username, brokers, orders);
+        Sender sender = senderFactory.create(sendStrategy, start, end);
+        Object res  = sender.send(username, brokers, orders);
 
         /*
         if (responseWrapper.getStatus().equals(ResponseWrapper.ERROR))
             throw new Exception(JSON.toJSONString(responseWrapper.getBody()));
             */
-        return orders;
+        return res;
     }
 
     @Override
     public Order create(String username, Order order, Integer brokerId){
-        Sender sender = senderFactory.create(SenderFactory.INSTANT);
+        InstantSender sender = senderFactory.create(SenderFactory.INSTANT_ONE);
         List<Order> orders = new ArrayList<>();
         orders.add(order);
 
-        List<Broker> brokers = senderFactory.getBroker(SenderFactory.INSTANT, brokerId);
-        int res = sender.send(username, brokers, orders);
+        List<Broker> brokers = senderFactory.getBroker(SenderFactory.INSTANT_ONE, brokerId);
+        Map<String, String> res = sender.send(username, brokers, orders);
+        order.setId(res.get(brokerId));
         return order;
     }
 
@@ -86,7 +90,7 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public Order findById(String type, Integer brokerId, String id) {
+    public Order findById(String type, String id, Integer brokerId) {
         Broker broker = brokerService.findById(brokerId);
         AbstractOrderDao dao = (AbstractOrderDao)daoFactory.create(broker, type);
         return dao.findById(id);

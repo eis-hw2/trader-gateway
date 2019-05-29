@@ -44,7 +44,6 @@ public class OrderScheduler {
         return new ConcurrentHashMap<>();
     }
 
-    // TODO
     public int addSplitOrder(String username, List<Order> orders, AbstractOrderDao orderDao, Calendar startTime, Calendar endTime){
 
         Calendar cur = startTime;
@@ -54,7 +53,7 @@ public class OrderScheduler {
         orders.stream().forEach( order -> {
             if (order.getCount() == 0)
                 return;
-            logger.info("[Future.createWithToken]: " + cur.getTime() + " " + JSON.toJSONString(order));
+            logger.info("[Future.create]: " + cur.getTime() + " " + JSON.toJSONString(order));
             ScheduledFuture future = threadPoolTaskScheduler.schedule(() -> {
                 int hashCode = order.hashCode();
                 String token = brokerSideUserService.getToken(username, orderDao.getBroker().getId());
@@ -79,6 +78,8 @@ public class OrderScheduler {
         List<ScheduledFuture> futureList = new ArrayList<>();
 
         orders.entrySet().stream().forEach( entry -> {
+            if (entry.getKey().getCount() == 0)
+                return;
             ScheduledFuture future = threadPoolTaskScheduler.schedule(() -> {
                 Order o = entry.getKey();
                 AbstractOrderDao dao = entry.getValue();
