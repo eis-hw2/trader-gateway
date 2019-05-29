@@ -11,7 +11,9 @@ import com.example.trader.Service.BrokerSideUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /*
 * Send the Order to One Broker
@@ -25,14 +27,18 @@ public class InstantSender extends Sender {
     private BrokerSideUserService brokerSideUserService;
 
     @Override
-    public int send(String traderSideUsername, List<Broker> brokers, List<Order> orders) {
+    public Map<String, String> send(String traderSideUsername, List<Broker> brokers, List<Order> orders) {
         Broker broker = brokers.get(0);
         String token = brokerSideUserService.getToken(traderSideUsername, broker.getId());
         AbstractOrderDao orderDao = daoFactory.create(broker, orders.get(0).getType(), token);
+
+        // BrokerId, OrderId
+        Map<String, String> res = new HashMap<>();
+
         for(Order order: orders){
-            orderDao.create(order);
+            res.put(broker.getId().toString(), orderDao.create(order));
         }
 
-        return 0;
+        return res;
     }
 }

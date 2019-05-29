@@ -33,8 +33,8 @@ public class OrderController {
         System.out.println(JSON.toJSONString(order));
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         order.setTraderName(username);
-        List<Order> orders = orderService.createWithStrategy(getUsername(), order, processStrategy, sendStrategy, brokerId);
-        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, orders);
+        Object res = orderService.createWithStrategy(getUsername(), order, processStrategy, sendStrategy, brokerId);
+        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, res);
         /*
         try{
             List<Order> orders = orderService.createWithStrategy(order, processStrategy, sendStrategy, brokerId);
@@ -43,30 +43,14 @@ public class OrderController {
         catch(Exception e){
             return ResponseWrapperFactory.create(ResponseWrapper.ERROR, e.getMessage());
         }*/
-
     }
 
-    @GetMapping("/MarketOrder")
-    public ResponseWrapper getMarketOrder(@RequestParam Integer brokerId){
-        List<Order> orders = orderService.findAll(Order.MARKET_ORDER, brokerId);
-        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, orders);
-    }
-
-    @GetMapping("/LimitOrder")
-    public ResponseWrapper getLimitOrder(@RequestParam Integer brokerId){
-        List<Order> orders = orderService.findAll(Order.LIMIT_ORDER, brokerId);
-        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, orders);
-    }
-
-    @GetMapping("/StopOrder")
-    public ResponseWrapper getStopOrder(@RequestParam Integer brokerId){
-        List<Order> orders = orderService.findAll(Order.STOP_ORDER, brokerId);
-        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, orders);
-    }
-
-    @GetMapping("/CancelOrder")
-    public ResponseWrapper getCancelOrder(@RequestParam Integer brokerId){
-        List<Order> orders = orderService.findAll(Order.CANCEL_ORDER, brokerId);
-        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, orders);
+    @GetMapping("")
+    public ResponseWrapper getOrderById(
+            @RequestParam String type,
+            @RequestParam String orderId,
+            @RequestParam Integer brokerId){
+        Order order = orderService.findById(type, orderId, brokerId);
+        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
     }
 }

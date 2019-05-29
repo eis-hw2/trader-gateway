@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class OrderServiceImpl implements OrderService{
@@ -30,19 +31,19 @@ public class OrderServiceImpl implements OrderService{
     private BrokerService brokerService;
 
     @Override
-    public List<Order> createWithStrategy(String username, Order order, String processStrategy, String sendStrategy, Integer brokerId){
+    public Object createWithStrategy(String username, Order order, String processStrategy, String sendStrategy, Integer brokerId){
         Processor processor = processorFactory.create(processStrategy);
         List<Order> orders = processor.process(order);
 
         List<Broker> brokers = senderFactory.getBroker(sendStrategy, brokerId);
         Sender sender = senderFactory.create(sendStrategy);
-        int res  = sender.send(username, brokers, orders);
+        Object res  = sender.send(username, brokers, orders);
 
         /*
         if (responseWrapper.getStatus().equals(ResponseWrapper.ERROR))
             throw new Exception(JSON.toJSONString(responseWrapper.getBody()));
             */
-        return orders;
+        return res;
     }
 
     @Override
@@ -52,7 +53,8 @@ public class OrderServiceImpl implements OrderService{
         orders.add(order);
 
         List<Broker> brokers = senderFactory.getBroker(SenderFactory.INSTANT, brokerId);
-        int res = sender.send(username, brokers, orders);
+        Map<String, String> res = (Map<String, String>)sender.send(username, brokers, orders);
+        order.setId(res.get(brokerId));
         return order;
     }
 
@@ -64,7 +66,7 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public Order findById(String type, Integer brokerId, String id) {
+    public Order findById(String type, String id, Integer brokerId) {
         Broker broker = brokerService.findById(brokerId);
         AbstractOrderDao dao = (AbstractOrderDao)daoFactory.create(broker, type);
         return dao.findById(id);
