@@ -33,27 +33,36 @@ public class OrderController {
             @RequestParam(defaultValue = SenderFactory.INSTANT_ONE) String sendStrategy,
             @RequestParam(defaultValue = DateUtil.TOMMOROW_OPEN) String startTime,
             @RequestParam(defaultValue = DateUtil.TOMMOROW_CLOSE) String endTime,
+            @RequestParam(defaultValue = "1") Integer slice,
             @RequestParam Integer brokerId) {
-
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         order.setTraderName(username);
 
-        Object res;
-        if (processStrategy.equals(ProcessorFactory.NONE)) {
-            res = orderService.create(username, order, brokerId);
+        ProcessorFactory.Parameter pp;
+        SenderFactory.Parameter sp;
+
+        try {
+            pp = new ProcessorFactory.Parameter(
+                    processStrategy,
+                    startTime,
+                    endTime,
+                    slice);
+            sp = new SenderFactory.Parameter(
+                    sendStrategy,
+                    startTime,
+                    endTime,
+                    brokerId
+            );
+
         }
-        else{
-            try {
-                res = orderService.createWithStrategy(getUsername(),
-                        order, processStrategy, sendStrategy, brokerId,
-                        startTime, endTime);
-            }
-            catch(ParseException e){
-                return ResponseWrapperFactory.create(ResponseWrapper.ERROR,
-                        "Time format should be yyyy-mm-dd HH:mm:ss");
-            }
+        catch(ParseException e){
+            return ResponseWrapperFactory.create(ResponseWrapper.ERROR,
+                    "Time format should be yyyy-mm-dd HH:mm:ss");
         }
+
+        Object res = orderService.createWithStrategy(username, order, pp, sp);
+
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, res);
     }
 
