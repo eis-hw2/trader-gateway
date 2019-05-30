@@ -2,10 +2,7 @@ package com.example.trader.Dao.Repo;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.example.trader.Dao.Factory.DaoFactory;
 import com.example.trader.Domain.Entity.Broker;
-import com.example.trader.Domain.Entity.Future;
-import com.example.trader.Domain.Wrapper.ResponseWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -41,8 +38,12 @@ public abstract class DynamicDao<K, V> {
         return httpEntity;
     }
 
-    public String getBaseUrl(){
+    public String getWriteBaseUrl(){
         return getBroker().getWriteApi() + "/" + getType();
+    }
+
+    public String getReadBaseUrl(){
+        return getBroker().getReadApi() + "/" + getType();
     }
 
     public void setBroker(Broker broker) {
@@ -62,7 +63,7 @@ public abstract class DynamicDao<K, V> {
      * }
      */
     public String create(V  value){
-        String url = getBroker().getWriteApi() + "/" + getType();
+        String url = getWriteBaseUrl();
         logger.info("[Dao.create] " + url);
         logger.info("[Dao.create] " + JSON.toJSONString(value));
         ResponseEntity<JSONObject> responseEntity = getRestTemplate().postForEntity(url, getHttpEntity(value), JSONObject.class);
@@ -72,7 +73,7 @@ public abstract class DynamicDao<K, V> {
     }
 
     public V findById(String id) {
-        String url = getBaseUrl() + "/" + id;
+        String url = getReadBaseUrl() + "/" + id;
         logger.info("[Dao.findById] " + url);
         V res = null;
         try {
@@ -87,7 +88,7 @@ public abstract class DynamicDao<K, V> {
     }
 
     public List<V> findAll(){
-        String url = getBaseUrl();
+        String url = getReadBaseUrl();
         logger.info("[Dao.findAll] " + url);
         ResponseEntity<JSONObject> responseEntity = getRestTemplate().getForEntity(url, JSONObject.class);
         V[] res = responseEntity.getBody()
