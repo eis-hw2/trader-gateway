@@ -33,7 +33,7 @@ public abstract class AbstractOrderDao extends SecuredDao<String, Order>{
     }
 
     public List<Order> findByTraderName(String traderName){
-        String url = getBroker().getReadApi() + "/" + getType() + "/search/traderName?traderName=" + traderName;
+        String url = getReadBaseUrl() + "/search/traderName?traderName=" + traderName;
         ResponseEntity<JSONObject> responseEntity = getRestTemplate().getForEntity(url, JSONObject.class);
         Order[] res = responseEntity.getBody()
                 .getJSONObject("_embedded")

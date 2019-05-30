@@ -1,6 +1,5 @@
 package com.example.trader.Dao.Repo;
 
-import com.alibaba.fastjson.JSONObject;
 import com.example.trader.Domain.Entity.OrderBlotter;
 import com.example.trader.Util.DateUtil;
 import org.springframework.context.annotation.Scope;
@@ -49,7 +48,7 @@ public class OrderBlotterDao extends SecuredDao<String ,OrderBlotter>{
     }
 
     public List<OrderBlotter> findByMarketDepthIdAndInterval(String marketDepthId, String startTime, String endTime){
-        String url = getBaseUrl() + "?marketDepthId=" + marketDepthId +
+        String url = getReadBaseUrl() + "/search/marketDepthId=" + marketDepthId +
                 "&startTime=" + startTime +
                 "&endTime=" + endTime;
         ResponseEntity<OrderBlotter[]> responseEntity = getRestTemplate().getForEntity(url, OrderBlotter[].class);
