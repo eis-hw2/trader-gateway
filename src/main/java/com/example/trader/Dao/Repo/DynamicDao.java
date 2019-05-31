@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class DynamicDao<K, V> {
-    private Logger logger = LoggerFactory.getLogger("Dao");
+    public abstract Logger getLogger();
 
     public RestTemplate getRestTemplate() {
         return new RestTemplate();
@@ -62,19 +62,19 @@ public abstract class DynamicDao<K, V> {
      *     "status": "200"
      * }
      */
-    public String create(V  value){
+    public Object create(V  value){
         String url = getWriteBaseUrl();
-        logger.info("[Dao.create] " + url);
-        logger.info("[Dao.create] " + JSON.toJSONString(value));
+        getLogger().info("[Dao.create] " + url);
+        getLogger().info("[Dao.create] " + JSON.toJSONString(value));
         ResponseEntity<JSONObject> responseEntity = getRestTemplate().postForEntity(url, getHttpEntity(value), JSONObject.class);
         JSONObject rw = responseEntity.getBody();
-        logger.info("[Dao.create] " + rw.toJSONString());
-        return rw.getString("body");
+        getLogger().info("[Dao.create] " + rw.toJSONString());
+        return rw.get("body");
     }
 
     public V findById(String id) {
         String url = getReadBaseUrl() + "/" + id;
-        logger.info("[Dao.findById] " + url);
+        getLogger().info("[Dao.findById] " + url);
         V res = null;
         try {
             ResponseEntity<JSONObject> responseEntity = getRestTemplate().getForEntity(url, JSONObject.class);
@@ -83,19 +83,19 @@ public abstract class DynamicDao<K, V> {
         catch (Exception e){
             e.printStackTrace();
         }
-        logger.info("[Dao.findById] " + JSON.toJSONString(res));
+        getLogger().info("[Dao.findById] " + JSON.toJSONString(res));
         return res;
     }
 
     public List<V> findAll(){
         String url = getReadBaseUrl();
-        logger.info("[Dao.findAll] " + url);
+        getLogger().info("[Dao.findAll] " + url);
         ResponseEntity<JSONObject> responseEntity = getRestTemplate().getForEntity(url, JSONObject.class);
         V[] res = responseEntity.getBody()
                 .getJSONObject("_embedded")
                 .getJSONArray(getType())
                 .toJavaObject(getValueArrayClass());
-        logger.info("[Dao.findAll] " + JSON.toJSONString(res));
+        getLogger().info("[Dao.findAll] " + JSON.toJSONString(res));
         return Arrays.asList(res);
     }
 }

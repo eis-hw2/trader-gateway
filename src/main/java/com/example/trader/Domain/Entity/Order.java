@@ -11,6 +11,12 @@ public class Order {
     public static final String STOP_ORDER = "StopOrder";
     public static final String CANCEL_ORDER = "CancelOrder";
 
+    public static final Order ERROR_ORDER = new Order("error");
+
+    private Order(String error){
+        this.id = error;
+    }
+
     private String id;
     private int unitPrice;
     private Side side;

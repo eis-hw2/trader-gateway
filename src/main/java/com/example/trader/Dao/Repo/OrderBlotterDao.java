@@ -2,6 +2,8 @@ package com.example.trader.Dao.Repo;
 
 import com.example.trader.Domain.Entity.OrderBlotter;
 import com.example.trader.Util.DateUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -13,6 +15,13 @@ import java.util.*;
 @Component("OrderBlotterDao")
 @Scope("prototype")
 public class OrderBlotterDao extends SecuredDao<String ,OrderBlotter>{
+
+    private static Logger logger = LoggerFactory.getLogger("OrderBlotterDao");
+
+    @Override
+    public Logger getLogger() {
+        return logger;
+    }
 
     @Override
     public HttpHeaders getHttpHeaders() {
