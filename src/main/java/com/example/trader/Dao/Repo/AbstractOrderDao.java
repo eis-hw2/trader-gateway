@@ -42,4 +42,22 @@ public abstract class AbstractOrderDao extends SecuredDao<String, Order>{
         System.out.println(JSON.toJSONString(res));
         return Arrays.asList(res);
     }
+
+    @Override
+    public Order create(Order  value){
+        String url = getWriteBaseUrl();
+        this.getLogger().info("[OrderDao.create] " + url);
+        this.getLogger().info("[OrderDao.create] " + JSON.toJSONString(value));
+        ResponseEntity<JSONObject> responseEntity = getRestTemplate().postForEntity(url, getHttpEntity(value), JSONObject.class);
+        JSONObject rw = responseEntity.getBody();
+        int status = rw.getInteger("status");
+        this.getLogger().info("[OrderDao.create] " + status);
+        this.getLogger().info("[OrderDao.create] " + rw.toJSONString());
+        Order res;
+        if (status != 200)
+            res = Order.ERROR_ORDER;
+        else
+            res = rw.getObject("body", Order.class);
+        return res;
+    }
 }

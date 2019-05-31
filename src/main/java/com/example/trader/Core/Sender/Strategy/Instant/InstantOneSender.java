@@ -26,14 +26,14 @@ public class InstantOneSender extends InstantSender {
     }
 
     @Override
-    public Map<String, String> send(String traderSideUsername, List<Order> orders) {
+    public Map<String, Order> send(String traderSideUsername, List<Order> orders) {
         Broker broker = getBrokers().get(0);
         String token = brokerSideUserService.getToken(traderSideUsername, broker.getId());
 
         AbstractOrderDao orderDao = daoFactory.createWithToken(broker, orders.get(0).getType(), token);
 
         // BrokerId, OrderId
-        Map<String, String> res = new HashMap<>();
+        Map<String, Order> res = new HashMap<>();
 
         for(Order order: orders){
             res.put(broker.getId().toString(), orderDao.create(order));
