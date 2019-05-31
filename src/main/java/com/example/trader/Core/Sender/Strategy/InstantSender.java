@@ -12,9 +12,9 @@ public abstract class InstantSender extends Sender{
      *
      * @param traderSideUsername
      * @param orders
-     * @return { $BrokerId: $OrderId }
+     * @return { $BrokerId: $Order }
      */
     @Override
-    public abstract Map<String, String> send(String traderSideUsername, List<Order> orders);
+    public abstract Map<String, Order> send(String traderSideUsername, List<Order> orders);
 
 }
