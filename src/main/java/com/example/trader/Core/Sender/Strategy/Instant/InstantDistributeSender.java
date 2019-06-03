@@ -5,8 +5,10 @@ import com.example.trader.Dao.Factory.DaoFactory;
 import com.example.trader.Dao.Repo.AbstractOrderDao;
 import com.example.trader.Domain.Entity.Broker;
 import com.example.trader.Domain.Entity.Order;
+import com.example.trader.Domain.Entity.Util.BrokerOrderPair;
 import com.example.trader.Service.BrokerSideUserService;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,11 +24,11 @@ public class InstantDistributeSender extends InstantSender {
     }
 
     @Override
-    public Map<String, Order> send(String traderSideUsername, List<Order> orders) {
+    public List<BrokerOrderPair> send(String traderSideUsername, List<Order> orders) {
 
 
         // BrokerId, Order
-        Map<String, Order> res = new HashMap<>();
+        List<BrokerOrderPair> res = new ArrayList<>();
 
         int size = getBrokers().size();
         int curIndex = 0;
@@ -36,8 +38,8 @@ public class InstantDistributeSender extends InstantSender {
             // set the token when the scheduler is about to send the request
             AbstractOrderDao orderDao = (AbstractOrderDao)daoFactory.createWithToken(curBroker, orders.get(0).getType(), token);
             Order createdOrder = orderDao.create(order);
-
-            res.put(curBroker.getId().toString(), createdOrder);
+            createdOrder.setType(order.getType());
+            res.add(new BrokerOrderPair(curBroker.getId(), createdOrder));
             ++curIndex;
         }
 

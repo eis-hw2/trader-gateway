@@ -6,19 +6,10 @@ import java.io.Serializable;
 
 public class BrokerSideUser implements Serializable{
     private Integer brokerId;
-    private String traderName;
     private String username;
 
     @JSONField(serialize = false)
     private String password;
-
-    public String getTraderName() {
-        return traderName;
-    }
-
-    public void setTraderName(String traderName) {
-        this.traderName = traderName;
-    }
 
     public String getPassword() {
         return password;

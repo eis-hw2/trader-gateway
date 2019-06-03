@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.trader.Domain.Entity.Order;
 import com.example.trader.Domain.Wrapper.ResponseWrapper;
+import org.slf4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -45,14 +46,15 @@ public abstract class AbstractOrderDao extends SecuredDao<String, Order>{
 
     @Override
     public Order create(Order  value){
+        Logger logger = getLogger();
         String url = getWriteBaseUrl();
-        this.getLogger().info("[OrderDao.create] " + url);
-        this.getLogger().info("[OrderDao.create] " + JSON.toJSONString(value));
+        logger.info("[OrderDao.create] URL: " + url);
+        logger.info("[OrderDao.create] Order:" + JSON.toJSONString(value));
         ResponseEntity<JSONObject> responseEntity = getRestTemplate().postForEntity(url, getHttpEntity(value), JSONObject.class);
         JSONObject rw = responseEntity.getBody();
         int status = rw.getInteger("status");
-        this.getLogger().info("[OrderDao.create] " + status);
-        this.getLogger().info("[OrderDao.create] " + rw.toJSONString());
+        logger.info("[OrderDao.create] Status: " + status);
+        logger.info("[OrderDao.create] Response: " + rw.toJSONString());
         Order res;
         if (status != 200)
             res = Order.ERROR_ORDER;
