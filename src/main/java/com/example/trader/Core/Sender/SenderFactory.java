@@ -9,6 +9,7 @@ import com.example.trader.Core.Sender.Strategy.Delay.DelayOneSender;
 import com.example.trader.Core.Sender.Strategy.InstantSender;
 import com.example.trader.Dao.Factory.DaoFactory;
 import com.example.trader.Domain.Entity.Broker;
+import com.example.trader.Exception.UnknownParameterException;
 import com.example.trader.Service.BrokerService;
 import com.example.trader.Service.BrokerSideUserService;
 import com.example.trader.Util.DateUtil;
@@ -82,9 +83,7 @@ public class SenderFactory {
                 break;
 
             default:
-                InstantOneSender s5 = new InstantOneSender(daoFactory, brokerSideUserService);
-                res = s5;
-                break;
+                throw new UnknownParameterException("Unknown Sender Strategy: " + parameter.getStrategy());
         }
         res.setBrokers(brokers);
         return res;

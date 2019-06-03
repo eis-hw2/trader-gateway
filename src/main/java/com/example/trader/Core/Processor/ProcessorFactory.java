@@ -5,6 +5,7 @@ import com.example.trader.Core.Processor.Strategy.TwapProcessor;
 import com.example.trader.Core.Processor.Strategy.NoneProcessor;
 import com.example.trader.Core.Processor.Strategy.VwapProcessor;
 import com.example.trader.Dao.Repo.OrderBlotterDao;
+import com.example.trader.Exception.UnknownParameterException;
 import com.example.trader.Util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -79,7 +80,7 @@ public class ProcessorFactory {
 
     public Processor create(Parameter parameter){
         Processor p;
-        switch (parameter.strategy){
+        switch (parameter.getStrategy()){
             case VWAP:
                 p = new VwapProcessor(parameter.getStartTime(), parameter.getEndTime(), orderBlotterDao);
                 break;
@@ -88,9 +89,12 @@ public class ProcessorFactory {
                 break;
             case MEAN:
                 p = new MeanProcessor(parameter.getSlice());
-            default:
+                break;
+            case NONE:
                 p = new NoneProcessor();
                 break;
+            default:
+                throw new UnknownParameterException("Unknown Processor Strategy: " + parameter.getStrategy());
         }
         return p;
     }
