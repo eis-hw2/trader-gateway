@@ -5,6 +5,7 @@ import com.example.trader.Core.Sender.SenderFactory;
 import com.example.trader.Domain.Factory.ResponseWrapperFactory;
 import com.example.trader.Domain.Entity.Order;
 import com.example.trader.Domain.Wrapper.ResponseWrapper;
+import com.example.trader.Exception.UnknownParameterException;
 import com.example.trader.Service.OrderService;
 import com.example.trader.Util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,9 +62,13 @@ public class OrderController {
                     "Time format should be yyyy-mm-dd HH:mm:ss");
         }
 
-        Object res = orderService.createWithStrategy(username, order, pp, sp);
-
-        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, res);
+        try {
+            Object res = orderService.createWithStrategy(username, order, pp, sp);
+            return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, res);
+        }
+        catch (UnknownParameterException e){
+            return ResponseWrapperFactory.create(ResponseWrapper.ERROR, e.getMessage());
+        }
     }
 
     @GetMapping("")
