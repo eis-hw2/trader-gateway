@@ -1,4 +1,4 @@
-package com.example.trader.Config;
+package com.example.trader.Config.Session;
 
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;

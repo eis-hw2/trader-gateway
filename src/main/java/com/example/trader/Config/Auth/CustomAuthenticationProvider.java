@@ -1,4 +1,4 @@
-package com.example.trader.Config;
+package com.example.trader.Config.Auth;
 
 import com.example.trader.Service.TraderSideUserService;
 import org.springframework.beans.factory.annotation.Autowired;

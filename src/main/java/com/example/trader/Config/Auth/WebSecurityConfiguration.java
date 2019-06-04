@@ -1,4 +1,4 @@
-package com.example.trader.Config;
+package com.example.trader.Config.Auth;
 
 import com.example.trader.Filter.JWTBasicFilter;
 import com.example.trader.Filter.JWTLoginFilter;

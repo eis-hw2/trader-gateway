@@ -1,4 +1,4 @@
-package com.example.trader.Config;
+package com.example.trader.Config.Redis;
 
 import com.alibaba.fastjson.parser.ParserConfig;
 import com.alibaba.fastjson.support.spring.FastJsonRedisSerializer;

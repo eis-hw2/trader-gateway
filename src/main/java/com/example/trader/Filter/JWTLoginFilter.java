@@ -38,5 +38,7 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
                 .signWith(SignatureAlgorithm.HS512, "MyJwtSecret")
                 .compact();
         response.addHeader("token", "Bearer " + token);
+        response.addHeader("Access-Control-Allow-Headers", "Content-Type,token");
+        response.addHeader("Access-Control-Expose-Headers", "Content-Type,token");
     }
 }
