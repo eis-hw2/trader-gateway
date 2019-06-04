@@ -4,7 +4,7 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 
-public class Producer {
+public class TaskProducer {
     private final static String QUEUE_NAME = "FutureTask";
     private final static String MQ_HOST = "47.106.8.44";
 
