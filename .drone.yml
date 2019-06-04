@@ -3,14 +3,17 @@ pipeline:
     image: registry.cn-hangzhou.aliyuncs.com/acs/maven
     commands:
       - mvn clean package -DskipTests
-
+    volumes:
+      - /root/maven/repository:/root/.m2/repository
+      - /root/maven/settings.xml:/usr/share/maven/conf/settings.xml
+  
   publish:
     image: docker
     secrets: [docker_username,docker_password]
     commands:
-        - docker login --username=$DOCKER_USERNAME --password=$DOCKER_PASSWORD
-        - docker build -t zzbslayer/trader-gateway:latest -f Dockerfile .
-        - docker push zzbslayer/trader-gateway:latest
+        - docker login --username=$DOCKER_USERNAME --password=$DOCKER_PASSWORD registry-vpc.cn-shenzhen.aliyuncs.com/pipipan/trader-gateway
+        - docker build -t registry-vpc.cn-shenzhen.aliyuncs.com/pipipan/trader-gateway:master -f Dockerfile .
+        - docker push registry-vpc.cn-shenzhen.aliyuncs.com/pipipan/trader-gateway:master
     volumes:
         - /var/run/docker.sock:/var/run/docker.sock
     when:
@@ -19,8 +22,9 @@ pipeline:
 
   deploy:
     image: appleboy/drone-ssh
-    host: 47.106.8.44
+    host: 202.120.40.8
     secrets: [ssh_username, ssh_password]
-    port: 22
+    port: 30250
     script:
-      - /shell/deploy.sh trader-gateway 9090 9090
+      - /root/shell/deployment-wjs.sh trader-gateway 30255 9090
+
