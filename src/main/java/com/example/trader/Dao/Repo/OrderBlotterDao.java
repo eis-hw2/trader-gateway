@@ -1,6 +1,9 @@
 package com.example.trader.Dao.Repo;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.example.trader.Domain.Entity.OrderBlotter;
+import com.example.trader.Domain.Wrapper.ResponseWrapper;
 import com.example.trader.Util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,18 +54,16 @@ public class OrderBlotterDao extends SecuredDao<String ,OrderBlotter>{
         return null;
     }
 
-    public List<OrderBlotter> findByMarketDepthIdAndDate(String futureId, String date){
-        // todo
-        return null;
-    }
-
     public List<OrderBlotter> findByMarketDepthIdAndInterval(String marketDepthId, String startTime, String endTime){
-        String url = getReadBaseUrl() + "/search/marketDepthId=" + marketDepthId +
+
+        String url = getReadBaseUrl() + "?marketDepthId=" + marketDepthId +
                 "&startTime=" + startTime +
                 "&endTime=" + endTime;
-        ResponseEntity<OrderBlotter[]> responseEntity = getRestTemplate().getForEntity(url, OrderBlotter[].class);
-        return Arrays.asList(responseEntity.getBody());
-
+        logger.info("[OrderBlotterDao.findByMarketDepthIdAndInterval] URL: "+url);
+        ResponseEntity<JSONObject> responseEntity = getRestTemplate().getForEntity(url, JSONObject.class);
+        logger.info("[OrderBlotterDao.findByMarketDepthIdAndInterval] Result: "+ JSON.toJSONString(responseEntity.getBody()));
+        OrderBlotter[] orderBlotters = responseEntity.getBody().getObject("body", OrderBlotter[].class);
+        return Arrays.asList(orderBlotters);
     }
 
     public static void main(String[] args){

@@ -1,10 +1,13 @@
 package com.example.trader.Core.Processor.Strategy;
 
+import com.alibaba.fastjson.JSON;
 import com.example.trader.Dao.Repo.OrderBlotterDao;
 import com.example.trader.Domain.Entity.Order;
 import com.example.trader.Domain.Entity.OrderBlotter;
 import com.example.trader.Core.Processor.Processor;
 import com.example.trader.Util.DateUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,25 +24,44 @@ public class VwapProcessor extends Processor {
     private OrderBlotterDao orderBlotterDao;
     private Calendar startTime;
     private Calendar endTime;
+
+    private static final Logger logger = LoggerFactory.getLogger("VwapProcessor");
     /**
      * Minute
      */
-    private final int DEFAULT_INTERVAL = 5;
+    private Integer intervalMinute;
+    private static final int DEFAULT_INTERVAL = 5;
 
-    public VwapProcessor(Calendar startTime, Calendar endTime, OrderBlotterDao od){
-        this.startTime = startTime;
-        this.endTime = endTime;
+    public VwapProcessor(Calendar startTime, Calendar endTime, OrderBlotterDao od, Integer intervalMinute){
         this.orderBlotterDao = od;
+        this.intervalMinute = intervalMinute;
+
+        /**
+         * 根据昨天该时间段的 OrderBlotter 进行划分
+         * 未来可以添加其他种类的 VWAP 策略，比如根据过去三天等等
+         */
+        Calendar startSearchCalendar = (Calendar) startTime.clone();
+        startSearchCalendar.add(Calendar.DAY_OF_MONTH, -1);
+        this.startTime = startSearchCalendar;
+
+        Calendar endSearchCalendar = (Calendar) endTime.clone();
+        endSearchCalendar.add(Calendar.DAY_OF_MONTH, -1);
+        this.endTime = endSearchCalendar;
     }
 
     @Override
     public List<Order> process(Order order){
 
-        String start = DateUtil.datetimeFormat.format(startTime);
-        String end = DateUtil.datetimeFormat.format(endTime);
+        logger.info("[VwapProcessor.process] StartTime: " + DateUtil.calendarToString(startTime, DateUtil.datetimeFormat));
+        logger.info("[VwapProcessor.process] EndTime: " + DateUtil.calendarToString(endTime, DateUtil.datetimeFormat));
+        logger.info("[VwapProcessor.process] Order: " + JSON.toJSONString(order));
+
+        String startSearch = DateUtil.calendarToString(startTime, DateUtil.datetimeFormat);
+        String endSearch = DateUtil.calendarToString(endTime, DateUtil.datetimeFormat);
+
         List<OrderBlotter> orderBlotters = orderBlotterDao.findByMarketDepthIdAndInterval(
                 order.getMarketDepthId(),
-                start, end);
+                startSearch, endSearch);
 
 
         double[] percents = getPercentage(orderBlotters);
@@ -59,6 +81,7 @@ public class VwapProcessor extends Processor {
             Order first = splitOrder.get(0);
             first.setCount(first.getCount() + (sum - splitSum));
         }
+        logger.info("[VwapProcessor.process] Result: " + JSON.toJSONString(splitOrder));
         return splitOrder;
     }
 
@@ -97,8 +120,10 @@ public class VwapProcessor extends Processor {
 
         orderBlotters.stream().forEach(ob -> {
             try{
+                logger.debug("[VwapProcessor.getPercentage] Created Time: " + ob.getCreationTime());
                 Calendar createdTime = DateUtil.stringToCalendar(ob.getCreationTime(), DateUtil.datetimeFormat);
                 int index = getIndex(createdTime);
+                logger.debug("[VwapProcessor.getPercentage] Index: " + index );
                 res[index] += ob.getCount();
             }
             catch(ParseException e){}
@@ -132,5 +157,13 @@ public class VwapProcessor extends Processor {
 
     public void setEndTime(Calendar endTime) {
         this.endTime = endTime;
+    }
+
+    public int getIntervalMinute() {
+        return intervalMinute;
+    }
+
+    public void setIntervalMinute(int intervalMinute) {
+        this.intervalMinute = intervalMinute;
     }
 }

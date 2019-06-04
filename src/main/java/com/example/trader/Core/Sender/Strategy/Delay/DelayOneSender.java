@@ -23,11 +23,17 @@ public class DelayOneSender extends DelaySender {
         this.orderScheduler = orderScheduler;
     }
 
+    public DelayOneSender(DaoFactory daoFactory, OrderScheduler orderScheduler, int intervalMinute){
+        this.daoFactory = daoFactory;
+        this.orderScheduler = orderScheduler;
+        this.setIntervalMinute(intervalMinute);
+    }
+
     @Override
     public Integer send(String traderSideUsername, List<Order> orders) {
         // set the token when the scheduler is about to send the request
         AbstractOrderDao orderDao = (AbstractOrderDao)daoFactory.create(getBrokers().get(0), orders.get(0).getType());
-        return orderScheduler.addSplitOrder(traderSideUsername, orders, orderDao, getStartTime(), getEndTime());
+        return orderScheduler.addSplitOrder(traderSideUsername, orders, orderDao, getStartTime(), getEndTime(), getIntervalMinute());
     }
 
 

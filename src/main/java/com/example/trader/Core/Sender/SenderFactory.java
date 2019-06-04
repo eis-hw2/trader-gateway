@@ -1,20 +1,17 @@
 package com.example.trader.Core.Sender;
 
 import com.example.trader.Core.Scheduler.OrderScheduler;
-import com.example.trader.Core.Sender.Strategy.DelaySender;
 import com.example.trader.Core.Sender.Strategy.Instant.InstantDistributeSender;
 import com.example.trader.Core.Sender.Strategy.Instant.InstantOneSender;
 import com.example.trader.Core.Sender.Strategy.Delay.DelayDistributeSender;
 import com.example.trader.Core.Sender.Strategy.Delay.DelayOneSender;
-import com.example.trader.Core.Sender.Strategy.InstantSender;
 import com.example.trader.Dao.Factory.DaoFactory;
 import com.example.trader.Domain.Entity.Broker;
-import com.example.trader.Exception.UnknownParameterException;
+import com.example.trader.Exception.InvalidParameterException;
 import com.example.trader.Service.BrokerService;
 import com.example.trader.Service.BrokerSideUserService;
 import com.example.trader.Util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
@@ -60,14 +57,14 @@ public class SenderFactory {
         Sender res;
         switch (parameter.getStrategy()){
             case DELAY_DISTRIBUTE:
-                DelayDistributeSender s1 = new DelayDistributeSender(daoFactory, orderScheduler);
+                DelayDistributeSender s1 = new DelayDistributeSender(daoFactory, orderScheduler, parameter.getIntervalMinute());
                 s1.setStartTime(parameter.getStartTime());
                 s1.setEndTime(parameter.getEndTime());
                 res = s1;
                 break;
 
             case DELAY_ONE:
-                DelayOneSender s2 = new DelayOneSender(daoFactory, orderScheduler);
+                DelayOneSender s2 = new DelayOneSender(daoFactory, orderScheduler, parameter.getIntervalMinute());
                 s2.setStartTime(parameter.getStartTime());
                 s2.setEndTime(parameter.getEndTime());
                 res = s2;
@@ -83,7 +80,7 @@ public class SenderFactory {
                 break;
 
             default:
-                throw new UnknownParameterException("Unknown Sender Strategy: " + parameter.getStrategy());
+                throw new InvalidParameterException("Unknown Sender Strategy: " + parameter.getStrategy());
         }
         res.setBrokers(brokers);
         return res;
@@ -94,20 +91,15 @@ public class SenderFactory {
         private Calendar startTime;
         private Calendar endTime;
         private Integer brokerId;
+        private Integer intervalMinute;
 
-        public Parameter(String strategy, Calendar startTime, Calendar endTime, Integer brokerId){
-            this.strategy = strategy;
-            this.startTime = startTime;
-            this.endTime = endTime;
-            this.brokerId = brokerId;
-        }
-
-        public Parameter(String strategy, String startTime, String endTime, Integer brokerId) throws ParseException {
+        public Parameter(String strategy, String startTime, String endTime, Integer brokerId, Integer intervalMinute) throws ParseException {
 
             this.startTime = DateUtil.stringToCalendar(startTime, DateUtil.datetimeFormat);
             this.endTime = DateUtil.stringToCalendar(endTime, DateUtil.datetimeFormat);
             this.strategy = strategy;
             this.brokerId = brokerId;
+            this.intervalMinute = intervalMinute;
         }
 
         public Parameter(String strategy, Integer brokerId){
@@ -147,6 +139,14 @@ public class SenderFactory {
 
         public void setBrokerId(Integer brokerId) {
             this.brokerId = brokerId;
+        }
+
+        public Integer getIntervalMinute() {
+            return intervalMinute;
+        }
+
+        public void setIntervalMinute(Integer intervalMinute) {
+            this.intervalMinute = intervalMinute;
         }
     }
 }

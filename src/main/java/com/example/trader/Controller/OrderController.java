@@ -5,7 +5,7 @@ import com.example.trader.Core.Sender.SenderFactory;
 import com.example.trader.Domain.Factory.ResponseWrapperFactory;
 import com.example.trader.Domain.Entity.Order;
 import com.example.trader.Domain.Wrapper.ResponseWrapper;
-import com.example.trader.Exception.UnknownParameterException;
+import com.example.trader.Exception.InvalidParameterException;
 import com.example.trader.Service.OrderService;
 import com.example.trader.Util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +35,7 @@ public class OrderController {
             @RequestParam(defaultValue = DateUtil.TOMMOROW_OPEN) String startTime,
             @RequestParam(defaultValue = DateUtil.TOMMOROW_CLOSE) String endTime,
             @RequestParam(defaultValue = "1") Integer slice,
+            @RequestParam(defaultValue = "5") Integer intervalMinute,
             @RequestParam Integer brokerId) {
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -48,13 +49,15 @@ public class OrderController {
                     processStrategy,
                     startTime,
                     endTime,
-                    slice);
+                    slice,
+                    brokerId,
+                    intervalMinute);
             sp = new SenderFactory.Parameter(
                     sendStrategy,
                     startTime,
                     endTime,
-                    brokerId
-            );
+                    brokerId,
+                    intervalMinute);
 
         }
         catch(ParseException e){
@@ -66,7 +69,7 @@ public class OrderController {
             Object res = orderService.createWithStrategy(username, order, pp, sp);
             return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, res);
         }
-        catch (UnknownParameterException e){
+        catch (InvalidParameterException e){
             return ResponseWrapperFactory.create(ResponseWrapper.ERROR, e.getMessage());
         }
     }
