@@ -54,7 +54,7 @@ public class OrderScheduler {
         List<ScheduledFuture> futureList = new ArrayList<>();
 
         orders.stream().forEach( order -> {
-            if (order.getCount() == 0)
+            if (order.getTotalCount() == 0)
                 return;
             logger.info("[Future.create]: " + cur.getTime() + " " + JSON.toJSONString(order));
             ScheduledFuture future = threadPoolTaskScheduler.schedule(() -> {
@@ -85,7 +85,7 @@ public class OrderScheduler {
         List<ScheduledFuture> futureList = new ArrayList<>();
 
         orders.entrySet().stream().forEach( entry -> {
-            if (entry.getKey().getCount() == 0)
+            if (entry.getKey().getTotalCount() == 0)
                 return;
             ScheduledFuture future = threadPoolTaskScheduler.schedule(() -> {
                 Order o = entry.getKey();

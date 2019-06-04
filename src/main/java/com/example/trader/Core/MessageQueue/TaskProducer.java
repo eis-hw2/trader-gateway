@@ -4,7 +4,7 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 
-public class Producer {
+public class TaskProducer {
     private final static String QUEUE_NAME = "FutureTask";
     private final static String MQ_HOST = "47.106.8.44";
 
@@ -17,6 +17,7 @@ public class Producer {
             Channel channel = connection.createChannel();
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);
             channel.basicPublish("", QUEUE_NAME, null, message.getBytes());
+            System.out.println(" [Produce.produce] Sent: " + message);
             return true;
         }
         catch(Exception e){

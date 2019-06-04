@@ -1,21 +1,27 @@
 package com.example.trader.Core.Sender.Strategy.Delay;
 
+import com.alibaba.fastjson.JSON;
+import com.example.trader.Core.MessageQueue.TaskProducer;
 import com.example.trader.Core.Scheduler.OrderScheduler;
 import com.example.trader.Core.Sender.Strategy.DelaySender;
-import com.example.trader.Dao.Repo.AbstractOrderDao;
 import com.example.trader.Dao.Factory.DaoFactory;
-import com.example.trader.Domain.Entity.Broker;
+import com.example.trader.Dao.Repo.AbstractOrderDao;
 import com.example.trader.Domain.Entity.Order;
 import com.example.trader.Domain.Entity.OrderToSend;
+import com.example.trader.Util.DateUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.UUID;
 
 /**
 * Send the Order to One Broker
 */
 public class DelayOneSender extends DelaySender {
 
+    private final static Logger logger = LoggerFactory.getLogger("DelayOneSender");
     private DaoFactory daoFactory;
     private OrderScheduler orderScheduler;
 
@@ -32,8 +38,6 @@ public class DelayOneSender extends DelaySender {
 
     @Override
     public Integer send(String traderSideUsername, List<Order> orders) {
-
-
         // set the token when the scheduler is about to send the request
         AbstractOrderDao orderDao = (AbstractOrderDao)daoFactory.create(getBrokers().get(0), orders.get(0).getType());
         return orderScheduler.addSplitOrder(traderSideUsername, orders, orderDao, getStartTime(), getEndTime(), getIntervalMinute());
