@@ -23,6 +23,7 @@ public class Order {
     private String marketDepthId;
     private Status status;
     private int count;
+    private int totalCount;
     private Type targetType;
     private String targetId;
     private String type;
@@ -52,7 +53,7 @@ public class Order {
         side = o.getSide();
         marketDepthId = o.getMarketDepthId();
         status = o.getStatus();
-        count = o.getCount();
+        totalCount = o.getTotalCount();
         targetType = o.getTargetType();
         targetId = o.getTargetId();
         type = o.getType();
@@ -116,12 +117,12 @@ public class Order {
         this.status = status;
     }
 
-    public int getCount() {
-        return count;
+    public int getTotalCount() {
+        return totalCount;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
     }
 
     public String getType() {
@@ -138,5 +139,13 @@ public class Order {
 
     public void setCreationTime(String creationTime) {
         this.creationTime = creationTime;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 }

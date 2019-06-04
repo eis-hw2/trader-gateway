@@ -1,5 +1,7 @@
 package com.example.trader.Filter;
 
+import com.example.trader.Domain.Factory.ResponseWrapperFactory;
+import com.example.trader.Domain.Wrapper.ResponseWrapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -37,8 +40,10 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
                 .setExpiration(new Date(System.currentTimeMillis() + 365 * 24 * 60 * 60 * 1000))
                 .signWith(SignatureAlgorithm.HS512, "MyJwtSecret")
                 .compact();
-        response.addHeader("token", "Bearer " + token);
-        response.addHeader("Access-Control-Allow-Headers", "Content-Type,token");
-        response.addHeader("Access-Control-Expose-Headers", "Content-Type,token");
+        String actualToken = "Bearer " + token;
+        PrintWriter out = response.getWriter();
+        out.write(ResponseWrapperFactory.createResponseString(ResponseWrapper.SUCCESS, actualToken));
+        out.flush();
+        out.close();
     }
 }
