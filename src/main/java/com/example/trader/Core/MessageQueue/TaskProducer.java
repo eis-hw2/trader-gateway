@@ -17,6 +17,7 @@ public class TaskProducer {
             Channel channel = connection.createChannel();
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);
             channel.basicPublish("", QUEUE_NAME, null, message.getBytes());
+            System.out.println(" [Produce.produce] Sent: " + message);
             return true;
         }
         catch(Exception e){

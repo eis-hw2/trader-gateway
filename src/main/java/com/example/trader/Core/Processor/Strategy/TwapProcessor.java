@@ -6,7 +6,6 @@ import com.example.trader.Domain.Entity.Order;
 import com.example.trader.Util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -35,7 +34,7 @@ public class TwapProcessor extends Processor{
         logger.info("[TwapProcessor] endTime: " + DateUtil.datetimeFormat.format(endTime.getTime()));
         logger.info("[TwapProcessor.process] " + JSON.toJSONString(order));
 
-        int total = order.getCount();
+        int total = order.getTotalCount();
         int slice = DateUtil.getMinuteInterval(startTime, endTime) / DEFAULT_INTERVAL;
         int mean = total / slice;
         logger.info("[TwapProcessor.process] Slice: " + slice + " Mean: " + mean);
@@ -46,11 +45,11 @@ public class TwapProcessor extends Processor{
 
         for (int i = 0; i < slice; i++){
             Order o = new Order(order);
-            o.setCount(mean);
+            o.setTotalCount(mean);
             orders.add(o);
         }
         Order temp = orders.get(0);
-        temp.setCount(temp.getCount() + gap);
+        temp.setTotalCount(temp.getTotalCount() + gap);
         return orders;
     }
 

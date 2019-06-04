@@ -8,16 +8,12 @@ import com.example.trader.Core.Processor.Processor;
 import com.example.trader.Util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.BiFunction;
-import java.util.function.BinaryOperator;
 
 public class VwapProcessor extends Processor {
 
@@ -68,7 +64,7 @@ public class VwapProcessor extends Processor {
 
         List<Order> splitOrder = new ArrayList<>(percents.length);
 
-        int sum = order.getCount();
+        int sum = order.getTotalCount();
         int splitSum = 0;
 
         for (int i = 0; i < percents.length; i++){
@@ -79,7 +75,7 @@ public class VwapProcessor extends Processor {
         }
         if (splitSum < sum){
             Order first = splitOrder.get(0);
-            first.setCount(first.getCount() + (sum - splitSum));
+            first.setTotalCount(first.getTotalCount() + (sum - splitSum));
         }
         logger.info("[VwapProcessor.process] Result: " + JSON.toJSONString(splitOrder));
         return splitOrder;
@@ -88,7 +84,7 @@ public class VwapProcessor extends Processor {
 
     private Order makeSplitOrder(Order origin, int count){
         Order split = new Order(origin);
-        split.setCount(count);
+        split.setTotalCount(count);
         return split;
     }
 
