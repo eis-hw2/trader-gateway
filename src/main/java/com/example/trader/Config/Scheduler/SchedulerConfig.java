@@ -1,4 +1,4 @@
-package com.example.trader.Config;
+package com.example.trader.Config.Scheduler;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
