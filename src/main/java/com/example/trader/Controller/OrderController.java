@@ -13,19 +13,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/Order")
 public class OrderController {
     @Autowired
     private OrderService orderService;
-
-    private String getUsername(){
-        return  SecurityContextHolder.getContext().getAuthentication().getName();
-
-    }
-
-
 
     @PostMapping("")
     public ResponseWrapper createWithStrategy(
@@ -74,12 +68,11 @@ public class OrderController {
         }
     }
 
-    @GetMapping("")
-    public ResponseWrapper getOrderById(
-            @RequestParam String type,
-            @RequestParam String orderId,
-            @RequestParam Integer brokerId){
-        Order order = orderService.findById(type, orderId, brokerId);
-        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
+
+    @GetMapping("/")
+    public ResponseWrapper findByBrokerId(@RequestParam Integer brokerId){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<Order> orders = orderService.findByBrokerIdAndUsername(brokerId, username);
+        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, orders);
     }
 }

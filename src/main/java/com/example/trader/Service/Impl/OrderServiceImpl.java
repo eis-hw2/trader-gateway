@@ -73,9 +73,14 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public Order findById(String type, String id, Integer brokerId) {
+    public Order findByIdAndType(String type, String id, Integer brokerId) {
         Broker broker = brokerService.findById(brokerId);
         AbstractOrderDao dao = (AbstractOrderDao)daoFactory.create(broker, type);
         return dao.findById(id);
+    }
+
+    @Override
+    public List<Order> findByBrokerIdAndUsername(Integer brokerId, String username) {
+        return null;
     }
 }
