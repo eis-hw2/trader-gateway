@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class TraderSideUserServiceImpl implements TraderSideUserService {
@@ -20,7 +21,8 @@ public class TraderSideUserServiceImpl implements TraderSideUserService {
 
     @Override
     public TraderSideUser register(TraderSideUser traderSideUser) {
-        traderSideUser.setBrokerSideUsers(new HashMap<>());
+        Map<String, BrokerSideUser> map = new HashMap<>();
+        traderSideUser.setBrokerSideUsers(map);
         traderSideUser.setRoles(Role.getDefaultRole());
         return traderSideUserDao.save(traderSideUser);
     }
