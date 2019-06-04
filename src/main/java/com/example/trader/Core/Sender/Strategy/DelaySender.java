@@ -11,6 +11,8 @@ public abstract class DelaySender extends Sender {
     private Calendar startTime;
     private Calendar endTime;
 
+    private int intervalMinute;
+
     public Calendar getStartTime() {
         return startTime;
     }
@@ -36,4 +38,11 @@ public abstract class DelaySender extends Sender {
     @Override
     public abstract Integer send(String traderSideUsername, List<Order> orders);
 
+    public int getIntervalMinute() {
+        return intervalMinute;
+    }
+
+    public void setIntervalMinute(int intervalMinute) {
+        this.intervalMinute = intervalMinute;
+    }
 }

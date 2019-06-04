@@ -20,6 +20,10 @@ public class DateUtil {
         return (int) (getMillisInterval(startTime, endTime) / 60000);
     }
 
+    public static String calendarToString(Calendar calendar, SimpleDateFormat format){
+        return format.format(calendar.getTime());
+    }
+
     public static Calendar stringToCalendar(String str, SimpleDateFormat format) throws ParseException{
         if (str.equals(TOMMOROW_OPEN))
             return getTomorrowOpenTime();

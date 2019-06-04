@@ -17,14 +17,11 @@ import java.util.List;
 public class TraderSideUserServiceImpl implements TraderSideUserService {
     @Autowired
     private TraderSideUserDao traderSideUserDao;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Override
     public TraderSideUser register(TraderSideUser traderSideUser) {
         traderSideUser.setBrokerSideUsers(new HashMap<>());
         traderSideUser.setRoles(Role.getDefaultRole());
-        traderSideUser.setPassword(passwordEncoder.encode(traderSideUser.getPassword()));
         return traderSideUserDao.save(traderSideUser);
     }
 

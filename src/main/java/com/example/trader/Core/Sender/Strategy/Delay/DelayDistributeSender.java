@@ -19,9 +19,10 @@ public class DelayDistributeSender extends DelaySender {
     private DaoFactory daoFactory;
     private OrderScheduler orderScheduler;
 
-    public DelayDistributeSender(DaoFactory daoFactory, OrderScheduler orderScheduler){
+    public DelayDistributeSender(DaoFactory daoFactory, OrderScheduler orderScheduler, int intervalMinute){
         this.daoFactory = daoFactory;
         this.orderScheduler = orderScheduler;
+        this.setIntervalMinute(intervalMinute);
     }
 
     @Override
@@ -38,7 +39,7 @@ public class DelayDistributeSender extends DelaySender {
             orderMap.put(order, orderDao);
             ++curIndex;
         }
-        return orderScheduler.addSplitOrder(traderSideUsername, orderMap, getStartTime(), getEndTime());
+        return orderScheduler.addSplitOrder(traderSideUsername, orderMap, getStartTime(), getEndTime(), getIntervalMinute());
 
     }
 }

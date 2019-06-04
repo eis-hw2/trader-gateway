@@ -44,7 +44,10 @@ public class OrderScheduler {
         return new ConcurrentHashMap<>();
     }
 
-    public int addSplitOrder(String username, List<Order> orders, AbstractOrderDao orderDao, Calendar startTime, Calendar endTime){
+    public int addSplitOrder(String username, List<Order> orders, AbstractOrderDao orderDao, Calendar startTime, Calendar endTime, Integer intervalMinute){
+        if (intervalMinute == null)
+            intervalMinute = DEFAULT_INTERVAL;
+        final int interval = intervalMinute;
 
         Calendar cur = startTime;
 
@@ -64,7 +67,7 @@ public class OrderScheduler {
                 orderDao.create(order);
             }, cur.getTime());
             futureList.add(future);
-            cur.add(Calendar.MINUTE, DEFAULT_INTERVAL);
+            cur.add(Calendar.MINUTE, interval);
         });
 
         int id = orders.hashCode();
@@ -72,7 +75,11 @@ public class OrderScheduler {
         return id;
     }
 
-    public int addSplitOrder(String username, Map<Order, AbstractOrderDao> orders, Calendar startTime, Calendar endTime){
+    public int addSplitOrder(String username, Map<Order, AbstractOrderDao> orders, Calendar startTime, Calendar endTime, Integer intervalMinute){
+        if (intervalMinute == null)
+            intervalMinute = DEFAULT_INTERVAL;
+        final int interval = intervalMinute;
+
         Calendar cur = startTime;
 
         List<ScheduledFuture> futureList = new ArrayList<>();
@@ -95,7 +102,7 @@ public class OrderScheduler {
                 dao.create(o);
             }, cur.getTime());
             futureList.add(future);
-            cur.add(Calendar.MINUTE, DEFAULT_INTERVAL);
+            cur.add(Calendar.MINUTE, interval);
         });
 
         int id = futureList.hashCode();

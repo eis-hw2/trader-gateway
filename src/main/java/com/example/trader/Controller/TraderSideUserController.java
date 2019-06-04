@@ -62,4 +62,10 @@ public class TraderSideUserController {
         List<TraderSideUser> users = traderSideUserService.findAll();
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, users);
     }
+
+    @GetMapping("/myself")
+    public ResponseWrapper myself(){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, username);
+    }
 }
