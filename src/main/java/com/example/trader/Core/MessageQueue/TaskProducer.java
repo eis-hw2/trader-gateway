@@ -12,12 +12,12 @@ public class TaskProducer {
     private final static Connection connection = getConnection(factory);
 
     public static boolean produce(String message){
-        System.out.println(" [Produce.produce] To send: " + message);
+        System.out.println(" [TaskProducer.produce] To send: " + message);
         try {
             Channel channel = connection.createChannel();
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);
             channel.basicPublish("", QUEUE_NAME, null, message.getBytes());
-            System.out.println(" [Produce.produce] Sent: " + message);
+            System.out.println(" [TaskProducer.produce] Sent: " + message);
             return true;
         }
         catch(Exception e){

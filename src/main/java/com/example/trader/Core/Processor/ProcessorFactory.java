@@ -110,7 +110,11 @@ public class ProcessorFactory {
 
                 break;
             case TWAP:
-                p = new TwapProcessor(parameter.getStartTime(), parameter.getEndTime());
+                TwapProcessor tp = new TwapProcessor();
+                tp.setStartTime(parameter.getStartTime());
+                tp.setEndTime(parameter.getEndTime());
+                tp.setInterval(parameter.getIntervalMinute());
+                p = tp;
                 break;
             case MEAN:
                 p = new MeanProcessor(parameter.getSlice());

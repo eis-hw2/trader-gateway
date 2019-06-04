@@ -18,7 +18,7 @@ public class TwapProcessor extends Processor{
     /**
      * Minute
      */
-    private final int DEFAULT_INTERVAL = 5;
+    private int interval;
 
     private Calendar startTime;
     private Calendar endTime;
@@ -28,6 +28,8 @@ public class TwapProcessor extends Processor{
         this.endTime = endTime;
     }
 
+    public TwapProcessor(){}
+
     @Override
     public List<Order> process(Order order) {
         logger.info("[TwapProcessor] startTime: " + DateUtil.datetimeFormat.format(startTime.getTime()));
@@ -35,7 +37,7 @@ public class TwapProcessor extends Processor{
         logger.info("[TwapProcessor.process] " + JSON.toJSONString(order));
 
         int total = order.getTotalCount();
-        int slice = DateUtil.getMinuteInterval(startTime, endTime) / DEFAULT_INTERVAL;
+        int slice = DateUtil.getMinuteInterval(startTime, endTime) / interval;
         int mean = total / slice;
         logger.info("[TwapProcessor.process] Slice: " + slice + " Mean: " + mean);
 
@@ -68,5 +70,13 @@ public class TwapProcessor extends Processor{
 
     public void setEndTime(Calendar endTime) {
         this.endTime = endTime;
+    }
+
+    public int getInterval() {
+        return interval;
+    }
+
+    public void setInterval(int interval) {
+        this.interval = interval;
     }
 }
