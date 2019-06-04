@@ -24,6 +24,7 @@ public class Order {
     private Status status;
     private int count;
     private int totalCount;
+    private String futureName;
     private Type targetType;
     private String targetId;
     private String type;
@@ -147,5 +148,13 @@ public class Order {
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public String getFutureName() {
+        return futureName;
+    }
+
+    public void setFutureName(String futureName) {
+        this.futureName = futureName;
     }
 }

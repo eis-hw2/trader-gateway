@@ -5,6 +5,7 @@ import com.example.trader.Domain.Entity.Util.Links;
 
 public class Future {
     private String id;
+    private String futureName;
     private String marketDepthId;
     private String description;
     private Links _links;
@@ -39,5 +40,13 @@ public class Future {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getFutureName() {
+        return futureName;
+    }
+
+    public void setFutureName(String futureName) {
+        this.futureName = futureName;
     }
 }
