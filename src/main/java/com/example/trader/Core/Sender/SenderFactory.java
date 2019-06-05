@@ -1,6 +1,5 @@
 package com.example.trader.Core.Sender;
 
-import com.example.trader.Core.Scheduler.OrderScheduler;
 import com.example.trader.Core.Sender.Strategy.Instant.InstantDistributeSender;
 import com.example.trader.Core.Sender.Strategy.Instant.InstantOneSender;
 import com.example.trader.Core.Sender.Strategy.Delay.DelayDistributeSender;
@@ -26,8 +25,6 @@ public class SenderFactory {
     private BrokerService brokerService;
     @Autowired
     private DaoFactory daoFactory;
-    @Autowired
-    private OrderScheduler orderScheduler;
     @Autowired
     private BrokerSideUserService brokerSideUserService;
 
@@ -57,14 +54,14 @@ public class SenderFactory {
         Sender res;
         switch (parameter.getStrategy()){
             case DELAY_DISTRIBUTE:
-                DelayDistributeSender s1 = new DelayDistributeSender(daoFactory, orderScheduler, parameter.getIntervalMinute());
+                DelayDistributeSender s1 = new DelayDistributeSender(parameter.getIntervalMinute());
                 s1.setStartTime(parameter.getStartTime());
                 s1.setEndTime(parameter.getEndTime());
                 res = s1;
                 break;
 
             case DELAY_ONE:
-                DelayOneSender s2 = new DelayOneSender(daoFactory, orderScheduler, parameter.getIntervalMinute());
+                DelayOneSender s2 = new DelayOneSender(parameter.getIntervalMinute());
                 s2.setStartTime(parameter.getStartTime());
                 s2.setEndTime(parameter.getEndTime());
                 res = s2;

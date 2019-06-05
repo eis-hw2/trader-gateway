@@ -22,17 +22,8 @@ import java.util.UUID;
 public class DelayOneSender extends DelaySender {
 
     private final static Logger logger = LoggerFactory.getLogger("DelayOneSender");
-    private DaoFactory daoFactory;
-    private OrderScheduler orderScheduler;
 
-    public DelayOneSender(DaoFactory daoFactory, OrderScheduler orderScheduler){
-        this.daoFactory = daoFactory;
-        this.orderScheduler = orderScheduler;
-    }
-
-    public DelayOneSender(DaoFactory daoFactory, OrderScheduler orderScheduler, int intervalMinute){
-        this.daoFactory = daoFactory;
-        this.orderScheduler = orderScheduler;
+    public DelayOneSender(int intervalMinute){
         this.setIntervalMinute(intervalMinute);
     }
 

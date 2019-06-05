@@ -32,6 +32,11 @@ public class OrderController {
             @RequestParam(defaultValue = "5") Integer intervalMinute,
             @RequestParam Integer brokerId) {
 
+        if (order.getTotalCount() <= 0)
+            return ResponseWrapperFactory.create(ResponseWrapper.ERROR, "Total count must be positive");
+        if (order.getFutureName() == null)
+            return ResponseWrapperFactory.create(ResponseWrapper.ERROR, "Future name must not be null");
+
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         order.setTraderName(username);
 
