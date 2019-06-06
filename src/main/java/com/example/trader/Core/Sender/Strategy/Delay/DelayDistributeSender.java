@@ -2,11 +2,7 @@ package com.example.trader.Core.Sender.Strategy.Delay;
 
 import com.alibaba.fastjson.JSON;
 import com.example.trader.Core.MessageQueue.TaskProducer;
-import com.example.trader.Core.Scheduler.OrderScheduler;
 import com.example.trader.Core.Sender.Strategy.DelaySender;
-import com.example.trader.Dao.Repo.AbstractOrderDao;
-import com.example.trader.Dao.Factory.DaoFactory;
-import com.example.trader.Domain.Entity.Broker;
 import com.example.trader.Domain.Entity.Order;
 import com.example.trader.Domain.Entity.OrderToSend;
 import com.example.trader.Util.DateUtil;
@@ -27,8 +23,9 @@ public class DelayDistributeSender extends DelaySender {
     }
 
     @Override
-    public Integer send(String traderSideUsername, List<Order> orders) {
+    public String send(String traderSideUsername, List<Order> orders) {
 
+        String groupId = UUID.randomUUID().toString();
         int interval = getIntervalMinute();
 
         Calendar cur = (Calendar) getStartTime().clone();
@@ -41,19 +38,22 @@ public class DelayDistributeSender extends DelaySender {
                 continue;
             OrderToSend ots = new OrderToSend();
             Integer brokerId = getBrokers().get(curIndex % size).getId();
+
+            ots.setStatus(OrderToSend.INIT);
+            ots.setGroupId(groupId);
             ots.setBrokerId(brokerId);
             ots.setDatetime(DateUtil.calendarToString(cur, DateUtil.datetimeFormat));
             ots.setId(UUID.randomUUID().toString());
             ots.setOrder(order);
             ots.setTraderSideUsername(traderSideUsername);
-            String message = JSON.toJSONString(ots);
 
-            logger.info("[DelayOneSender.send] OrderToSend: " + message);
-            TaskProducer.produce(message);
+            TaskProducer.create(ots);
+
+            getOrderToSendDao().save(ots);
 
             cur.add(Calendar.MINUTE, interval);
             ++curIndex;
         }
-        return 0;
+        return groupId;
     }
 }

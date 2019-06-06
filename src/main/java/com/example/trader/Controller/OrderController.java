@@ -1,7 +1,10 @@
 package com.example.trader.Controller;
 
+import com.example.trader.Core.MessageQueue.TaskProducer;
 import com.example.trader.Core.Processor.ProcessorFactory;
 import com.example.trader.Core.Sender.SenderFactory;
+import com.example.trader.Dao.Repo.OrderToSendDao;
+import com.example.trader.Domain.Entity.OrderToSend;
 import com.example.trader.Domain.Factory.ResponseWrapperFactory;
 import com.example.trader.Domain.Entity.Order;
 import com.example.trader.Domain.Wrapper.ResponseWrapper;
@@ -20,6 +23,28 @@ import java.util.List;
 public class OrderController {
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private OrderToSendDao orderToSendDao;
+
+    @GetMapping("/future-order")
+    public ResponseWrapper getFutureOrder(){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<OrderToSend> otss = orderToSendDao.findByTraderSideUsername(username);
+        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, otss);
+    }
+
+    @DeleteMapping("/future-order/{groupId}")
+    public ResponseWrapper cancelFutureWait(@PathVariable String groupId,
+                                            @RequestParam(defaultValue = "1000") Long sleep){
+        TaskProducer.cancel(groupId);
+        try {
+            Thread.sleep(sleep);
+        }
+        catch (InterruptedException e){}
+
+        List<OrderToSend> otss = orderToSendDao.findByGroupId(groupId);
+        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, otss);
+    }
 
     @PostMapping("")
     public ResponseWrapper createWithStrategy(

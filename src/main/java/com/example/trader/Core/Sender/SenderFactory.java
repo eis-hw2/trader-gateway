@@ -5,6 +5,7 @@ import com.example.trader.Core.Sender.Strategy.Instant.InstantOneSender;
 import com.example.trader.Core.Sender.Strategy.Delay.DelayDistributeSender;
 import com.example.trader.Core.Sender.Strategy.Delay.DelayOneSender;
 import com.example.trader.Dao.Factory.DaoFactory;
+import com.example.trader.Dao.Repo.OrderToSendDao;
 import com.example.trader.Domain.Entity.Broker;
 import com.example.trader.Exception.InvalidParameterException;
 import com.example.trader.Service.BrokerService;
@@ -27,6 +28,8 @@ public class SenderFactory {
     private DaoFactory daoFactory;
     @Autowired
     private BrokerSideUserService brokerSideUserService;
+    @Autowired
+    private OrderToSendDao orderToSendDao;
 
     public final static String DELAY_DISTRIBUTE = "DELAY_DISTRIBUTE";
     public final static String DELAY_ONE = "DELAY_ONE";
@@ -57,6 +60,7 @@ public class SenderFactory {
                 DelayDistributeSender s1 = new DelayDistributeSender(parameter.getIntervalMinute());
                 s1.setStartTime(parameter.getStartTime());
                 s1.setEndTime(parameter.getEndTime());
+                s1.setOrderToSendDao(orderToSendDao);
                 res = s1;
                 break;
 
@@ -64,6 +68,7 @@ public class SenderFactory {
                 DelayOneSender s2 = new DelayOneSender(parameter.getIntervalMinute());
                 s2.setStartTime(parameter.getStartTime());
                 s2.setEndTime(parameter.getEndTime());
+                s2.setOrderToSendDao(orderToSendDao);
                 res = s2;
                 break;
 
