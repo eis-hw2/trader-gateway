@@ -38,6 +38,8 @@ public class InstantOneSender extends InstantSender {
         List<BrokerOrderPair> res = new ArrayList<>();
 
         for(Order order: orders){
+            if (order.getTotalCount() == 0)
+                continue;
             Order createdOrder = orderDao.create(order);
             createdOrder.setType(order.getType());
             res.add(new BrokerOrderPair(broker.getId(), createdOrder));

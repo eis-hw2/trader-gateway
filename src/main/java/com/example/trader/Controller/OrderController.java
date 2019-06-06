@@ -1,7 +1,10 @@
 package com.example.trader.Controller;
 
+import com.example.trader.Core.MessageQueue.TaskProducer;
 import com.example.trader.Core.Processor.ProcessorFactory;
 import com.example.trader.Core.Sender.SenderFactory;
+import com.example.trader.Dao.Repo.OrderToSendDao;
+import com.example.trader.Domain.Entity.OrderToSend;
 import com.example.trader.Domain.Factory.ResponseWrapperFactory;
 import com.example.trader.Domain.Entity.Order;
 import com.example.trader.Domain.Wrapper.ResponseWrapper;
@@ -13,19 +16,35 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/Order")
 public class OrderController {
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private OrderToSendDao orderToSendDao;
 
-    private String getUsername(){
-        return  SecurityContextHolder.getContext().getAuthentication().getName();
-
+    @GetMapping("/future-order")
+    public ResponseWrapper getFutureOrder(){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<OrderToSend> otss = orderToSendDao.findByTraderSideUsername(username);
+        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, otss);
     }
 
+    @DeleteMapping("/future-order/{groupId}")
+    public ResponseWrapper cancelFutureWait(@PathVariable String groupId,
+                                            @RequestParam(defaultValue = "1000") Long sleep){
+        TaskProducer.cancel(groupId);
+        try {
+            Thread.sleep(sleep);
+        }
+        catch (InterruptedException e){}
 
+        List<OrderToSend> otss = orderToSendDao.findByGroupId(groupId);
+        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, otss);
+    }
 
     @PostMapping("")
     public ResponseWrapper createWithStrategy(
@@ -37,6 +56,11 @@ public class OrderController {
             @RequestParam(defaultValue = "1") Integer slice,
             @RequestParam(defaultValue = "5") Integer intervalMinute,
             @RequestParam Integer brokerId) {
+
+        if (order.getTotalCount() <= 0)
+            return ResponseWrapperFactory.create(ResponseWrapper.ERROR, "Total count must be positive");
+        if (order.getFutureName() == null)
+            return ResponseWrapperFactory.create(ResponseWrapper.ERROR, "Future name must not be null");
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         order.setTraderName(username);
@@ -74,12 +98,11 @@ public class OrderController {
         }
     }
 
-    @GetMapping("")
-    public ResponseWrapper getOrderById(
-            @RequestParam String type,
-            @RequestParam String orderId,
-            @RequestParam Integer brokerId){
-        Order order = orderService.findById(type, orderId, brokerId);
-        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, order);
+
+    @GetMapping("/")
+    public ResponseWrapper findByBrokerId(@RequestParam Integer brokerId){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<Order> orders = orderService.findByBrokerIdAndUsername(brokerId, username);
+        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, orders);
     }
 }
