@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface OrderToSendDao extends MongoRepository<OrderToSend, String> {
     List<OrderToSend> findByGroupId(String groupId);
+    List<OrderToSend> findByTraderSideUsername(String username);
 }

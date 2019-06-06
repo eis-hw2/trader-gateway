@@ -26,13 +26,14 @@ public class OrderController {
     @Autowired
     private OrderToSendDao orderToSendDao;
 
-    @DeleteMapping("/cancel-future/{groupId}")
-    public ResponseWrapper cancelFuture(@PathVariable String groupId){
-        TaskProducer.cancel(groupId);
-        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, "request sent");
+    @GetMapping("/future-order")
+    public ResponseWrapper getFutureOrder(){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<OrderToSend> otss = orderToSendDao.findByTraderSideUsername(username);
+        return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, otss);
     }
 
-    @DeleteMapping("/cancel-future-wait/{groupId}")
+    @DeleteMapping("/future-order/{groupId}")
     public ResponseWrapper cancelFutureWait(@PathVariable String groupId,
                                             @RequestParam(defaultValue = "1000") Long sleep){
         TaskProducer.cancel(groupId);
