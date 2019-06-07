@@ -5,8 +5,11 @@ import com.example.trader.Dao.Repo.OrderBlotterDao;
 import com.example.trader.Domain.Entity.Broker;
 import com.example.trader.Domain.Entity.OrderBlotter;
 import com.example.trader.Service.BrokerService;
+import com.example.trader.Service.BrokerSideUserService;
 import com.example.trader.Service.OrderBlotterService;
+import com.example.trader.Util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
@@ -19,6 +22,8 @@ public class OrderBlotterServiceImpl implements OrderBlotterService {
     private DaoFactory daoFactory;
     @Autowired
     private BrokerService brokerService;
+    @Autowired
+    private BrokerSideUserService brokerSideUserService;
 
     @Override
     public List<OrderBlotter> findAll(Integer brokerId) {
@@ -36,9 +41,11 @@ public class OrderBlotterServiceImpl implements OrderBlotterService {
     }
 
     @Override
-    public List<OrderBlotter> findByFutureIdAndTime(Integer brokerId, String futureId, Calendar startTime, Calendar endTime) {
+    public List<OrderBlotter> findByMarketDepthIdAndStartTimeAndEndTime(String traderSideUsername, Integer brokerId, String marketDepthId, String startTime, String endTime) {
         Broker broker = brokerService.findById(brokerId);
-        OrderBlotterDao dao = (OrderBlotterDao)daoFactory.create(broker, "OrderBlotter");
-        return null;
+        String token = brokerSideUserService.getToken(traderSideUsername, brokerId);
+        OrderBlotterDao dao = (OrderBlotterDao)daoFactory.createWithToken(broker, "OrderBlotter", token);
+
+        return dao.findByMarketDepthIdAndInterval(marketDepthId, startTime, endTime);
     }
 }
