@@ -1,9 +1,8 @@
 package com.example.trader.Config.Auth;
 
-import com.example.trader.Filter.JWTBasicFilter;
-import com.example.trader.Filter.JWTLoginFilter;
+import com.example.trader.Config.Auth.Filter.*;
+import com.example.trader.Service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -17,6 +16,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     AuthenticationProvider customAuthenticationProvider;
+    @Autowired
+    RedisService redisService;
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(customAuthenticationProvider);
@@ -40,7 +42,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/configuration/security").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .addFilter(new JWTLoginFilter(authenticationManager()))
+                .addFilter(new JWTLoginFilter(authenticationManager(), redisService))
                 .addFilter(new JWTBasicFilter(authenticationManager()));
     }
 }

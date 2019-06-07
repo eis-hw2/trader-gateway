@@ -9,6 +9,6 @@ import java.util.List;
 public interface OrderBlotterService {
     List<OrderBlotter> findAll(Integer brokerId);
     OrderBlotter findById(Integer brokerId, String id);
-    List<OrderBlotter> findByFutureIdAndTime(Integer brokerId, String futureId, Calendar startTime, Calendar endTime);
+    List<OrderBlotter> findByMarketDepthIdAndStartTimeAndEndTime(String traderSideUsername, Integer brokerId, String marketDepthId, String startTime, String endTime);
 
 }

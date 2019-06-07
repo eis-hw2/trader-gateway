@@ -38,7 +38,7 @@ public class DaoFactory {
         }
     }
 
-    public SecuredDao<String, Order> createWithToken(Broker broker, String type, String token){
+    public SecuredDao createWithToken(Broker broker, String type, String token){
         SecuredDao dao = (SecuredDao)applicationContext.getBean(type + "Dao");
         dao.setBroker(broker);
         dao.setToken(token);
