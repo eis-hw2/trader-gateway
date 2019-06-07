@@ -8,6 +8,7 @@ public class OrderToSend {
     public final static String INIT = "INIT";
     public final static String SCHEDULED = "SCHEDULED";
     public final static String CREATED = "CREATED";
+    public final static String CANCELLED = "CANCELLED";
 
     private String groupId;
     @Id
@@ -18,6 +19,7 @@ public class OrderToSend {
     private Integer brokerId;
     private String datetime;
     private String status = INIT;
+    private String cancelOrderId;
 
     public String getId() {
         return id;
@@ -81,5 +83,13 @@ public class OrderToSend {
 
     public void setBrokerOrderId(String brokerOrderId) {
         this.brokerOrderId = brokerOrderId;
+    }
+
+    public String getCancelOrderId() {
+        return cancelOrderId;
+    }
+
+    public void setCancelOrderId(String cancelOrderId) {
+        this.cancelOrderId = cancelOrderId;
     }
 }

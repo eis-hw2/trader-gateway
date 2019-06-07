@@ -53,10 +53,6 @@ public class OrderServiceImpl implements OrderService{
         Sender sender = senderFactory.create(sp);
         Object res  = sender.send(username, orders);
 
-        /*
-        if (responseWrapper.getStatus().equals(ResponseWrapper.ERROR))
-            throw new Exception(JSON.toJSONString(responseWrapper.getBody()));
-            */
         return res;
     }
 

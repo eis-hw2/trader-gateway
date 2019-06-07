@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MeanProcessor extends Processor {
+public class MeanProcessor implements Processor {
     private int slice;
     private static Logger logger = LoggerFactory.getLogger("MeanProcessor");
 

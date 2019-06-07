@@ -9,7 +9,8 @@ import com.example.trader.Domain.Entity.OrderToSend;
 import java.util.Calendar;
 import java.util.List;
 
-public abstract class DelaySender extends Sender {
+public abstract class DelaySender implements Sender {
+    private List<Broker> brokers;
     private Calendar startTime;
     private Calendar endTime;
 
@@ -31,6 +32,14 @@ public abstract class DelaySender extends Sender {
 
     public void setEndTime(Calendar endTime) {
         this.endTime = endTime;
+    }
+
+    public List<Broker> getBrokers() {
+        return brokers;
+    }
+
+    public void setBrokers(List<Broker> brokers) {
+        this.brokers = brokers;
     }
 
     /**

@@ -15,7 +15,7 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
 
-public class VwapProcessor extends Processor {
+public class VwapProcessor implements Processor {
 
     private OrderBlotterDao orderBlotterDao;
     private Calendar startTime;

@@ -35,7 +35,7 @@ public class OrderController {
 
     @DeleteMapping("/future-order/{groupId}")
     public ResponseWrapper cancelFutureWait(@PathVariable String groupId,
-                                            @RequestParam(defaultValue = "1000") Long sleep){
+                                            @RequestParam(defaultValue = "2000") Long sleep){
         TaskProducer.cancel(groupId);
         try {
             Thread.sleep(sleep);
@@ -61,6 +61,10 @@ public class OrderController {
             return ResponseWrapperFactory.create(ResponseWrapper.ERROR, "Total count must be positive");
         if (order.getFutureName() == null)
             return ResponseWrapperFactory.create(ResponseWrapper.ERROR, "Future name must not be null");
+        if (!order.getType().equals("CancelOrder")
+                && !order.getType().equals("MarketOrder")
+                && !order.getType().equals("LimitOrder"))
+            return ResponseWrapperFactory.create(ResponseWrapper.ERROR, "Invalid order type:"+order.getType());
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         order.setTraderName(username);
