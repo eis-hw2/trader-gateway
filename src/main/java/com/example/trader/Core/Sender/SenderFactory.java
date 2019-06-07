@@ -61,6 +61,7 @@ public class SenderFactory {
                 s1.setStartTime(parameter.getStartTime());
                 s1.setEndTime(parameter.getEndTime());
                 s1.setOrderToSendDao(orderToSendDao);
+                s1.setBrokers(brokers);
                 res = s1;
                 break;
 
@@ -69,22 +70,25 @@ public class SenderFactory {
                 s2.setStartTime(parameter.getStartTime());
                 s2.setEndTime(parameter.getEndTime());
                 s2.setOrderToSendDao(orderToSendDao);
+                s2.setBrokers(brokers);
                 res = s2;
                 break;
 
             case INSTANT_DISTRIBUTE:
                 InstantDistributeSender s3 = new InstantDistributeSender(daoFactory, brokerSideUserService);
+                s3.setBrokers(brokers);
                 res = s3;
                 break;
             case INSTANT_ONE:
                 InstantOneSender s4 = new InstantOneSender(daoFactory, brokerSideUserService);
+                s4.setBrokers(brokers);
                 res = s4;
                 break;
 
             default:
                 throw new InvalidParameterException("Unknown Sender Strategy: " + parameter.getStrategy());
         }
-        res.setBrokers(brokers);
+
         return res;
     }
 
