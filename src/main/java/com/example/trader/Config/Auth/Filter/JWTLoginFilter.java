@@ -29,7 +29,7 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
     private RedisService redisService;
 
     public JWTLoginFilter(AuthenticationManager am, RedisService redisService){
-        this.authenticationManager = authenticationManager;
+        this.authenticationManager = am;
         this.redisService = redisService;
     }
 
