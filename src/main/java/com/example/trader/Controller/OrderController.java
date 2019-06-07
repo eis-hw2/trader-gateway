@@ -35,7 +35,7 @@ public class OrderController {
 
     @DeleteMapping("/future-order/{groupId}")
     public ResponseWrapper cancelFutureWait(@PathVariable String groupId,
-                                            @RequestParam(defaultValue = "1000") Long sleep){
+                                            @RequestParam(defaultValue = "2000") Long sleep){
         TaskProducer.cancel(groupId);
         try {
             Thread.sleep(sleep);
