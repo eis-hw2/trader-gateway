@@ -48,15 +48,24 @@ public class Order {
         this.traderName = traderName;
     }
 
+    /**
+     * Important
+     * 新加属性后需要修改该函数
+     * @param o
+     */
     public Order(Order o){
+
         id = o.getId();
         unitPrice = o.getUnitPrice();
         side = o.getSide();
         marketDepthId = o.getMarketDepthId();
         status = o.getStatus();
+        count = o.getCount();
         totalCount = o.getTotalCount();
+        futureName = o.getFutureName();
         targetType = o.getTargetType();
         targetId = o.getTargetId();
+        traderName = o.getTraderName();
         type = o.getType();
     }
 

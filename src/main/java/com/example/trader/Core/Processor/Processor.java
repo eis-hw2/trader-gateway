@@ -4,6 +4,6 @@ import com.example.trader.Domain.Entity.Order;
 
 import java.util.List;
 
-public abstract class Processor {
-    public abstract List<Order> process(Order order);
+public interface Processor {
+    List<Order> process(Order order);
 }

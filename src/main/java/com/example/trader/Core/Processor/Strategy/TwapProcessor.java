@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class TwapProcessor extends Processor{
+public class TwapProcessor implements Processor{
 
     private final static Logger logger = LoggerFactory.getLogger("TwapProcessor");
 

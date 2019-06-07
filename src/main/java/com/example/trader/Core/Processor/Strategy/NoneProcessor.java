@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NoneProcessor extends Processor {
+public class NoneProcessor implements Processor {
     @Override
     public List<Order> process(Order order) {
         List<Order> orders = new ArrayList<>();

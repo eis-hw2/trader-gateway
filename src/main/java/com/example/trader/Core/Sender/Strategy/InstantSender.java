@@ -8,7 +8,8 @@ import com.example.trader.Domain.Entity.Util.BrokerOrderPair;
 import java.util.List;
 import java.util.Map;
 
-public abstract class InstantSender extends Sender{
+public abstract class InstantSender implements Sender{
+    private List<Broker> brokers;
     /**
      *
      * @param traderSideUsername
@@ -18,4 +19,11 @@ public abstract class InstantSender extends Sender{
     @Override
     public abstract List<BrokerOrderPair> send(String traderSideUsername, List<Order> orders);
 
+    public List<Broker> getBrokers() {
+        return brokers;
+    }
+
+    public void setBrokers(List<Broker> brokers) {
+        this.brokers = brokers;
+    }
 }
