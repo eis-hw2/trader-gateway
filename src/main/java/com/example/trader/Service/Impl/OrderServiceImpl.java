@@ -93,7 +93,7 @@ public class OrderServiceImpl implements OrderService{
         String brokerSideUsername = traderSideUserService.findByUsername(username).getBrokerSideUser(brokerId).getUsername();
 
         MarketOrderDao mdao = (MarketOrderDao) daoFactory.createWithToken(broker, "MarketOrder", token);
-        LimitOrderDao ldao = (LimitOrderDao) daoFactory.createWithToken(broker, "LimitiOrder", token);
+        LimitOrderDao ldao = (LimitOrderDao) daoFactory.createWithToken(broker, "LimitOrder", token);
         StopOrderDao sdao = (StopOrderDao) daoFactory.createWithToken(broker, "StopOrder", token);
         List<Order> res = mdao.findByTraderName(brokerSideUsername);
         res.addAll(ldao.findByTraderName(brokerSideUsername));
