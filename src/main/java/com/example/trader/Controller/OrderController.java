@@ -103,10 +103,11 @@ public class OrderController {
     }
 
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseWrapper findByBrokerId(@RequestParam Integer brokerId){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         List<Order> orders = orderService.findByBrokerIdAndUsername(brokerId, username);
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, orders);
     }
+
 }
