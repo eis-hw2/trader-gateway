@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -96,6 +97,6 @@ public abstract class DynamicDao<K, V> {
                 .getJSONArray(getType())
                 .toJavaObject(getValueArrayClass());
         getLogger().info("[Dao.findAll] " + JSON.toJSONString(res));
-        return Arrays.asList(res);
+        return new ArrayList<>(Arrays.asList(res));
     }
 }

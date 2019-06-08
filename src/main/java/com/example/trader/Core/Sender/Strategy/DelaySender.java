@@ -66,4 +66,10 @@ public abstract class DelaySender implements Sender {
     public void setOrderToSendDao(OrderToSendDao orderToSendDao) {
         this.orderToSendDao = orderToSendDao;
     }
+
+    public boolean checkOrder(Order order){
+        if (order.getType().equals("CancelOrder"))
+            return false;
+        return true;
+    }
 }

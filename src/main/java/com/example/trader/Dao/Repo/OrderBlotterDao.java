@@ -63,7 +63,7 @@ public class OrderBlotterDao extends SecuredDao<String ,OrderBlotter>{
         ResponseEntity<JSONObject> responseEntity = getRestTemplate().getForEntity(url, JSONObject.class);
         logger.info("[OrderBlotterDao.findByMarketDepthIdAndInterval] Result: "+ JSON.toJSONString(responseEntity.getBody()));
         OrderBlotter[] orderBlotters = responseEntity.getBody().getObject("body", OrderBlotter[].class);
-        return Arrays.asList(orderBlotters);
+        return new ArrayList<>(Arrays.asList(orderBlotters));
     }
 
     public static void main(String[] args){

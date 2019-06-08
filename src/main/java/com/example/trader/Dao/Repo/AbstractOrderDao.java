@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,7 +42,7 @@ public abstract class AbstractOrderDao extends SecuredDao<String, Order>{
                 .getJSONArray(getType())
                 .toJavaObject(getValueArrayClass());
         System.out.println(JSON.toJSONString(res));
-        return Arrays.asList(res);
+        return new ArrayList<>(Arrays.asList(res));
     }
 
     @Override
