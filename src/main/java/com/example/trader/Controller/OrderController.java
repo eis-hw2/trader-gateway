@@ -3,7 +3,7 @@ package com.example.trader.Controller;
 import com.example.trader.Core.MessageQueue.TaskProducer;
 import com.example.trader.Core.Processor.ProcessorFactory;
 import com.example.trader.Core.Sender.SenderFactory;
-import com.example.trader.Dao.Repo.OrderToSendDao;
+import com.example.trader.Dao.Repo.TraderSideDao.OrderToSendDao;
 import com.example.trader.Domain.Entity.OrderToSend;
 import com.example.trader.Domain.Factory.ResponseWrapperFactory;
 import com.example.trader.Domain.Entity.Order;

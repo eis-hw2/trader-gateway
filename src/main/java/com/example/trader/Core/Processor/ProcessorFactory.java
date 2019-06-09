@@ -5,7 +5,7 @@ import com.example.trader.Core.Processor.Strategy.TwapProcessor;
 import com.example.trader.Core.Processor.Strategy.NoneProcessor;
 import com.example.trader.Core.Processor.Strategy.VwapProcessor;
 import com.example.trader.Dao.Factory.DaoFactory;
-import com.example.trader.Dao.Repo.OrderBlotterDao;
+import com.example.trader.Dao.Repo.BrokerSideDao.Secured.OrderBlotterDao;
 import com.example.trader.Domain.Entity.Broker;
 import com.example.trader.Exception.InvalidParameterException;
 import com.example.trader.Service.BrokerService;

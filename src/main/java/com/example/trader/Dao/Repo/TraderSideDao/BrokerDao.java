@@ -1,4 +1,4 @@
-package com.example.trader.Dao.Repo;
+package com.example.trader.Dao.Repo.TraderSideDao;
 
 import com.example.trader.Domain.Entity.Broker;
 import org.springframework.data.jpa.repository.JpaRepository;

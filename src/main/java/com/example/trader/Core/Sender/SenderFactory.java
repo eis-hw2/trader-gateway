@@ -5,7 +5,7 @@ import com.example.trader.Core.Sender.Strategy.Instant.InstantOneSender;
 import com.example.trader.Core.Sender.Strategy.Delay.DelayDistributeSender;
 import com.example.trader.Core.Sender.Strategy.Delay.DelayOneSender;
 import com.example.trader.Dao.Factory.DaoFactory;
-import com.example.trader.Dao.Repo.OrderToSendDao;
+import com.example.trader.Dao.Repo.TraderSideDao.OrderToSendDao;
 import com.example.trader.Domain.Entity.Broker;
 import com.example.trader.Exception.InvalidParameterException;
 import com.example.trader.Service.BrokerService;

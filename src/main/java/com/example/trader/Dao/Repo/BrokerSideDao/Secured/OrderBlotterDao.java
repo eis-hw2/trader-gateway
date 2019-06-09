@@ -1,9 +1,9 @@
-package com.example.trader.Dao.Repo;
+package com.example.trader.Dao.Repo.BrokerSideDao.Secured;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.example.trader.Dao.Repo.BrokerSideDao.SecuredDao;
 import com.example.trader.Domain.Entity.OrderBlotter;
-import com.example.trader.Domain.Wrapper.ResponseWrapper;
 import com.example.trader.Util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,7 @@ import java.util.*;
 
 @Component("OrderBlotterDao")
 @Scope("prototype")
-public class OrderBlotterDao extends SecuredDao<String ,OrderBlotter>{
+public class OrderBlotterDao extends SecuredDao<String ,OrderBlotter> {
 
     private static Logger logger = LoggerFactory.getLogger("OrderBlotterDao");
 

@@ -1,8 +1,7 @@
 package com.example.trader.Service.Impl;
 
 import com.example.trader.Dao.Factory.DaoFactory;
-import com.example.trader.Dao.Repo.DynamicDao;
-import com.example.trader.Dao.Repo.FutureDao;
+import com.example.trader.Dao.Repo.BrokerSideDao.Unsecured.FutureDao;
 import com.example.trader.Domain.Entity.Broker;
 import com.example.trader.Domain.Entity.Future;
 import com.example.trader.Service.BrokerService;

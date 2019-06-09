@@ -1,13 +1,12 @@
 package com.example.trader.Service.Impl;
 
-import com.example.trader.Dao.Repo.TraderSideUserDao;
+import com.example.trader.Dao.Repo.TraderSideDao.TraderSideUserDao;
 import com.example.trader.Domain.Entity.BrokerSideUser;
 import com.example.trader.Domain.Entity.TraderSideUser;
 import com.example.trader.Domain.Entity.Util.Role;
 import com.example.trader.Service.TraderSideUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

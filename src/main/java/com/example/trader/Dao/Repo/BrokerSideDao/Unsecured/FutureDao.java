@@ -1,21 +1,16 @@
-package com.example.trader.Dao.Repo;
+package com.example.trader.Dao.Repo.BrokerSideDao.Unsecured;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.example.trader.Dao.Repo.BrokerSideDao.DynamicDao;
+import com.example.trader.Dao.Repo.BrokerSideDao.UnsecuredDao;
 import com.example.trader.Domain.Entity.Future;
-import com.example.trader.Domain.Wrapper.ResponseWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Component("FutureDao")
 @Scope("prototype")
-public class FutureDao extends DynamicDao<String ,Future> {
+public class FutureDao extends UnsecuredDao<String ,Future> {
 
     private static Logger logger = LoggerFactory.getLogger("FutureDao");
 

@@ -1,9 +1,9 @@
-package com.example.trader.Dao.Repo;
+package com.example.trader.Dao.Repo.BrokerSideDao.Secured;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.example.trader.Dao.Repo.BrokerSideDao.SecuredDao;
 import com.example.trader.Domain.Entity.Order;
-import com.example.trader.Domain.Wrapper.ResponseWrapper;
 import org.slf4j.Logger;
 import org.springframework.http.*;
 import org.springframework.web.client.RequestCallback;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractOrderDao extends SecuredDao<String, Order>{
+public abstract class AbstractOrderDao extends SecuredDao<String, Order> {
 
     @Override
     public HttpHeaders getHttpHeaders() {

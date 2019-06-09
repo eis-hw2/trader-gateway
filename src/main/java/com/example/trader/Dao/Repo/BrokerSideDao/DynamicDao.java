@@ -1,4 +1,4 @@
-package com.example.trader.Dao.Repo;
+package com.example.trader.Dao.Repo.BrokerSideDao;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
