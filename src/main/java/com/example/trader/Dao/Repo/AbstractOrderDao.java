@@ -5,9 +5,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.trader.Domain.Entity.Order;
 import com.example.trader.Domain.Wrapper.ResponseWrapper;
 import org.slf4j.Logger;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.web.client.RequestCallback;
+import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -36,7 +36,14 @@ public abstract class AbstractOrderDao extends SecuredDao<String, Order>{
 
     public List<Order> findByTraderName(String traderName){
         String url = getReadBaseUrl() + "/search/traderName?traderName=" + traderName;
-        ResponseEntity<JSONObject> responseEntity = getRestTemplate().getForEntity(url, JSONObject.class);
+
+        RestTemplate restTemplate = getRestTemplate();
+        HttpEntity request = getHttpEntity();
+        RequestCallback requestCallback = restTemplate.httpEntityCallback(request, JSONObject.class);
+        ResponseExtractor<ResponseEntity<JSONObject>> responseExtractor = restTemplate.responseEntityExtractor(JSONObject.class);
+        ResponseEntity<JSONObject> responseEntity = restTemplate.execute(url, HttpMethod.GET, requestCallback, responseExtractor);
+
+
         Order[] res = responseEntity.getBody()
                 .getJSONObject("_embedded")
                 .getJSONArray(getType())

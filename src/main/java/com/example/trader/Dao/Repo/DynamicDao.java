@@ -39,6 +39,11 @@ public abstract class DynamicDao<K, V> {
         return httpEntity;
     }
 
+    public HttpEntity<Object> getHttpEntity() {
+        HttpEntity<Object> httpEntity = new HttpEntity<>(getHttpHeaders());
+        return httpEntity;
+    }
+
     public String getWriteBaseUrl(){
         return getBroker().getWriteApi() + "/" + getType();
     }
