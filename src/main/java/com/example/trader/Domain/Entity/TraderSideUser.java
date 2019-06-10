@@ -20,6 +20,9 @@ public class TraderSideUser implements UserDetails{
 
     private String password;
     private List<String> roles = new ArrayList<>();
+    /**
+     * 为了 JSON 返回时需要，Key 由 Integer 改为 String
+     */
     private Map<String, BrokerSideUser> brokerSideUsers = new HashMap<>();
 
     @JSONField(serialize = false)
@@ -108,7 +111,7 @@ public class TraderSideUser implements UserDetails{
     }
 
     public BrokerSideUser modifyBrokerSideUser(BrokerSideUser brokerSideUser){
-        if (brokerSideUsers.get(brokerSideUser.getBrokerId()) == null)
+        if (brokerSideUsers.get(brokerSideUser.getBrokerId().toString()) == null)
             return null;
         return brokerSideUsers.put(brokerSideUser.getBrokerId().toString(), brokerSideUser);
     }
