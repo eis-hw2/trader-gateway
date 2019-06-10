@@ -1,12 +1,11 @@
 package com.example.trader.Service.Impl;
 
 
-import com.example.trader.Core.Sender.Strategy.InstantSender;
 import com.example.trader.Dao.Factory.DaoFactory;
-import com.example.trader.Dao.Repo.AbstractOrderDao;
-import com.example.trader.Dao.Repo.OrderDao.LimitOrderDao;
-import com.example.trader.Dao.Repo.OrderDao.MarketOrderDao;
-import com.example.trader.Dao.Repo.OrderDao.StopOrderDao;
+import com.example.trader.Dao.Repo.BrokerSideDao.Secured.AbstractOrderDao;
+import com.example.trader.Dao.Repo.BrokerSideDao.Secured.OrderDao.LimitOrderDao;
+import com.example.trader.Dao.Repo.BrokerSideDao.Secured.OrderDao.MarketOrderDao;
+import com.example.trader.Dao.Repo.BrokerSideDao.Secured.OrderDao.StopOrderDao;
 import com.example.trader.Domain.Entity.Broker;
 import com.example.trader.Domain.Entity.Order;
 import com.example.trader.Service.BrokerService;
@@ -17,13 +16,10 @@ import com.example.trader.Core.Processor.ProcessorFactory;
 import com.example.trader.Core.Sender.Sender;
 import com.example.trader.Core.Sender.SenderFactory;
 import com.example.trader.Service.TraderSideUserService;
-import com.example.trader.Util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -92,12 +88,17 @@ public class OrderServiceImpl implements OrderService{
         String token = brokerSideUserService.getToken(username, brokerId);
         String brokerSideUsername = traderSideUserService.findByUsername(username).getBrokerSideUser(brokerId).getUsername();
 
-        MarketOrderDao mdao = (MarketOrderDao) daoFactory.createWithToken(broker, "MarketOrder", token);
-        LimitOrderDao ldao = (LimitOrderDao) daoFactory.createWithToken(broker, "LimitiOrder", token);
-        StopOrderDao sdao = (StopOrderDao) daoFactory.createWithToken(broker, "StopOrder", token);
-        List<Order> res = mdao.findByTraderName(brokerSideUsername);
-        res.addAll(ldao.findByTraderName(brokerSideUsername));
-        res.addAll(sdao.findByTraderName(brokerSideUsername));
-        return res;
+        MarketOrderDao mdao = (MarketOrderDao) daoFactory.createWithToken(broker, Order.MARKET_ORDER, token);
+        LimitOrderDao ldao = (LimitOrderDao) daoFactory.createWithToken(broker, Order.LIMIT_ORDER, token);
+        StopOrderDao sdao = (StopOrderDao) daoFactory.createWithToken(broker, Order.STOP_ORDER, token);
+        List<Order> mo = mdao.findByTraderName(brokerSideUsername);
+        List<Order> lo = ldao.findByTraderName(brokerSideUsername);
+        List<Order> so = sdao.findByTraderName(brokerSideUsername);
+        mo.stream().forEach(e -> e.setType(Order.MARKET_ORDER));
+        lo.stream().forEach(e -> e.setType(Order.LIMIT_ORDER));
+        so.stream().forEach(e -> e.setType(Order.STOP_ORDER));
+        mo.addAll(lo);
+        mo.addAll(so);
+        return mo;
     }
 }

@@ -28,6 +28,10 @@ public class DelayOneSender extends DelaySender {
 
     @Override
     public String send(String traderSideUsername, List<Order> orders) {
+        orders.stream().forEach(e -> {
+            if (!checkOrder(e))
+                throw new RuntimeException("CancelOrder is not allowed in DelaySender.");
+        });
         String groupId = UUID.randomUUID().toString();
         int interval = getIntervalMinute();
 

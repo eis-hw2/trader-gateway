@@ -1,4 +1,4 @@
-package com.example.trader.Dao.Repo;
+package com.example.trader.Dao.Repo.TraderSideDao;
 
 import com.example.trader.Domain.Entity.TraderSideUser;
 import org.springframework.data.mongodb.repository.MongoRepository;

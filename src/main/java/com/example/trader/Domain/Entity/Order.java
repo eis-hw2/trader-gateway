@@ -31,6 +31,7 @@ public class Order {
     private String traderName;
     private String creationTime;
     private Links __links;
+    private String clientId;
 
     public Links get__links() {
         return __links;
@@ -165,5 +166,13 @@ public class Order {
 
     public void setFutureName(String futureName) {
         this.futureName = futureName;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 }

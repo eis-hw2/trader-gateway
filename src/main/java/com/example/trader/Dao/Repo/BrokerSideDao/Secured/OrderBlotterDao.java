@@ -1,23 +1,24 @@
-package com.example.trader.Dao.Repo;
+package com.example.trader.Dao.Repo.BrokerSideDao.Secured;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.example.trader.Dao.Repo.BrokerSideDao.SecuredDao;
 import com.example.trader.Domain.Entity.OrderBlotter;
-import com.example.trader.Domain.Wrapper.ResponseWrapper;
 import com.example.trader.Util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RequestCallback;
+import org.springframework.web.client.ResponseExtractor;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
 @Component("OrderBlotterDao")
 @Scope("prototype")
-public class OrderBlotterDao extends SecuredDao<String ,OrderBlotter>{
+public class OrderBlotterDao extends SecuredDao<String ,OrderBlotter> {
 
     private static Logger logger = LoggerFactory.getLogger("OrderBlotterDao");
 
@@ -60,10 +61,17 @@ public class OrderBlotterDao extends SecuredDao<String ,OrderBlotter>{
                 "&startTime=" + startTime +
                 "&endTime=" + endTime;
         logger.info("[OrderBlotterDao.findByMarketDepthIdAndInterval] URL: "+url);
-        ResponseEntity<JSONObject> responseEntity = getRestTemplate().getForEntity(url, JSONObject.class);
+
+        RestTemplate restTemplate = getRestTemplate();
+        HttpEntity request = getHttpEntity();
+        RequestCallback requestCallback = restTemplate.httpEntityCallback(request, JSONObject.class);
+        ResponseExtractor<ResponseEntity<JSONObject>> responseExtractor = restTemplate.responseEntityExtractor(JSONObject.class);
+        ResponseEntity<JSONObject> responseEntity = restTemplate.execute(url, HttpMethod.GET, requestCallback, responseExtractor);
+
+
         logger.info("[OrderBlotterDao.findByMarketDepthIdAndInterval] Result: "+ JSON.toJSONString(responseEntity.getBody()));
         OrderBlotter[] orderBlotters = responseEntity.getBody().getObject("body", OrderBlotter[].class);
-        return Arrays.asList(orderBlotters);
+        return new ArrayList<>(Arrays.asList(orderBlotters));
     }
 
     public static void main(String[] args){

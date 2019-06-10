@@ -2,16 +2,14 @@ package com.example.trader.Core.Sender.Strategy.Instant;
 
 import com.example.trader.Core.Sender.Strategy.InstantSender;
 import com.example.trader.Dao.Factory.DaoFactory;
-import com.example.trader.Dao.Repo.AbstractOrderDao;
+import com.example.trader.Dao.Repo.BrokerSideDao.Secured.AbstractOrderDao;
 import com.example.trader.Domain.Entity.Broker;
 import com.example.trader.Domain.Entity.Order;
 import com.example.trader.Domain.Entity.Util.BrokerOrderPair;
 import com.example.trader.Service.BrokerSideUserService;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class InstantDistributeSender extends InstantSender {
 

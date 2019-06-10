@@ -1,6 +1,6 @@
 package com.example.trader.Service.Impl;
 
-import com.example.trader.Dao.Repo.BrokerDao;
+import com.example.trader.Dao.Repo.TraderSideDao.BrokerDao;
 import com.example.trader.Domain.Entity.Broker;
 import com.example.trader.Service.BrokerService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.example.trader.Dao.Repo;
+package com.example.trader.Dao.Repo.BrokerSideDao;
 
 public abstract class SecuredDao<K, V> extends DynamicDao<K, V>{
     private String token;

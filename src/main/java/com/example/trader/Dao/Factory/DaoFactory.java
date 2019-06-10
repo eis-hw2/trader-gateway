@@ -1,10 +1,8 @@
 package com.example.trader.Dao.Factory;
 
-import com.example.trader.Dao.Repo.AbstractOrderDao;
-import com.example.trader.Dao.Repo.DynamicDao;
-import com.example.trader.Dao.Repo.SecuredDao;
+import com.example.trader.Dao.Repo.BrokerSideDao.DynamicDao;
+import com.example.trader.Dao.Repo.BrokerSideDao.SecuredDao;
 import com.example.trader.Domain.Entity.Broker;
-import com.example.trader.Domain.Entity.Order;
 import com.example.trader.Util.LRUCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;

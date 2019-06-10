@@ -3,7 +3,7 @@ package com.example.trader.Controller;
 import com.example.trader.Core.MessageQueue.TaskProducer;
 import com.example.trader.Core.Processor.ProcessorFactory;
 import com.example.trader.Core.Sender.SenderFactory;
-import com.example.trader.Dao.Repo.OrderToSendDao;
+import com.example.trader.Dao.Repo.TraderSideDao.OrderToSendDao;
 import com.example.trader.Domain.Entity.OrderToSend;
 import com.example.trader.Domain.Factory.ResponseWrapperFactory;
 import com.example.trader.Domain.Entity.Order;
@@ -57,14 +57,18 @@ public class OrderController {
             @RequestParam(defaultValue = "5") Integer intervalMinute,
             @RequestParam Integer brokerId) {
 
-        if (order.getTotalCount() <= 0)
-            return ResponseWrapperFactory.create(ResponseWrapper.ERROR, "Total count must be positive");
-        if (order.getFutureName() == null)
-            return ResponseWrapperFactory.create(ResponseWrapper.ERROR, "Future name must not be null");
         if (!order.getType().equals("CancelOrder")
                 && !order.getType().equals("MarketOrder")
                 && !order.getType().equals("LimitOrder"))
-            return ResponseWrapperFactory.create(ResponseWrapper.ERROR, "Invalid order type:"+order.getType());
+            return ResponseWrapperFactory.create(ResponseWrapper.ERROR, "Invalid order type:" + order.getType());
+
+
+        if (!order.getType().equals(Order.CANCEL_ORDER)) {
+            if (order.getTotalCount() <= 0)
+                return ResponseWrapperFactory.create(ResponseWrapper.ERROR, "Total count must be positive");
+            if (order.getFutureName() == null)
+                return ResponseWrapperFactory.create(ResponseWrapper.ERROR, "Future name must not be null");
+        }
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         order.setTraderName(username);
@@ -103,10 +107,11 @@ public class OrderController {
     }
 
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseWrapper findByBrokerId(@RequestParam Integer brokerId){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         List<Order> orders = orderService.findByBrokerIdAndUsername(brokerId, username);
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, orders);
     }
+
 }

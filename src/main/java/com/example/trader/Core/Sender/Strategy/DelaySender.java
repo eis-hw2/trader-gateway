@@ -1,10 +1,9 @@
 package com.example.trader.Core.Sender.Strategy;
 
 import com.example.trader.Core.Sender.Sender;
-import com.example.trader.Dao.Repo.OrderToSendDao;
+import com.example.trader.Dao.Repo.TraderSideDao.OrderToSendDao;
 import com.example.trader.Domain.Entity.Broker;
 import com.example.trader.Domain.Entity.Order;
-import com.example.trader.Domain.Entity.OrderToSend;
 
 import java.util.Calendar;
 import java.util.List;
@@ -65,5 +64,11 @@ public abstract class DelaySender implements Sender {
 
     public void setOrderToSendDao(OrderToSendDao orderToSendDao) {
         this.orderToSendDao = orderToSendDao;
+    }
+
+    public boolean checkOrder(Order order){
+        if (order.getType().equals("CancelOrder"))
+            return false;
+        return true;
     }
 }

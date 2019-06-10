@@ -1,4 +1,4 @@
-package com.example.trader.Dao.Repo;
+package com.example.trader.Dao.Repo.BrokerSideDao;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,6 +36,11 @@ public abstract class DynamicDao<K, V> {
 
     public HttpEntity<Object> getHttpEntity(Object requestBody) {
         HttpEntity<Object> httpEntity = new HttpEntity<>(requestBody, getHttpHeaders());
+        return httpEntity;
+    }
+
+    public HttpEntity<Object> getHttpEntity() {
+        HttpEntity<Object> httpEntity = new HttpEntity<>(getHttpHeaders());
         return httpEntity;
     }
 
@@ -96,6 +102,6 @@ public abstract class DynamicDao<K, V> {
                 .getJSONArray(getType())
                 .toJavaObject(getValueArrayClass());
         getLogger().info("[Dao.findAll] " + JSON.toJSONString(res));
-        return Arrays.asList(res);
+        return new ArrayList<>(Arrays.asList(res));
     }
 }
