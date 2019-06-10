@@ -28,14 +28,6 @@ public class OrderBlotterDao extends SecuredDao<String ,OrderBlotter> {
     }
 
     @Override
-    public HttpHeaders getHttpHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("token", getToken());
-        return headers;
-    }
-
-    @Override
     public String getType() {
         return "orderBlotters";
     }

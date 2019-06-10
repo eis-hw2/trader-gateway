@@ -17,14 +17,6 @@ import java.util.List;
 public abstract class AbstractOrderDao extends SecuredDao<String, Order> {
 
     @Override
-    public HttpHeaders getHttpHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("token", getToken());
-        return headers;
-    }
-
-    @Override
     public Class<Order> getValueClass() {
         return Order.class;
     }
