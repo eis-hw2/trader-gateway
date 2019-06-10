@@ -71,4 +71,21 @@ public class OrderBlotterDao extends SecuredDao<String ,OrderBlotter> {
 
         System.out.print(DateUtil.dateFormat.format(calendar.getTime()));
     }
+
+    @Override
+    public List<OrderBlotter> findAll() {
+        String url = getReadBaseUrl();
+        getLogger().info("[Dao.findAll] " + url);
+        HttpEntity request = getHttpEntity();
+        getLogger().info("[Dao.findAll] " + request.getHeaders().get("token"));
+        RestTemplate restTemplate = getRestTemplate();
+        RequestCallback requestCallback = restTemplate.httpEntityCallback(request, JSONObject.class);
+        ResponseExtractor<ResponseEntity<JSONObject>> responseExtractor = restTemplate.responseEntityExtractor(JSONObject.class);
+        ResponseEntity<JSONObject> responseEntity = restTemplate.execute(url, HttpMethod.GET, requestCallback, responseExtractor);
+
+        OrderBlotter[] res = responseEntity.getBody()
+                .getJSONArray("body")
+                .toJavaObject(getValueArrayClass());
+        return new ArrayList<>(Arrays.asList(res));
+    }
 }
