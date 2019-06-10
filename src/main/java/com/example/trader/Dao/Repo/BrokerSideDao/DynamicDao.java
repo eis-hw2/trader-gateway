@@ -5,10 +5,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.trader.Domain.Entity.Broker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.web.client.RequestCallback;
+import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -96,7 +95,13 @@ public abstract class DynamicDao<K, V> {
     public List<V> findAll(){
         String url = getReadBaseUrl();
         getLogger().info("[Dao.findAll] " + url);
-        ResponseEntity<JSONObject> responseEntity = getRestTemplate().getForEntity(url, JSONObject.class);
+        HttpEntity request = getHttpEntity();
+
+        RestTemplate restTemplate = getRestTemplate();
+        RequestCallback requestCallback = restTemplate.httpEntityCallback(request, JSONObject.class);
+        ResponseExtractor<ResponseEntity<JSONObject>> responseExtractor = restTemplate.responseEntityExtractor(JSONObject.class);
+        ResponseEntity<JSONObject> responseEntity = restTemplate.execute(url, HttpMethod.GET, requestCallback, responseExtractor);
+
         V[] res = responseEntity.getBody()
                 .getJSONObject("_embedded")
                 .getJSONArray(getType())
