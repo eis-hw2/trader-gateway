@@ -57,9 +57,10 @@ public class OrderController {
             @RequestParam(defaultValue = "5") Integer intervalMinute,
             @RequestParam Integer brokerId) {
 
-        if (!order.getType().equals("CancelOrder")
-                && !order.getType().equals("MarketOrder")
-                && !order.getType().equals("LimitOrder"))
+        if (!order.getType().equals(Order.CANCEL_ORDER)
+                && !order.getType().equals(Order.MARKET_ORDER)
+                && !order.getType().equals(Order.LIMIT_ORDER)
+                && !order.getType().equals(Order.STOP_ORDER))
             return ResponseWrapperFactory.create(ResponseWrapper.ERROR, "Invalid order type:" + order.getType());
 
 

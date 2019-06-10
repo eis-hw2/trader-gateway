@@ -67,7 +67,7 @@ public abstract class DelaySender implements Sender {
     }
 
     public boolean checkOrder(Order order){
-        if (order.getType().equals("CancelOrder"))
+        if (order.getType().equals(Order.CANCEL_ORDER))
             return false;
         return true;
     }
