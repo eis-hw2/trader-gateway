@@ -31,7 +31,7 @@ public class InstantDistributeSender extends InstantSender {
         int size = getBrokers().size();
         int curIndex = 0;
         for (Order order: orders){
-            if (order.getTotalCount() == 0)
+            if (!isValid(order))
                 continue;
             Broker curBroker = getBrokers().get(curIndex % size);
             String token = brokerSideUserService.getToken(traderSideUsername, curBroker.getId());

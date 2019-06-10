@@ -35,7 +35,7 @@ public class InstantOneSender extends InstantSender {
         List<BrokerOrderPair> res = new ArrayList<>();
 
         for(Order order: orders){
-            if (order.getTotalCount() == 0)
+            if (!isValid(order))
                 continue;
             Order createdOrder = orderDao.create(order);
             createdOrder.setType(order.getType());
