@@ -48,7 +48,7 @@ public abstract class AbstractOrderDao extends SecuredDao<String, Order> {
                 .getJSONObject("_embedded")
                 .getJSONArray(getType())
                 .toJavaObject(getValueArrayClass());
-        System.out.println(JSON.toJSONString(res));
+        getLogger().info("["+getType()+"Dao.findByTraderName] "+JSON.toJSONString(res));
         return new ArrayList<>(Arrays.asList(res));
     }
 
