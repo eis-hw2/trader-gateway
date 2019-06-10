@@ -49,7 +49,7 @@ public class OrderBlotterDao extends SecuredDao<String ,OrderBlotter> {
 
     public List<OrderBlotter> findByMarketDepthIdAndInterval(String marketDepthId, String startTime, String endTime){
 
-        String url = getReadBaseUrl() + "?marketDepthId=" + marketDepthId +
+        String url = getReadBaseUrl() + "/query?marketDepthId=" + marketDepthId +
                 "&startTime=" + startTime +
                 "&endTime=" + endTime;
         logger.info("[OrderBlotterDao.findByMarketDepthIdAndInterval] URL: "+url);
@@ -83,6 +83,7 @@ public class OrderBlotterDao extends SecuredDao<String ,OrderBlotter> {
         ResponseExtractor<ResponseEntity<JSONObject>> responseExtractor = restTemplate.responseEntityExtractor(JSONObject.class);
         ResponseEntity<JSONObject> responseEntity = restTemplate.execute(url, HttpMethod.GET, requestCallback, responseExtractor);
 
+        logger.info("[OrderBlotterDao.findByMarketDepthIdAndInterval] Result: "+ JSON.toJSONString(responseEntity.getBody()));
         OrderBlotter[] res = responseEntity.getBody()
                 .getJSONArray("body")
                 .toJavaObject(getValueArrayClass());

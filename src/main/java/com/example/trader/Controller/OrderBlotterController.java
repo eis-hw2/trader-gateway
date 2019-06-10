@@ -27,14 +27,16 @@ public class OrderBlotterController {
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, res);
     }
 
+    /*
     @GetMapping("/{obid}")
     public ResponseWrapper findById(@RequestParam Integer brokerId, @PathVariable String obid){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         OrderBlotter res = orderBlotterService.findById(username, brokerId, obid);
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, res);
-    }
+    }*/
 
+    @GetMapping("/query")
     public ResponseWrapper findByMarketDepthIdAndStartTimeAndEndTime(
             @RequestParam Integer brokerId,
             @RequestParam String marketDepthId,
