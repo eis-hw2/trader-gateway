@@ -21,25 +21,29 @@ public class OrderBlotterController {
 
     @GetMapping("")
     public ResponseWrapper findAll(@RequestParam Integer brokerId){
-        List<OrderBlotter> res = orderBlotterService.findAll(brokerId);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        List<OrderBlotter> res = orderBlotterService.findAll(username, brokerId);
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, res);
     }
 
     @GetMapping("/{obid}")
     public ResponseWrapper findById(@RequestParam Integer brokerId, @PathVariable String obid){
-        OrderBlotter res = orderBlotterService.findById(brokerId, obid);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        OrderBlotter res = orderBlotterService.findById(username, brokerId, obid);
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, res);
     }
 
     public ResponseWrapper findByMarketDepthIdAndStartTimeAndEndTime(
-            @RequestParam Integer broerId,
+            @RequestParam Integer brokerId,
             @RequestParam String marketDepthId,
             @RequestParam String startTime,
             @RequestParam String endTime){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         List<OrderBlotter> res = orderBlotterService.findByMarketDepthIdAndStartTimeAndEndTime(
-                username, broerId, marketDepthId, startTime, endTime
+                username, brokerId, marketDepthId, startTime, endTime
         );
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, res);
     }

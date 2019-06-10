@@ -2,6 +2,7 @@ package com.example.trader.Service.Impl;
 
 import com.example.trader.Dao.Factory.DaoFactory;
 import com.example.trader.Dao.Repo.BrokerSideDao.Secured.OrderBlotterDao;
+import com.example.trader.Dao.Repo.BrokerSideDao.SecuredDao;
 import com.example.trader.Domain.Entity.Broker;
 import com.example.trader.Domain.Entity.OrderBlotter;
 import com.example.trader.Service.BrokerService;
@@ -23,17 +24,18 @@ public class OrderBlotterServiceImpl implements OrderBlotterService {
     private BrokerSideUserService brokerSideUserService;
 
     @Override
-    public List<OrderBlotter> findAll(Integer brokerId) {
+    public List<OrderBlotter> findAll(String username, Integer brokerId) {
         Broker broker = brokerService.findById(brokerId);
-        OrderBlotterDao dao = (OrderBlotterDao)daoFactory.create(broker, "OrderBlotter");
-
+        String token = brokerSideUserService.getToken(username, brokerId);
+        SecuredDao dao = (SecuredDao) daoFactory.createWithToken(broker, "OrderBlotter", token);
         return dao.findAll();
     }
 
     @Override
-    public OrderBlotter findById(Integer brokerId, String id) {
+    public OrderBlotter findById(String username, Integer brokerId, String id) {
         Broker broker = brokerService.findById(brokerId);
-        OrderBlotterDao dao = (OrderBlotterDao)daoFactory.create(broker, "OrderBlotter");
+        String token = brokerSideUserService.getToken(username, brokerId);
+        OrderBlotterDao dao = (OrderBlotterDao)daoFactory.createWithToken(broker, "OrderBlotter", token);
         return dao.findById(id);
     }
 
