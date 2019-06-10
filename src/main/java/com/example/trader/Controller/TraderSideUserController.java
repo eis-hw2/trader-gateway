@@ -32,6 +32,9 @@ public class TraderSideUserController {
     public ResponseWrapper addBrokerSideUser(@RequestBody BrokerSideUser brokerSideUser){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         BrokerSideUser res = traderSideUserService.addBrokerSideUser(username, brokerSideUser);
+        if (res == null){
+            return ResponseWrapperFactory.create(ResponseWrapper.ERROR, "Broker Login Failure");
+        }
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, res);
     }
 
@@ -47,7 +50,7 @@ public class TraderSideUserController {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         BrokerSideUser res = traderSideUserService.modifyBrokerSideUser(username, brokerSideUser);
         if (res == null){
-            return ResponseWrapperFactory.create(ResponseWrapper.ERROR, "BrokerSideUser does not exist");
+            return ResponseWrapperFactory.create(ResponseWrapper.ERROR, "Broker Login Failure");
         }
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, res);
     }

@@ -1,5 +1,6 @@
 package com.example.trader.Service.Impl;
 
+import com.alibaba.fastjson.JSON;
 import com.example.trader.Domain.Entity.Broker;
 import com.example.trader.Domain.Entity.BrokerSideUser;
 import com.example.trader.Domain.Entity.TraderSideUser;
@@ -66,20 +67,11 @@ public class BrokerSideUserServiceImpl implements BrokerSideUserService {
         //logger.info("[BrokerSideUserService.login] BrokerSideUser: " + JSON.toJSONString(brokerSideUser));
         Broker broker = brokerService.findById(brokerId);
 
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
-        MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
-        map.add("username", brokerSideUser.getUsername());
-        map.add("password", brokerSideUser.getPassword());
-
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
-
         String url = broker.getLoginApi() + "/login";
         logger.info("[BrokerSideUserSerivce.login] url: " + url);
 
-        ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
+        ResponseEntity<String> response = _login(brokerSideUser.getUsername(),
+                brokerSideUser.getPassword(), url);
 
         HttpHeaders responseHeaders = response.getHeaders();
         String token = responseHeaders.get("token").get(0);
@@ -88,6 +80,47 @@ public class BrokerSideUserServiceImpl implements BrokerSideUserService {
         String key =  getKey(traderSideUsername, brokerId);
         redisService.set(key, token, DEFAULT_EXPIRATION);
         return token;
+    }
+
+    @Override
+    public boolean login(BrokerSideUser brokerSideUser) {
+        try {
+            logger.info("[BrokerSideUserService.login] BrokerSideUser: " + JSON.toJSONString(brokerSideUser));
+            //logger.info("[BrokerSideUserService.login] BrokerSideUser: " + JSON.toJSONString(brokerSideUser));
+            Broker broker = brokerService.findById(brokerSideUser.getBrokerId());
+            String url = broker.getLoginApi() + "/login";
+
+            ResponseEntity<String> response = _login(brokerSideUser.getUsername(),
+                    brokerSideUser.getPassword(), url);
+
+            HttpHeaders responseHeaders = response.getHeaders();
+            String token = responseHeaders.get("token").get(0);
+            logger.info("[BrokerSideUserSerivce.login] token: " + token);
+            if (token == null)
+                return false;
+            return true;
+        }
+        catch(Exception e){
+            logger.error("[BrokerSideUserService.login] Error :" + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private ResponseEntity<String> _login(String username, String password, String loginApi){
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
+        map.add("username", username);
+        map.add("password", password);
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+
+        logger.info("[BrokerSideUserSerivce.login] url: " + loginApi);
+
+        ResponseEntity<String> response = restTemplate.postForEntity(loginApi, request, String.class);
+        return response;
     }
 
     private String getKey(String username, Integer brokerId){

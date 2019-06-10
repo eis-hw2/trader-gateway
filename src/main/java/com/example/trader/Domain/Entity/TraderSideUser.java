@@ -103,7 +103,8 @@ public class TraderSideUser implements UserDetails{
     }
 
     public BrokerSideUser addBrokerSideUser(BrokerSideUser brokerSideUser){
-        return brokerSideUsers.put(brokerSideUser.getBrokerId().toString(), brokerSideUser);
+        brokerSideUsers.put(brokerSideUser.getBrokerId().toString(), brokerSideUser);
+        return brokerSideUser;
     }
 
     public BrokerSideUser removeBrokerSideUser(Integer bid){
@@ -111,9 +112,8 @@ public class TraderSideUser implements UserDetails{
     }
 
     public BrokerSideUser modifyBrokerSideUser(BrokerSideUser brokerSideUser){
-        if (brokerSideUsers.get(brokerSideUser.getBrokerId().toString()) == null)
-            return null;
-        return brokerSideUsers.put(brokerSideUser.getBrokerId().toString(), brokerSideUser);
+        brokerSideUsers.put(brokerSideUser.getBrokerId().toString(), brokerSideUser);
+        return brokerSideUser;
     }
 
     public BrokerSideUser getBrokerSideUser(Integer bid){
