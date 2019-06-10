@@ -26,4 +26,12 @@ public abstract class InstantSender implements Sender{
     public void setBrokers(List<Broker> brokers) {
         this.brokers = brokers;
     }
+
+    public boolean isValid(Order o){
+        if (o.getType().equals(Order.CANCEL_ORDER))
+            return true;
+        if (o.getTotalCount() > 0)
+            return true;
+        return false;
+    }
 }
