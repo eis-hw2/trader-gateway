@@ -96,7 +96,7 @@ public abstract class DynamicDao<K, V> {
         String url = getReadBaseUrl();
         getLogger().info("[Dao.findAll] " + url);
         HttpEntity request = getHttpEntity();
-
+        getLogger().info("[Dao.findAll] " + request.getHeaders().get("token"));
         RestTemplate restTemplate = getRestTemplate();
         RequestCallback requestCallback = restTemplate.httpEntityCallback(request, JSONObject.class);
         ResponseExtractor<ResponseEntity<JSONObject>> responseExtractor = restTemplate.responseEntityExtractor(JSONObject.class);

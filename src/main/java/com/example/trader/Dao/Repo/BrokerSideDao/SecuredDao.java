@@ -19,6 +19,7 @@ public abstract class SecuredDao<K, V> extends DynamicDao<K, V>{
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("token", getToken());
+        getLogger().info("[SecuredDao.getHttpHeaders] token:" + getToken());
         return headers;
     }
 }
