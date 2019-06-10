@@ -30,6 +30,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v1/Broker/**").permitAll()
                 .antMatchers("/api/v1/Future/**").permitAll()
                 .antMatchers("/api/v1/OrderBlotter/**").permitAll()
+                .antMatchers("/api/v1/TraderSideUser").permitAll()
                 /**
                  * swagger config
                  */
