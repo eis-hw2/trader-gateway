@@ -46,6 +46,9 @@ public class TraderSideUserController {
     public ResponseWrapper modifyBrokerSideUser(@RequestBody BrokerSideUser brokerSideUser){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         BrokerSideUser res = traderSideUserService.modifyBrokerSideUser(username, brokerSideUser);
+        if (res == null){
+            return ResponseWrapperFactory.create(ResponseWrapper.ERROR, "BrokerSideUser does not exist");
+        }
         return ResponseWrapperFactory.create(ResponseWrapper.SUCCESS, res);
     }
 
