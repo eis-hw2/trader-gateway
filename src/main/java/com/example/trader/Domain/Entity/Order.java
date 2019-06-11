@@ -4,6 +4,7 @@ import com.example.trader.Domain.Entity.Util.Links;
 import com.example.trader.Domain.Entity.Util.Side;
 import com.example.trader.Domain.Entity.Util.Status;
 import com.example.trader.Domain.Entity.Util.Type;
+import io.swagger.annotations.ApiModelProperty;
 
 public class Order {
     public static final String MARKET_ORDER = "MarketOrder";
@@ -31,7 +32,13 @@ public class Order {
     private String traderName;
     private String creationTime;
     private Links __links;
+    @ApiModelProperty(notes = "与用户下单无关的id")
     private String clientId;
+
+    @ApiModelProperty(notes = "止损价格")
+    private int stopPrice;
+    @ApiModelProperty(notes = "StopOrder 转换的时间")
+    private String statusSwitchTime;
 
     public Links get__links() {
         return __links;
@@ -68,6 +75,7 @@ public class Order {
         targetId = o.getTargetId();
         traderName = o.getTraderName();
         type = o.getType();
+        stopPrice = o.getStopPrice();
     }
 
     public Order(){}
@@ -174,5 +182,21 @@ public class Order {
 
     public void setClientId(String clientId) {
         this.clientId = clientId;
+    }
+
+    public int getStopPrice() {
+        return stopPrice;
+    }
+
+    public void setStopPrice(int stopPrice) {
+        this.stopPrice = stopPrice;
+    }
+
+    public String getStatusSwitchTime() {
+        return statusSwitchTime;
+    }
+
+    public void setStatusSwitchTime(String statusSwitchTime) {
+        this.statusSwitchTime = statusSwitchTime;
     }
 }
