@@ -11,6 +11,8 @@ import com.example.trader.Domain.Wrapper.ResponseWrapper;
 import com.example.trader.Exception.InvalidParameterException;
 import com.example.trader.Service.OrderService;
 import com.example.trader.Util.DateUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +27,8 @@ public class OrderController {
     private OrderService orderService;
     @Autowired
     private OrderToSendDao orderToSendDao;
+
+    private static final Logger logger = LoggerFactory.getLogger("OrderController");
 
     @GetMapping("/future-order")
     public ResponseWrapper getFutureOrder(){
@@ -71,6 +75,8 @@ public class OrderController {
                 return ResponseWrapperFactory.create(ResponseWrapper.ERROR, "Future name must not be null");
         }
 
+        logger.info("[OrderController.create] Process: "+processStrategy);
+        logger.info("[OrderController.create] Send: " +sendStrategy);
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         order.setTraderName(username);
 
