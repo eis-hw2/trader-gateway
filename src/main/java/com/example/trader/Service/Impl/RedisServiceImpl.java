@@ -2,6 +2,7 @@ package com.example.trader.Service.Impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.trader.Service.RedisService;
+import com.example.trader.Util.LRUCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +20,21 @@ public class RedisServiceImpl implements RedisService{
     @Autowired
     private RedisTemplate redisTemplate;
 
+    private LRUCache<String, Object> cache = new LRUCache<>(20);
+
     @Override
     public Object get(final String key) {
         JSONObject pair = new JSONObject();
         pair.put("Key", key);
 
+
         ValueOperations<Serializable, Object> operations = redisTemplate.opsForValue();
-        Object value = operations.get(key);
+
+        Object value = cache.get(key);
+        if (value == null){
+            value = operations.get(key);
+            cache.put(key, value);
+        }
 
         pair.put("Value", value);
         logger.info("[RedisService.get] " + pair.toJSONString());
@@ -50,6 +59,7 @@ public class RedisServiceImpl implements RedisService{
             ValueOperations<Serializable, Object> operations = redisTemplate.opsForValue();
             operations.set(key, value);
             result = true;
+            cache.put(key, value);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -70,6 +80,7 @@ public class RedisServiceImpl implements RedisService{
             operations.set(key, value);
             redisTemplate.expire(key, expiration, TimeUnit.SECONDS);
             result = true;
+            cache.put(key, value);
         } catch (Exception e) {
             e.printStackTrace();
         }
