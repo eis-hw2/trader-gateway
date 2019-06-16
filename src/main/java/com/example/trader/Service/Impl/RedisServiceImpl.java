@@ -98,6 +98,8 @@ public class RedisServiceImpl implements RedisService{
     @Override
     public boolean exists(String key) {
         logger.info("[RedisService.exists] " + key);
+        if (cache.get(key) != null)
+            return true;
         return redisTemplate.hasKey(key);
     }
 }
